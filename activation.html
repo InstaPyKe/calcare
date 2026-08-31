@@ -583,48 +583,55 @@
 
             <!-- Method B: Paybill -->
             <div class="pay-method-panel" id="panelPaybill">
-                <div class="paybill-box">
-                    <div class="paybill-header">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                <div class="paybill-box" style="background: #ffffff; border: 1px solid #e9ecef; border-radius: 16px; padding: 20px 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); text-align: left; margin-bottom: 20px;">
+                    <div class="paybill-header" style="color: #4caf50; font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid #f1f3f5; padding-bottom: 10px;">
+                        <span style="background: #4caf50; color: #fff; font-size: 9px; font-weight: 900; padding: 3px 6px; border-radius: 4px; letter-spacing: 0.5px;">M-PESA</span>
+                        LIPA NA M-PESA MANUAL PAY
+                    </div>
+                    
+                    <!-- Business No Block -->
+                    <div class="paybill-block" style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 12px; padding: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 9px; color: #868e96; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Step 1: Paybill Number</div>
+                            <div style="font-size: 18px; font-weight: 800; color: #2b1f3d; margin-top: 2px;">522533</div>
+                        </div>
+                        <button type="button" onclick="copyValue('522533', 'Paybill Number')" style="background: #5a3276; color: #fff; border: none; padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: transform 0.2s;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy
+                        </button>
+                    </div>
+
+                    <!-- Account No Block -->
+                    <div class="paybill-block" style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 12px; padding: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 9px; color: #868e96; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Step 2: Account Number</div>
+                            <div style="font-size: 18px; font-weight: 800; color: #2b1f3d; margin-top: 2px;">8106675</div>
+                        </div>
+                        <button type="button" onclick="copyValue('8106675', 'Account Number')" style="background: #5a3276; color: #fff; border: none; padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: transform 0.2s;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy
+                        </button>
+                    </div>
+
+                    <!-- Amount Block -->
+                    <div class="paybill-block" style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 12px; padding: 12px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 9px; color: #868e96; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Step 3: Exact Amount</div>
+                            <div style="font-size: 18px; font-weight: 800; color: #ffb800; margin-top: 2px;">KSh 100</div>
+                        </div>
+                        <button type="button" onclick="copyValue('100', 'Amount')" style="background: #5a3276; color: #fff; border: none; padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: transform 0.2s;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy
+                        </button>
+                    </div>
+
+                    <!-- Verified Recipient Alert -->
+                    <div style="background: #eafaf1; border: 1px solid #a3e9be; border-radius: 12px; padding: 10px 12px; display: flex; align-items: center; gap: 8px; text-align: left; font-size: 11px; color: #1e4620; font-weight: 600;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
                         </svg>
-                        Lipa na M-Pesa Instructions
-                    </div>
-                    
-                    <div class="paybill-step">
-                        <span class="label">1. Business Number:</span>
-                        <div class="paybill-value-container">
-                            <span class="value" id="valPaybill">522533</span>
-                            <button type="button" class="btn-copy-clip" onclick="copyValue('522533', 'Business Number')">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="paybill-step">
-                        <span class="label">2. Account Number:</span>
-                        <div class="paybill-value-container">
-                            <span class="value" id="valAccount">8106675</span>
-                            <button type="button" class="btn-copy-clip" onclick="copyValue('8106675', 'Account Number')">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="paybill-step">
-                        <span class="label">3. Amount:</span>
-                        <div class="paybill-value-container">
-                            <span class="value">KSh. 100</span>
-                            <button type="button" class="btn-copy-clip" onclick="copyValue('100', 'Amount')">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="paybill-step" style="margin-top: 8px; font-size: 11px; border-top: 1px solid #e3fafc; padding-top: 8px; color: #6c757d;">
-                        Recipient: <strong>JASPER MARKETS</strong>
+                        <span>Verify recipient is registered as <strong>JASPER MARKETS</strong> before confirming M-Pesa payment.</span>
                     </div>
                 </div>
             </div>
