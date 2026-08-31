@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -270,6 +270,7 @@
             if (isValid) {
                 btn.disabled = false;
                 btn.classList.add('active');
+                localStorage.setItem('calcare_phone', cleanVal);
             } else {
                 btn.disabled = true;
                 btn.classList.remove('active');

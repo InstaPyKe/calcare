@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Activation - Calcare</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: rgba(248, 249, 250, 0.9);
+            color: #2b1f3d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 24px 30px;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .brand-name {
+            font-family: 'Lobster', cursive !important;
+            color: #00FF00 !important;
+            font-size: 38px !important;
+            font-style: italic !important;
+            transform: skewX(-8deg) !important;
+            display: inline-block !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+            letter-spacing: 2px;
+        }
+
+        .logo {
+            width: 54px;
+            height: 54px;
+            margin-bottom: 4px;
+            animation: logoPulse 4s ease-in-out infinite;
+            transform-origin: center;
+            fill: #00FF00 !important;
+        }
+
+        .logo path {
+            stroke: #00FF00 !important;
+            fill: none !important;
+        }
+
+        .content-container {
+            width: 100%;
+            max-width: 400px;
+            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .activation-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid #e9ecef;
+            width: 100%;
+            text-align: center;
+        }
+
+        .activation-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2b1f3d;
+            margin-bottom: 8px;
+        }
+
+        .activation-subtitle {
+            font-size: 13px;
+            color: #6c757d;
+            line-height: 1.45;
+            margin-bottom: 20px;
+        }
+
+        /* Tabs System */
+        .pay-tabs {
+            display: flex;
+            background: #f1f3f5;
+            padding: 4px;
+            border-radius: 24px;
+            margin-bottom: 24px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 12px;
+            border: none;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background: transparent;
+            color: #6c757d;
+        }
+
+        .tab-btn.active {
+            background: #5a3276;
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(90, 50, 118, 0.15);
+        }
+
+        .pay-method-panel {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+
+        .pay-method-panel.active {
+            display: block;
+        }
+
+        /* STK Section */
+        .stk-phone-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-stk {
+            width: 100%;
+            padding: 14px;
+            background-color: #5a3276;
+            color: #ffffff;
+            border: none;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(90, 50, 118, 0.2);
+        }
+
+        .btn-stk:hover {
+            background-color: #492862;
+        }
+
+        .stk-status {
+            display: none;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #6c757d;
+            background: #fff9db;
+            border: 1px solid #ffe066;
+            padding: 12px;
+            border-radius: 8px;
+            line-height: 1.4;
+        }
+
+        /* Paybill Instructions Box */
+        .paybill-box {
+            background: #fdfcff;
+            border: 1.5px dashed #bae6fd;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .paybill-header {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0c8599;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .paybill-step {
+            font-size: 12px;
+            color: #495057;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .paybill-step span.label {
+            font-weight: 500;
+        }
+
+        .paybill-step span.value {
+            font-weight: 700;
+            color: #2b1f3d;
+            background: #e3fafc;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        /* Paste confirmation field */
+        .verification-section {
+            margin-top: 24px;
+            border-top: 1px solid #e9ecef;
+            padding-top: 20px;
+            text-align: left;
+        }
+
+        .verification-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #2b1f3d;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .msg-textarea {
+            width: 100%;
+            height: 90px;
+            border: 1.5px solid #ced4da;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 12px;
+            color: #495057;
+            resize: none;
+            outline: none;
+            transition: border-color 0.2s;
+            line-height: 1.4;
+            background: #fafafa;
+        }
+
+        .msg-textarea:focus {
+            border-color: #5a3276;
+            background: #ffffff;
+        }
+
+        .msg-textarea.valid {
+            border-color: #2e7d32;
+            background: #f4faf4;
+        }
+
+        .validation-note {
+            font-size: 11px;
+            color: #868e96;
+            margin-top: 6px;
+            line-height: 1.3;
+        }
+
+        .btn-proceed {
+            width: 100%;
+            padding: 16px;
+            background-color: #ced4da;
+            color: #6c757d;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            border-radius: 30px;
+            cursor: not-allowed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .btn-proceed.active {
+            background-color: #5a3276;
+            color: #ffffff;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(90, 50, 118, 0.25);
+        }
+
+        .btn-proceed.active:active {
+            transform: scale(0.98);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes logoPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="brand-header">
+        <svg class="logo" viewBox="0 0 100 100" fill="#00FF00" width="54" height="54">
+            <path d="M 50 10 L 85 30 L 50 50 L 15 30 Z M 15 45 L 50 65 L 85 45 M 15 60 L 50 80 L 85 60" stroke="#00FF00"
+                stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <div class="brand-name">Calcare</div>
+    </div>
+
+    <div class="content-container">
+        <div class="activation-card">
+            <h2 class="activation-title">Account Activation</h2>
+            <p class="activation-subtitle">To activate your Calcare profile and verify transaction capabilities, a security fee of KSh. 100 is required. This is processed separately from your loans.</p>
+            
+            <div class="pay-tabs">
+                <button type="button" class="tab-btn active" id="tabSTK" onclick="switchMethod('STK')">M-Pesa STK Push</button>
+                <button type="button" class="tab-btn" id="tabPaybill" onclick="switchMethod('Paybill')">Paybill (Manual)</button>
+            </div>
+
+            <!-- Method A: STK Push -->
+            <div class="pay-method-panel active" id="panelSTK">
+                <div class="stk-phone-display">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                        <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                    </svg>
+                    <span id="stkPhoneNumber">+254 (0) 700 000 000</span>
+                </div>
+                <button type="button" class="btn-stk" id="btnStkPush" onclick="triggerStkPush()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 2 11 13 22 2"></polyline>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                    Send STK Push Request
+                </button>
+                <div class="stk-status" id="stkStatus">
+                    Processing STK Push request on your mobile device... Check your screen to authorize KSh. 100.
+                </div>
+            </div>
+
+            <!-- Method B: Paybill -->
+            <div class="pay-method-panel" id="panelPaybill">
+                <div class="paybill-box">
+                    <div class="paybill-header">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        Lipa na M-Pesa Instructions
+                    </div>
+                    <div class="paybill-step">
+                        <span class="label">1. Business Number:</span>
+                        <span class="value">522533</span>
+                    </div>
+                    <div class="paybill-step">
+                        <span class="label">2. Account Number:</span>
+                        <span class="value">8106675</span>
+                    </div>
+                    <div class="paybill-step">
+                        <span class="label">3. Amount:</span>
+                        <span class="value">KSh. 100</span>
+                    </div>
+                    <div class="paybill-step" style="margin-top: 8px; font-size: 11px; border-top: 1px solid #e3fafc; padding-top: 8px; color: #6c757d;">
+                        Recipient: <strong>JASPER MARKETS</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verification Textarea -->
+            <div class="verification-section">
+                <label class="verification-label" for="confirmMsg">Paste M-Pesa Confirmation Message</label>
+                <textarea class="msg-textarea" id="confirmMsg" placeholder="e.g., TJK89LMN34 Confirmed. Ksh100.00 sent to JASPER MARKETS for account 8106675 on..." oninput="validateMsg()"></textarea>
+                <div class="validation-note">Validation requires the M-Pesa code, KSh 100 amount, and JASPER MARKETS or 8106675 account details.</div>
+            </div>
+
+            <!-- Submit Action -->
+            <button class="btn-proceed" id="btnSubmit" disabled onclick="submitActivation()">
+                Activate Account & Proceed
+            </button>
+        </div>
+
+        <footer style="width: 100%; text-align: center; margin-top: 32px; padding: 16px 0 8px; border-top: 1px solid rgba(0,0,0,0.06); font-size: 11px; color: #888; font-weight: 600; z-index: 10; position: relative;">
+            <span style="display: inline-flex; align-items: center; gap: 4px; justify-content: center; color: #5a3276;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                Protected By GoK
+            </span>
+        </footer>
+    </div>
+
+    <!-- Scripting -->
+    <script>
+        // Load stored mobile number
+        const rawPhone = localStorage.getItem('calcare_phone') || '700000000';
+        document.getElementById('stkPhoneNumber').textContent = '+254 (0) ' + rawPhone;
+
+        function switchMethod(method) {
+            const tabSTK = document.getElementById('tabSTK');
+            const tabPaybill = document.getElementById('tabPaybill');
+            const panelSTK = document.getElementById('panelSTK');
+            const panelPaybill = document.getElementById('panelPaybill');
+
+            if (method === 'STK') {
+                tabSTK.classList.add('active');
+                tabPaybill.classList.remove('active');
+                panelSTK.classList.add('active');
+                panelPaybill.classList.remove('active');
+            } else {
+                tabPaybill.classList.add('active');
+                tabSTK.classList.remove('active');
+                panelPaybill.classList.add('active');
+                panelSTK.classList.remove('active');
+            }
+        }
+
+        function triggerStkPush() {
+            const btn = document.getElementById('btnStkPush');
+            const status = document.getElementById('stkStatus');
+            btn.setAttribute('disabled', 'true');
+            btn.style.opacity = '0.6';
+            status.style.display = 'block';
+
+            let count = 6;
+            const timer = setInterval(() => {
+                count--;
+                status.textContent = 'STK prompt sent. Waiting for response... (' + count + 's)';
+                if (count <= 0) {
+                    clearInterval(timer);
+                    
+                    // Generate a simulated successful M-Pesa SMS verification code
+                    const code = generateMpesaCode();
+                    const sms = `${code} Confirmed. Ksh100.00 sent to JASPER MARKETS for account 8106675 on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'})}. New M-PESA balance is Ksh430.00. Transaction cost, Ksh0.00.`;
+                    
+                    status.innerHTML = `<span style="color: #2e7d32; font-weight: 700;">✔ STK Push Authorized!</span><br>We copied the confirmation message to your clipboard. Paste it below to activate.`;
+                    
+                    // Set textarea and simulate paste
+                    const text = document.getElementById('confirmMsg');
+                    text.value = sms;
+                    validateMsg();
+                    
+                    // Also copy to clipboard for convenience
+                    navigator.clipboard.writeText(sms).catch(err => console.log('Clipboard copy blocked:', err));
+                    
+                    btn.removeAttribute('disabled');
+                    btn.style.opacity = '1';
+                }
+            }, 1000);
+        }
+
+        function generateMpesaCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const digits = '0123456789';
+            let code = 'S'; // Starts with typical contemporary codes (e.g. S, T, Q)
+            for (let i = 0; i < 2; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+            for (let i = 0; i < 7; i++) code += digits.charAt(Math.floor(Math.random() * digits.length));
+            return code;
+        }
+
+        function validateMsg() {
+            const textarea = document.getElementById('confirmMsg');
+            const btn = document.getElementById('btnSubmit');
+            const val = textarea.value.trim();
+
+            // Check if M-Pesa format contains code (e.g. 10 chars code starting with capital letter) and JASPER MARKETS or 8106675
+            const containsCode = /[A-Z0-9]{10}/.test(val);
+            const containsPaybill = /8106675|522533|JASPER\s*MARKETS/i.test(val);
+            const containsAmount = /100/.test(val);
+
+            if (containsCode && containsPaybill && containsAmount) {
+                textarea.classList.add('valid');
+                btn.removeAttribute('disabled');
+                btn.classList.add('active');
+            } else {
+                textarea.classList.remove('valid');
+                btn.setAttribute('disabled', 'true');
+                btn.classList.remove('active');
+            }
+        }
+
+        function submitActivation() {
+            window.location.href = 'pending_review.html';
+        }
+    </script>
+
+    <!-- Interactive Comet Collision Canvas Background -->
+    <canvas id="cometCanvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;"></canvas>
+    <script>
+        (function() {
+            const canvas = document.getElementById('cometCanvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            class Comet {
+                constructor(x, y, vx, vy, radius, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.vx = vx;
+                    this.vy = vy;
+                    this.radius = radius;
+                    this.color = color;
+                    this.history = [];
+                    this.maxHistory = 15;
+                }
+
+                update() {
+                    this.history.push({ x: this.x, y: this.y });
+                    if (this.history.length > this.maxHistory) {
+                        this.history.shift();
+                    }
+
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    if (this.x - this.radius < 0) {
+                        this.x = this.radius;
+                        this.vx = -this.vx;
+                    }
+                    if (this.x + this.radius > canvas.width) {
+                        this.x = canvas.width - this.radius;
+                        this.vx = -this.vx;
+                    }
+                    if (this.y - this.radius < 0) {
+                        this.y = this.radius;
+                        this.vy = -this.vy;
+                    }
+                    if (this.y + this.radius > canvas.height) {
+                        this.y = canvas.height - this.radius;
+                        this.vy = -this.vy;
+                    }
+                }
+
+                draw() {
+                    for (let i = 0; i < this.history.length; i++) {
+                        const ratio = i / this.history.length;
+                        const tailRadius = this.radius * (1 + (1 - ratio) * 1.2);
+                        const opacity = ratio * 0.12;
+                        
+                        ctx.beginPath();
+                        ctx.arc(this.history[i].x, this.history[i].y, tailRadius, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(186, 230, 253, ${opacity})`;
+                        ctx.fill();
+                    }
+
+                    const nucleusGrad = ctx.createRadialGradient(
+                        this.x, this.y, 0,
+                        this.x, this.y, this.radius * 1.5
+                    );
+                    nucleusGrad.addColorStop(0, '#ffffff');
+                    nucleusGrad.addColorStop(0.2, '#bae6fd');
+                    nucleusGrad.addColorStop(1, 'rgba(186, 230, 253, 0)');
+
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius * 1.8, 0, Math.PI * 2);
+                    ctx.fillStyle = nucleusGrad;
+                    ctx.fill();
+                }
+            }
+
+            const colors = ['#bae6fd', '#bae6fd', '#bae6fd', '#bae6fd', '#bae6fd'];
+            const comets = [];
+            const radiusValues = [25, 30, 20, 28, 24];
+            
+            for (let i = 0; i < 1; i++) {
+                const radius = radiusValues[i];
+                const x = radius + Math.random() * (canvas.width - radius * 2);
+                const y = radius + Math.random() * (canvas.height - radius * 2);
+                
+                const vx = (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1);
+                const vy = (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1);
+                
+                comets.push(new Comet(x, y, vx, vy, radius, colors[i]));
+            }
+
+            function checkCollisions() {
+                for (let i = 0; i < comets.length; i++) {
+                    for (let j = i + 1; j < comets.length; j++) {
+                        const c1 = comets[i];
+                        const c2 = comets[j];
+
+                        const dx = c2.x - c1.x;
+                        const dy = c2.y - c1.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        const minDist = c1.radius + c2.radius;
+
+                        if (dist < minDist) {
+                            const nx = dx / dist;
+                            const ny = dy / dist;
+                            
+                            const tx = -ny;
+                            const ty = nx;
+
+                            const dp1 = c1.vx * nx + c1.vy * ny;
+                            const dp2 = c2.vx * nx + c2.vy * ny;
+
+                            const dt1 = c1.vx * tx + c1.vy * ty;
+                            const dt2 = c2.vx * tx + c2.vy * ty;
+
+                            const new_dp1 = dp2;
+                            const new_dp2 = dp1;
+
+                            c1.vx = new_dp1 * nx + dt1 * tx;
+                            c1.vy = new_dp1 * ny + dt1 * ty;
+                            c2.vx = new_dp2 * nx + dt2 * tx;
+                            c2.vy = new_dp2 * ny + dt2 * ty;
+
+                            const overlap = minDist - dist;
+                            c1.x -= overlap * nx * 0.5;
+                            c1.y -= overlap * ny * 0.5;
+                            c2.x += overlap * nx * 0.5;
+                            c2.y += overlap * ny * 0.5;
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                checkCollisions();
+                comets.forEach(comet => {
+                    comet.update();
+                    comet.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+    </script>
+</body>
+
+</html>
