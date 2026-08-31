@@ -182,34 +182,31 @@
                 }
 
                 draw() {
-                    if (this.history.length > 1) {
-                        ctx.beginPath();
-                        ctx.moveTo(this.history[0].x, this.history[0].y);
-                        for (let i = 1; i < this.history.length; i++) {
-                            ctx.lineTo(this.history[i].x, this.history[i].y);
-                        }
+                    // Draw realistic flared comet tail
+                    for (let i = 0; i < this.history.length; i++) {
+                        const ratio = i / this.history.length; // 0 at tail end, 1 at head
+                        const tailRadius = this.radius * (1 + (1 - ratio) * 1.2); // Flared tail (gets wider at the back)
+                        const opacity = ratio * 0.12; // Fades out at the back
                         
-                        const grad = ctx.createLinearGradient(
-                            this.history[0].x, this.history[0].y,
-                            this.x, this.y
-                        );
-                        grad.addColorStop(0, 'transparent');
-                        grad.addColorStop(1, this.color + '22');
-
-                        ctx.strokeStyle = grad;
-                        ctx.lineWidth = this.radius * 1.5;
-                        ctx.lineCap = 'round';
-                        ctx.lineJoin = 'round';
-                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.arc(this.history[i].x, this.history[i].y, tailRadius, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(186, 230, 253, ${opacity})`;
+                        ctx.fill();
                     }
 
+                    // Draw glowing nucleus with radial gradient
+                    const nucleusGrad = ctx.createRadialGradient(
+                        this.x, this.y, 0,
+                        this.x, this.y, this.radius * 1.5
+                    );
+                    nucleusGrad.addColorStop(0, '#ffffff'); // Intense white nucleus
+                    nucleusGrad.addColorStop(0.2, '#bae6fd'); // Soft sky blue coma
+                    nucleusGrad.addColorStop(1, 'rgba(186, 230, 253, 0)'); // Fading outer edge
+
                     ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = this.color;
-                    ctx.shadowColor = this.color;
-                    ctx.shadowBlur = 15;
+                    ctx.arc(this.x, this.y, this.radius * 1.8, 0, Math.PI * 2);
+                    ctx.fillStyle = nucleusGrad;
                     ctx.fill();
-                    ctx.shadowBlur = 0;
                 }
             }
 
