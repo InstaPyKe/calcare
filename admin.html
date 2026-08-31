@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcare - Admin Event Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: #0f0a1c;
+            color: #f1f3f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Top Header Navbar */
+        .admin-navbar {
+            background: rgba(22, 15, 34, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-logo {
+            width: 32px;
+            height: 32px;
+            fill: #00FF00;
+        }
+
+        .brand-title {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+        }
+
+        .brand-badge {
+            background: linear-gradient(135deg, #00FF00, #ffb800);
+            color: #000000;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .nav-status {
+            font-size: 13px;
+            color: #ffb800;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-pulse {
+            width: 8px;
+            height: 8px;
+            background: #ffb800;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.6; }
+        }
+
+        /* Split-Pane Dashboard Container */
+        .dashboard-container {
+            display: flex;
+            flex: 1;
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 24px;
+            gap: 24px;
+        }
+
+        /* Left Side: Mobile Device Simulator Pane */
+        .left-pane {
+            flex: 0 0 450px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .device-emulator {
+            width: 100%;
+            max-width: 390px;
+            height: 780px;
+            background: #1e1b29;
+            border: 12px solid #2f2a42;
+            border-radius: 48px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(90, 50, 118, 0.15);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .emulator-speaker {
+            width: 80px;
+            height: 4px;
+            background: #2f2a42;
+            border-radius: 2px;
+            position: absolute;
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .emulator-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #ffffff;
+            margin-top: 10px;
+            border-radius: 36px 36px 0 0;
+            overflow: hidden;
+        }
+
+        /* Right Side: Command Center Pane */
+        .right-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            min-width: 0; /* Prevents flex items from overflowing */
+        }
+
+        /* Widgets/Cards grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.3), transparent);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #a0aec0;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        /* Control Panel layout */
+        .control-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            flex: 1;
+        }
+
+        .panel-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            backdrop-filter: blur(16px);
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffb800;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* State Form Controls */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            overflow-y: auto;
+            max-height: 480px;
+            padding-right: 4px;
+        }
+
+        .form-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .form-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #a0aec0;
+            text-transform: uppercase;
+        }
+
+        .form-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: #ffb800;
+            box-shadow: 0 0 8px rgba(255, 184, 0, 0.15);
+        }
+
+        /* Button controls styling */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-btn {
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-update {
+            background-color: #ffb800;
+            color: #000000;
+        }
+
+        .btn-update:hover {
+            background-color: #e0a300;
+            transform: translateY(-2px);
+        }
+
+        .btn-approve {
+            background-color: #2e7d32;
+            color: #ffffff;
+        }
+
+        .btn-approve:hover {
+            background-color: #246327;
+            transform: translateY(-2px);
+        }
+
+        .btn-reject {
+            background-color: #d93838;
+            color: #ffffff;
+        }
+
+        .btn-reject:hover {
+            background-color: #b32a2a;
+            transform: translateY(-2px);
+        }
+
+        .btn-reset {
+            background: transparent;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            color: #ff4d4d;
+        }
+
+        .btn-reset:hover {
+            background: rgba(255, 77, 77, 0.1);
+            border-color: #ff4d4d;
+        }
+
+        .btn-disburse {
+            background-color: #5a3276;
+            color: #ffffff;
+        }
+
+        .btn-disburse:hover {
+            background-color: #492862;
+            transform: translateY(-2px);
+        }
+
+        /* Timeline styles */
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 6px;
+            max-height: 480px;
+        }
+
+        .timeline-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .timeline-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .event-time {
+            font-size: 11px;
+            color: #718096;
+            font-weight: 600;
+        }
+
+        .event-page {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .badge-index { background: rgba(90, 50, 118, 0.2); color: #c084fc; }
+        .badge-phone { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .badge-review { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .badge-disbursment { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .badge-other { background: rgba(255, 255, 255, 0.08); color: #cbd5e1; }
+
+        .event-name {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #e2e8f0;
+        }
+
+        .event-details {
+            font-size: 11px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 6px;
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            overflow-x: auto;
+        }
+
+        .event-details pre {
+            font-family: monospace;
+            color: #a0aec0;
+            white-space: pre-wrap;
+        }
+
+        .no-events {
+            text-align: center;
+            font-size: 13px;
+            color: #718096;
+            padding: 40px 0;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Admin Header Bar -->
+    <header class="admin-navbar">
+        <div class="brand-section">
+            <svg class="admin-logo" viewBox="0 0 100 100">
+                <path d="M 50 10 L 85 30 L 50 50 L 15 30 Z M 15 45 L 50 65 L 85 45 M 15 60 L 50 80 L 85 60" stroke="#00FF00"
+                    stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <div class="brand-title">CALCARE</div>
+            <div class="brand-badge">ADMIN CONTROL</div>
+        </div>
+        <div class="nav-status">
+            <div class="status-pulse"></div>
+            Live Session Synchronized
+        </div>
+    </header>
+
+    <!-- Split Pane Dashboard Content -->
+    <main class="dashboard-container">
+        
+        <!-- Left: Device Frame Emulator -->
+        <section class="left-pane">
+            <div class="device-emulator">
+                <div class="emulator-speaker"></div>
+                <iframe src="index.html" class="emulator-iframe" id="appIframe"></iframe>
+            </div>
+        </section>
+
+        <!-- Right: Real-time Stats & Controls -->
+        <section class="right-pane">
+            
+            <!-- Quick stats header widgets -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-label">Active Flow Screen</span>
+                    <span class="stat-value" id="statScreen">Welcome Portal</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Current Limit</span>
+                    <span class="stat-value" id="statLimit">KSh 0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Requested Amount</span>
+                    <span class="stat-value" id="statAmount">KSh 0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Admin Approval Status</span>
+                    <span class="stat-value" id="statStatus">Pending Review</span>
+                </div>
+            </div>
+
+            <!-- Two Column Control Layout -->
+            <div class="control-layout">
+                
+                <!-- Col 1: LocalStorage State Manager -->
+                <div class="panel-card">
+                    <h3 class="panel-title">User State Editor</h3>
+                    
+                    <form class="form-grid" id="stateEditorForm" onsubmit="event.preventDefault();">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" id="adminPhone" class="form-input" placeholder="e.g. 712345678">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Legal Name</label>
+                            <input type="text" id="adminNames" class="form-input" placeholder="e.g. John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">National ID</label>
+                            <input type="text" id="adminID" class="form-input" placeholder="e.g. 12345678">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Secure PIN</label>
+                            <input type="text" id="adminPIN" class="form-input" placeholder="e.g. 1234">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Place of Birth</label>
+                            <input type="text" id="adminPOB" class="form-input" placeholder="e.g. Mombasa">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Loan Limit (KSh)</label>
+                            <input type="number" id="adminLimit" class="form-input" placeholder="e.g. 3000">
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label">Requested Amount (KSh)</label>
+                            <input type="number" id="adminAmount" class="form-input" placeholder="e.g. 1500">
+                        </div>
+                    </form>
+
+                    <div class="button-group">
+                        <button class="action-btn btn-update" onclick="updateIframeState()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                            Apply State Modifications
+                        </button>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px;">
+                            <button class="action-btn btn-approve" onclick="setAdminDecision('approved')">Approve Loan</button>
+                            <button class="action-btn btn-reject" onclick="setAdminDecision('rejected')">Reject Loan</button>
+                        </div>
+
+                        <button class="action-btn btn-disburse" onclick="simulateDisbursal()">Simulate Disbursal Screen</button>
+
+                        <button class="action-btn btn-reset" onclick="resetUserState()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg>
+                            Reset All User Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Col 2: Real-time Event Logger Feed -->
+                <div class="panel-card">
+                    <h3 class="panel-title">
+                        Real-time Event Timeline
+                        <button class="action-btn btn-reset" style="padding: 4px 10px; font-size: 11px; margin: 0;" onclick="clearEventLogs()">Clear Feed</button>
+                    </h3>
+                    
+                    <div class="timeline-container" id="timelineContainer">
+                        <div class="no-events">No events logged yet. Interact with the application flow on the left to trigger events.</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+        const iframe = document.getElementById('appIframe');
+
+        // Main logger initialization to catch administrative dashboard clicks
+        window.logCalcareEvent = function(name, details = {}) {
+            try {
+                const logs = JSON.parse(localStorage.getItem('calcare_event_logs') || '[]');
+                logs.push({
+                    timestamp: new Date().toISOString(),
+                    page: 'admin.html',
+                    name: name,
+                    details: details
+                });
+                localStorage.setItem('calcare_event_logs', JSON.stringify(logs));
+                renderTimeline();
+            } catch(e) {
+                console.error(e);
+            }
+        };
+
+        // Render events timeline list
+        function renderTimeline() {
+            const logs = JSON.parse(localStorage.getItem('calcare_event_logs') || '[]');
+            const container = document.getElementById('timelineContainer');
+            
+            if (logs.length === 0) {
+                container.innerHTML = '<div class="no-events">No events logged yet. Interact with the application flow on the left to trigger events.</div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            // Show newest logs at top
+            const sortedLogs = [...logs].reverse();
+            
+            sortedLogs.forEach(log => {
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                
+                const time = new Date(log.timestamp).toLocaleTimeString();
+                let detailsHtml = '';
+                if (log.details && Object.keys(log.details).length > 0) {
+                    detailsHtml = `<div class="event-details"><pre>${JSON.stringify(log.details, null, 2)}</pre></div>`;
+                }
+                
+                let pageBadgeClass = 'badge-other';
+                const file = log.page;
+                if (file === 'index.html') pageBadgeClass = 'badge-index';
+                else if (file === 'phone.html') pageBadgeClass = 'badge-phone';
+                else if (file === 'pending_review.html') pageBadgeClass = 'badge-review';
+                else if (file === 'pending_disbursment.html') pageBadgeClass = 'badge-disbursment';
+                
+                item.innerHTML = `
+                    <div class="event-header">
+                        <span class="event-time">${time}</span>
+                        <span class="event-page ${pageBadgeClass}">${file}</span>
+                    </div>
+                    <div class="event-name">${log.name}</div>
+                    ${detailsHtml}
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Pull active input parameters from storage to control panel inputs
+        function loadInputsFromStorage() {
+            document.getElementById('adminPhone').value = localStorage.getItem('calcare_phone') || '';
+            document.getElementById('adminNames').value = localStorage.getItem('calcare_names') || '';
+            document.getElementById('adminID').value = localStorage.getItem('calcare_national_id') || '';
+            document.getElementById('adminPIN').value = localStorage.getItem('calcare_pin') || '';
+            document.getElementById('adminPOB').value = localStorage.getItem('calcare_pob') || '';
+            document.getElementById('adminLimit').value = localStorage.getItem('calcare_loan_limit') || '';
+            document.getElementById('adminAmount').value = localStorage.getItem('calcare_loan_amount') || '';
+            
+            // Sync stats
+            document.getElementById('statLimit').textContent = localStorage.getItem('calcare_loan_limit') ? 'KSh ' + localStorage.getItem('calcare_loan_limit') : 'Not Set';
+            document.getElementById('statAmount').textContent = localStorage.getItem('calcare_loan_amount') ? 'KSh ' + localStorage.getItem('calcare_loan_amount') : 'Not Requested';
+            
+            // Detect active page from iframe URL
+            try {
+                const url = iframe.contentWindow.location.pathname;
+                const activeFile = url.split('/').pop() || 'index.html';
+                // Convert filename to clean display name
+                let name = activeFile.replace('.html', '').replace('_', ' ');
+                name = name.charAt(0).toUpperCase() + name.slice(1);
+                document.getElementById('statScreen').textContent = name;
+            } catch(e) {
+                // cross-origin protection block (failsafe)
+            }
+
+            const decision = localStorage.getItem('calcare_admin_decision');
+            const statStatus = document.getElementById('statStatus');
+            if (decision === 'approved') {
+                statStatus.textContent = 'Approved';
+                statStatus.style.color = '#2e7d32';
+            } else if (decision === 'rejected') {
+                statStatus.textContent = 'Rejected';
+                statStatus.style.color = '#d93838';
+            } else {
+                statStatus.textContent = 'Pending Review';
+                statStatus.style.color = '#ffb800';
+            }
+        }
+
+        // Apply state inputs overrides to both environments
+        function updateIframeState() {
+            localStorage.setItem('calcare_phone', document.getElementById('adminPhone').value);
+            localStorage.setItem('calcare_names', document.getElementById('adminNames').value);
+            localStorage.setItem('calcare_national_id', document.getElementById('adminID').value);
+            localStorage.setItem('calcare_pin', document.getElementById('adminPIN').value);
+            localStorage.setItem('calcare_pob', document.getElementById('adminPOB').value);
+            localStorage.setItem('calcare_loan_limit', document.getElementById('adminLimit').value);
+            localStorage.setItem('calcare_loan_amount', document.getElementById('adminAmount').value);
+            
+            logCalcareEvent('Admin Modified User State', {
+                phone: document.getElementById('adminPhone').value,
+                names: document.getElementById('adminNames').value,
+                limit: document.getElementById('adminLimit').value,
+                amount: document.getElementById('adminAmount').value
+            });
+            
+            // Reload iframe
+            iframe.contentWindow.location.reload();
+            loadInputsFromStorage();
+        }
+
+        // Set admin review decision (Approved or Rejected)
+        function setAdminDecision(decision) {
+            localStorage.setItem('calcare_admin_decision', decision);
+            logCalcareEvent(`Admin set review state: ${decision.toUpperCase()}`);
+            loadInputsFromStorage();
+        }
+
+        // Reset all application data
+        function resetUserState() {
+            // Keep logs, clear other keys
+            const logs = localStorage.getItem('calcare_event_logs');
+            localStorage.clear();
+            if (logs) localStorage.setItem('calcare_event_logs', logs);
+            
+            logCalcareEvent('Admin Reset User State Data');
+            iframe.src = 'index.html';
+            loadInputsFromStorage();
+        }
+
+        // Force redirect to disbursement pending status screen
+        function simulateDisbursal() {
+            logCalcareEvent('Admin Forced Redirection to Disbursement');
+            iframe.contentWindow.location.href = 'pending_disbursment.html';
+        }
+
+        // Clear Timeline Feed
+        function clearEventLogs() {
+            localStorage.removeItem('calcare_event_logs');
+            renderTimeline();
+        }
+
+        // Hook listeners to iframe window transitions
+        iframe.addEventListener('load', () => {
+            loadInputsFromStorage();
+            renderTimeline();
+
+            // Bind log listener to iframe window
+            try {
+                iframe.contentWindow.addEventListener('calcare_new_event', () => {
+                    renderTimeline();
+                    loadInputsFromStorage();
+                });
+            } catch(e) {
+                // Same-origin failsafe block
+            }
+        });
+
+        // Initialize lists and start sync timers
+        loadInputsFromStorage();
+        renderTimeline();
+        window.addEventListener('storage', () => {
+            loadInputsFromStorage();
+            renderTimeline();
+        });
+        
+        // Fast sync polling
+        setInterval(loadInputsFromStorage, 800);
+        setInterval(renderTimeline, 1500);
+
+    </script>
+</body>
+</html>
