@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Activation - Calcare</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Inter:wght@400;500;600;700;800&display=swap');
 
         * {
             box-sizing: border-box;
@@ -63,17 +63,18 @@
 
         .activation-card {
             background: #ffffff;
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 24px 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 25px rgba(0,0,0,0.05);
             border: 1px solid #e9ecef;
             width: 100%;
             text-align: center;
+            position: relative;
         }
 
         .activation-title {
             font-size: 20px;
-            font-weight: 700;
+            font-weight: 800;
             color: #2b1f3d;
             margin-bottom: 8px;
         }
@@ -81,7 +82,7 @@
         .activation-subtitle {
             font-size: 13px;
             color: #6c757d;
-            line-height: 1.45;
+            line-height: 1.5;
             margin-bottom: 20px;
         }
 
@@ -99,12 +100,16 @@
             padding: 10px 12px;
             border: none;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.25s ease;
             background: transparent;
             color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
         .tab-btn.active {
@@ -122,7 +127,7 @@
             display: block;
         }
 
-        /* STK Section */
+        /* Phone Display */
         .stk-phone-display {
             background: #f8f9fa;
             border: 1px solid #dee2e6;
@@ -160,19 +165,130 @@
             background-color: #492862;
         }
 
-        .stk-status {
+        /* Simulated Mobile STK Push Mockup Screen */
+        .mobile-mockup-container {
             display: none;
-            margin-top: 16px;
-            font-size: 13px;
-            color: #6c757d;
-            background: #fff9db;
-            border: 1px solid #ffe066;
-            padding: 12px;
-            border-radius: 8px;
-            line-height: 1.4;
+            width: 100%;
+            justify-content: center;
+            margin: 20px 0;
+            animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
-        /* Paybill Instructions Box */
+        .mobile-phone {
+            width: 200px;
+            height: 120px;
+            background: #111;
+            border: 4px solid #333;
+            border-radius: 14px;
+            position: relative;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .phone-notch {
+            position: absolute;
+            left: 50%;
+            top: 2px;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+        }
+
+        .phone-screen {
+            background: #ffffff;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 8px;
+            color: #333;
+            text-align: left;
+        }
+
+        .phone-title {
+            font-weight: 700;
+            color: #5a3276;
+            margin-bottom: 4px;
+            font-size: 9px;
+            border-bottom: 0.5px solid #eee;
+            padding-bottom: 2px;
+        }
+
+        .phone-dialog {
+            margin-bottom: 6px;
+            line-height: 1.2;
+        }
+
+        .phone-input-dots {
+            font-family: monospace;
+            background: #eee;
+            text-align: center;
+            letter-spacing: 2px;
+            padding: 2px;
+            margin-bottom: 6px;
+            font-size: 8px;
+        }
+
+        .phone-btns {
+            display: flex;
+            justify-content: space-between;
+            font-size: 7px;
+        }
+
+        .phone-btn {
+            padding: 2px 6px;
+            border: 0.5px solid #ccc;
+            background: #f1f3f5;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        /* Circular Countdown Timer */
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .timer-svg {
+            transform: rotate(-90deg);
+            width: 36px;
+            height: 36px;
+        }
+
+        .timer-circle-bg {
+            fill: none;
+            stroke: #e9ecef;
+            stroke-width: 3.5;
+        }
+
+        .timer-circle-progress {
+            fill: none;
+            stroke: #ffb800;
+            stroke-width: 3.5;
+            stroke-linecap: round;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1s linear;
+        }
+
+        .stk-status-text {
+            font-size: 12px;
+            color: #664d03;
+            font-weight: 600;
+        }
+
+        /* Paybill Instructions Box with copy clips */
         .paybill-box {
             background: #fdfcff;
             border: 1.5px dashed #bae6fd;
@@ -199,13 +315,20 @@
             line-height: 1.4;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
         .paybill-step span.label {
             font-weight: 500;
         }
 
-        .paybill-step span.value {
+        .paybill-value-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .paybill-value-container span.value {
             font-weight: 700;
             color: #2b1f3d;
             background: #e3fafc;
@@ -215,7 +338,24 @@
             font-size: 13px;
         }
 
-        /* Paste confirmation field */
+        .btn-copy-clip {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #0c8599;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .btn-copy-clip:hover {
+            background: #e3fafc;
+        }
+
+        /* Verification Message Panel */
         .verification-section {
             margin-top: 24px;
             border-top: 1px solid #e9ecef;
@@ -256,11 +396,30 @@
             background: #f4faf4;
         }
 
-        .validation-note {
+        /* Paste checklist rules checker */
+        .checklist-rules {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             font-size: 11px;
             color: #868e96;
-            margin-top: 6px;
-            line-height: 1.3;
+            font-weight: 500;
+        }
+
+        .rule-item.met {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .rule-item svg {
+            flex-shrink: 0;
         }
 
         .btn-proceed {
@@ -295,6 +454,30 @@
             transform: scale(0.98);
         }
 
+        /* Toast Popup Notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(40px);
+            background: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        .toast-notification.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
         /* Animations */
         @keyframes fadeInUp {
             from {
@@ -309,6 +492,10 @@
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
         @keyframes logoPulse {
             0% { transform: scale(1); }
@@ -333,8 +520,22 @@
             <p class="activation-subtitle">To activate your Calcare profile and verify transaction capabilities, a security fee of KSh. 100 is required. This is processed separately from your loans.</p>
             
             <div class="pay-tabs">
-                <button type="button" class="tab-btn active" id="tabSTK" onclick="switchMethod('STK')">M-Pesa STK Push</button>
-                <button type="button" class="tab-btn" id="tabPaybill" onclick="switchMethod('Paybill')">Paybill (Manual)</button>
+                <button type="button" class="tab-btn active" id="tabSTK" onclick="switchMethod('STK')">
+                    <!-- Phone Icon -->
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                        <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                    </svg>
+                    M-Pesa STK Push
+                </button>
+                <button type="button" class="tab-btn" id="tabPaybill" onclick="switchMethod('Paybill')">
+                    <!-- Dollar bill icon -->
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                        <circle cx="12" cy="12" r="2"></circle>
+                    </svg>
+                    Paybill (Manual)
+                </button>
             </div>
 
             <!-- Method A: STK Push -->
@@ -353,8 +554,30 @@
                     </svg>
                     Send STK Push Request
                 </button>
-                <div class="stk-status" id="stkStatus">
-                    Processing STK Push request on your mobile device... Check your screen to authorize KSh. 100.
+
+                <!-- Phone Mockup Screen dialog prompt -->
+                <div class="mobile-mockup-container" id="mockupScreen">
+                    <div class="mobile-phone">
+                        <div class="phone-notch"></div>
+                        <div class="phone-screen">
+                            <div class="phone-title">Lipa Na M-PESA</div>
+                            <div class="phone-dialog">Pay KSh 100 to JASPER MARKETS for account 8106675?</div>
+                            <div class="phone-input-dots">••••</div>
+                            <div class="phone-btns">
+                                <span class="phone-btn">Cancel</span>
+                                <span class="phone-btn" style="border-color: #5a3276; color: #5a3276;">Send PIN</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timer countdown progress circle -->
+                <div class="countdown-container" id="timerContainer" style="display: none;">
+                    <svg class="timer-svg">
+                        <circle class="timer-circle-bg" cx="18" cy="18" r="16"></circle>
+                        <circle class="timer-circle-progress" id="timerProgress" cx="18" cy="18" r="16"></circle>
+                    </svg>
+                    <span class="stk-status-text" id="timerStatusText">STK Prompt Sent (6s)</span>
                 </div>
             </div>
 
@@ -369,18 +592,37 @@
                         </svg>
                         Lipa na M-Pesa Instructions
                     </div>
+                    
                     <div class="paybill-step">
                         <span class="label">1. Business Number:</span>
-                        <span class="value">522533</span>
+                        <div class="paybill-value-container">
+                            <span class="value" id="valPaybill">522533</span>
+                            <button type="button" class="btn-copy-clip" onclick="copyValue('522533', 'Business Number')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                        </div>
                     </div>
+                    
                     <div class="paybill-step">
                         <span class="label">2. Account Number:</span>
-                        <span class="value">8106675</span>
+                        <div class="paybill-value-container">
+                            <span class="value" id="valAccount">8106675</span>
+                            <button type="button" class="btn-copy-clip" onclick="copyValue('8106675', 'Account Number')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                        </div>
                     </div>
+                    
                     <div class="paybill-step">
                         <span class="label">3. Amount:</span>
-                        <span class="value">KSh. 100</span>
+                        <div class="paybill-value-container">
+                            <span class="value">KSh. 100</span>
+                            <button type="button" class="btn-copy-clip" onclick="copyValue('100', 'Amount')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                        </div>
                     </div>
+                    
                     <div class="paybill-step" style="margin-top: 8px; font-size: 11px; border-top: 1px solid #e3fafc; padding-top: 8px; color: #6c757d;">
                         Recipient: <strong>JASPER MARKETS</strong>
                     </div>
@@ -391,7 +633,22 @@
             <div class="verification-section">
                 <label class="verification-label" for="confirmMsg">Paste M-Pesa Confirmation Message</label>
                 <textarea class="msg-textarea" id="confirmMsg" placeholder="e.g., TJK89LMN34 Confirmed. Ksh100.00 sent to JASPER MARKETS for account 8106675 on..." oninput="validateMsg()"></textarea>
-                <div class="validation-note">Validation requires the M-Pesa code, KSh 100 amount, and JASPER MARKETS or 8106675 account details.</div>
+                
+                <!-- Real-time Verification Checklist -->
+                <div class="checklist-rules">
+                    <div class="rule-item" id="ruleCode">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        Includes valid M-Pesa Transaction Code
+                    </div>
+                    <div class="rule-item" id="ruleRecipient">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        Recipient matches JASPER MARKETS or Account 8106675
+                    </div>
+                    <div class="rule-item" id="ruleAmount">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        Payment Amount is KSh 100
+                    </div>
+                </div>
             </div>
 
             <!-- Submit Action -->
@@ -409,6 +666,9 @@
             </span>
         </footer>
     </div>
+
+    <!-- Clipboard alert Toast notification element -->
+    <div class="toast-notification" id="toast">Value Copied to Clipboard!</div>
 
     <!-- Scripting -->
     <script>
@@ -435,17 +695,42 @@
             }
         }
 
+        // Copy utility + Toast trigger
+        function copyValue(val, label) {
+            navigator.clipboard.writeText(val).then(() => {
+                const toast = document.getElementById('toast');
+                toast.textContent = label + ' Copied!';
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            }).catch(err => console.log('Clipboard failed:', err));
+        }
+
         function triggerStkPush() {
             const btn = document.getElementById('btnStkPush');
-            const status = document.getElementById('stkStatus');
+            const timerContainer = document.getElementById('timerContainer');
+            const mockupScreen = document.getElementById('mockupScreen');
+            const timerProgress = document.getElementById('timerProgress');
+            const timerStatusText = document.getElementById('timerStatusText');
+
             btn.setAttribute('disabled', 'true');
-            btn.style.opacity = '0.6';
-            status.style.display = 'block';
+            btn.style.opacity = '0.5';
+            mockupScreen.style.display = 'flex';
+            timerContainer.style.display = 'flex';
 
             let count = 6;
+            const dashMax = 100;
+            timerProgress.style.strokeDashoffset = '0';
+
             const timer = setInterval(() => {
                 count--;
-                status.textContent = 'STK prompt sent. Waiting for response... (' + count + 's)';
+                timerStatusText.textContent = 'STK Prompt Sent (' + count + 's)';
+                
+                // Animate SVG circle stroke dashoffset
+                const offset = dashMax - (count / 6) * dashMax;
+                timerProgress.style.strokeDashoffset = offset;
+
                 if (count <= 0) {
                     clearInterval(timer);
                     
@@ -453,7 +738,8 @@
                     const code = generateMpesaCode();
                     const sms = `${code} Confirmed. Ksh100.00 sent to JASPER MARKETS for account 8106675 on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'})}. New M-PESA balance is Ksh430.00. Transaction cost, Ksh0.00.`;
                     
-                    status.innerHTML = `<span style="color: #2e7d32; font-weight: 700;">✔ STK Push Authorized!</span><br>We copied the confirmation message to your clipboard. Paste it below to activate.`;
+                    timerStatusText.innerHTML = `<span style="color: #2e7d32; font-weight: 700;">✔ STK Authorized!</span>`;
+                    mockupScreen.style.display = 'none';
                     
                     // Set textarea and simulate paste
                     const text = document.getElementById('confirmMsg');
@@ -462,6 +748,7 @@
                     
                     // Also copy to clipboard for convenience
                     navigator.clipboard.writeText(sms).catch(err => console.log('Clipboard copy blocked:', err));
+                    showToast('SMS confirmation copied to clipboard!');
                     
                     btn.removeAttribute('disabled');
                     btn.style.opacity = '1';
@@ -469,10 +756,19 @@
             }, 1000);
         }
 
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
         function generateMpesaCode() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             const digits = '0123456789';
-            let code = 'S'; // Starts with typical contemporary codes (e.g. S, T, Q)
+            let code = 'S'; 
             for (let i = 0; i < 2; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
             for (let i = 0; i < 7; i++) code += digits.charAt(Math.floor(Math.random() * digits.length));
             return code;
@@ -480,22 +776,44 @@
 
         function validateMsg() {
             const textarea = document.getElementById('confirmMsg');
-            const btn = document.getElementById('btnSubmit');
+            const btnSubmit = document.getElementById('btnSubmit');
             const val = textarea.value.trim();
 
-            // Check if M-Pesa format contains code (e.g. 10 chars code starting with capital letter) and JASPER MARKETS or 8106675
-            const containsCode = /[A-Z0-9]{10}/.test(val);
-            const containsPaybill = /8106675|522533|JASPER\s*MARKETS/i.test(val);
-            const containsAmount = /100/.test(val);
+            // Rules checker elements
+            const ruleCode = document.getElementById('ruleCode');
+            const ruleRecipient = document.getElementById('ruleRecipient');
+            const ruleAmount = document.getElementById('ruleAmount');
 
-            if (containsCode && containsPaybill && containsAmount) {
+            // 1. Transaction Code check (e.g. 10 chars code)
+            const hasCode = /[A-Z0-9]{10}/.test(val);
+            updateRuleUI(ruleCode, hasCode);
+
+            // 2. Paybill / Recipient check
+            const hasRecipient = /8106675|522533|JASPER\s*MARKETS/i.test(val);
+            updateRuleUI(ruleRecipient, hasRecipient);
+
+            // 3. Amount check
+            const hasAmount = /100/.test(val);
+            updateRuleUI(ruleAmount, hasAmount);
+
+            if (hasCode && hasRecipient && hasAmount) {
                 textarea.classList.add('valid');
-                btn.removeAttribute('disabled');
-                btn.classList.add('active');
+                btnSubmit.removeAttribute('disabled');
+                btnSubmit.classList.add('active');
             } else {
                 textarea.classList.remove('valid');
-                btn.setAttribute('disabled', 'true');
-                btn.classList.remove('active');
+                btnSubmit.setAttribute('disabled', 'true');
+                btnSubmit.classList.remove('active');
+            }
+        }
+
+        function updateRuleUI(el, met) {
+            if (met) {
+                el.classList.add('met');
+                el.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Check passed`;
+            } else {
+                el.classList.remove('met');
+                el.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Requirement missing`;
             }
         }
 
