@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Mobile Number</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #2b1f3d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 24px 24px;
+            text-align: center;
+        }
+
+        /* Top Logo Header */
+        .brand-header {
+            margin-top: 10px;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 44px;
+            height: 44px;
+            margin-bottom: 6px;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: none;
+        }
+
+        /* Verification Form Container */
+        .content-container {
+            width: 100%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .sub-text {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 24px;
+        }
+
+        .phone-number {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .change-phone {
+            background: none;
+            border: none;
+            color: #ffb800;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-bottom: 32px;
+        }
+
+        /* Input Field Styling */
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 24px;
+        }
+
+        .input-group fieldset {
+            border: 2px solid #5a3276;
+            border-radius: 28px;
+            padding: 0 16px 0 20px;
+            display: flex;
+            align-items: center;
+            height: 56px;
+        }
+
+        .input-group legend {
+            padding: 0 6px;
+            font-size: 12px;
+            color: #5a3276;
+            font-weight: 500;
+            text-align: left;
+            margin-left: 12px;
+        }
+
+        .input-group input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 18px;
+            letter-spacing: 2px;
+            color: #2b1f3d;
+            background: transparent;
+        }
+
+        .arrow-icon {
+            color: #2b1f3d;
+            font-size: 20px;
+            font-weight: bold;
+            user-select: none;
+            padding-left: 8px;
+        }
+
+        /* Resend Section */
+        .resend-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 32px;
+            padding: 0 4px;
+        }
+
+        /* Save Button */
+        .btn-save {
+            width: 100%;
+            padding: 16px;
+            background-color: #5a3276;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(90, 50, 118, 0.2);
+        }
+
+        .btn-save:active {
+            transform: scale(0.98);
+        }
+
+        .btn-skip {
+            color: #5a3276;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            display: inline-block;
+            padding: 8px 20px;
+            border: 1.5px solid #5a3276;
+            border-radius: 20px;
+            margin-top: 16px;
+            transition: all 0.2s;
+        }
+
+        .btn-skip:hover {
+            background-color: #5a3276;
+            color: #ffffff;
+        }
+    
+        /* Magnified Slanted Pure Green Brand Style */
+        .brand-name {
+            font-family: 'Lobster', cursive !important;
+            color: #00FF00 !important;
+            font-size: 38px !important;
+            font-style: italic !important;
+            transform: skewX(-8deg) !important;
+            display: inline-block !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+        }
+        .logo {
+            width: 54px !important;
+            height: 54px !important;
+            fill: #00FF00 !important;
+        }
+        .logo path {
+            stroke: #00FF00 !important;
+            fill: none !important;
+        }
+        .hero-container .brand-name {
+            font-size: 72px !important;
+        }
+        .hero-container .logo {
+            width: 90px !important;
+            height: 90px !important;
+        }
+    
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes logoPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .content-container {
+            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .logo {
+            animation: logoPulse 4s ease-in-out infinite;
+            transform-origin: center;
+        }
+        .back-arrow:hover {
+            background: #e9ecef !important;
+            transform: scale(1.05);
+        }
+        .back-arrow {
+            transition: all 0.2s ease !important;
+        }
+    
+    
+        .btn-skip:hover .arrow-icon {
+            transform: translateX(4px);
+        }
+        </style>
+</head>
+
+<body>
+
+    <div class="brand-header">
+        <svg class="logo" viewBox="0 0 100 100" fill="#00FF00">
+            <path d="M 50 10 L 85 30 L 50 50 L 15 30 Z M 15 45 L 50 65 L 85 45 M 15 60 L 50 80 L 85 60" stroke="#00FF00"
+                stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <div class="brand-name">Calcare</div>
+    </div>
+
+    <div class="content-container">
+        <h2>Verify your mobile number</h2>
+        <p class="sub-text">Verification code has been sent to:</p>
+
+        <div class="phone-number">+254 (0) 758-716-026</div>
+        <button class="change-phone" onclick="window.history.back()">CHANGE PHONE NUMBER</button>
+
+        <form style="width: 100%;" onsubmit="event.preventDefault(); window.location.href='id_upload.html';">
+            <div class="input-group">
+                <fieldset>
+                    <legend>SMS code</legend>
+                    <input type="text" value="7016" maxlength="6" inputmode="numeric" id="smsCode">
+                    <span class="arrow-icon" style="display: inline-flex; align-items: center; margin-left: 6px; transition: transform 0.2s;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </span>
+                </fieldset>
+            </div>
+
+            <div class="resend-row">
+                <span>Didn't receive a SMS?</span>
+                <span>Try again in <span id="timer">166</span>s</span>
+            </div>
+
+            <button type="submit" class="btn-save">SAVE</button>
+            <div style="text-align: center;">
+                <a href="id_upload.html" class="btn-skip">Skip for now</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Simple countdown timer logic
+        let timeLeft = 166;
+        const timerElement = document.getElementById('timer');
+        const countdown = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                timerElement.parentElement.innerHTML = '<a href="#" style="color:#ffb800; text-decoration:none; font-weight:bold;">Resend SMS</a>';
+            } else {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+            }
+        }, 1000);
+    </script>
+
+</body>
+
+</html>

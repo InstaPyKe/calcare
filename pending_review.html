@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Pending Review</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #2b1f3d;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 32px 28px;
+        }
+
+        .clipboard-icon {
+            width: 160px;
+            height: auto;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1f1430;
+            margin-bottom: 12px;
+            text-align: left;
+        }
+
+        p {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.5;
+            text-align: left;
+        }
+    
+        /* Magnified Slanted Pure Green Brand Style */
+        .brand-name {
+            font-family: 'Lobster', cursive !important;
+            color: #00FF00 !important;
+            font-size: 38px !important;
+            font-style: italic !important;
+            transform: skewX(-8deg) !important;
+            display: inline-block !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+        }
+        .logo {
+            width: 54px !important;
+            height: 54px !important;
+            fill: #00FF00 !important;
+        }
+        .logo path {
+            stroke: #00FF00 !important;
+            fill: none !important;
+        }
+        .hero-container .brand-name {
+            font-size: 72px !important;
+        }
+        .hero-container .logo {
+            width: 90px !important;
+            height: 90px !important;
+        }
+    
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes logoPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .content-container {
+            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .logo {
+            animation: logoPulse 4s ease-in-out infinite;
+            transform-origin: center;
+        }
+        .back-arrow:hover {
+            background: #e9ecef !important;
+            transform: scale(1.05);
+        }
+        .back-arrow {
+            transition: all 0.2s ease !important;
+        }
+    
+    </style>
+</head>
+
+<body>
+    <!-- Embedded Clipboard / Magnifying Glass Graphic SVG -->
+    <svg class="clipboard-icon" viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="30" y="40" width="120" height="160" rx="6" fill="#8B5E3C" />
+        <rect x="70" y="25" width="40" height="20" rx="4" fill="#C0C0C0" stroke="#00FF00" stroke-width="2" />
+        <rect x="40" y="55" width="100" height="135" rx="3" fill="#F8F9FA" />
+        <path d="M 60 75 L 120 75 M 60 95 L 120 95 M 60 115 L 110 115 M 60 135 L 90 135" stroke="#00FF00"
+            stroke-width="3" stroke-linecap="round" />
+        <!-- Magnifying Glass Overlay -->
+        <circle cx="110" cy="110" r="35" fill="none" stroke="#00FF00" stroke-width="6" />
+        <line x1="135" y1="135" x2="165" y2="165" stroke="#00FF00" stroke-width="8" stroke-linecap="round" />
+        <path d="M 95 95 A 25 25 0 0 1 125 95" fill="none" stroke="#00FF00" stroke-width="3" stroke-linecap="round"
+            opacity="0.6" />
+    </svg>
+    <h2>Application is pending review</h2>
+    <p>99% of Calcare applications are processed automatically. If you still see this screen after 30 minutes and haven't
+        received an SMS kindly contact our support for assistance.</p>
+    <script>
+        // Auto redirect to disbursement pending status screen
+        setTimeout(() => { window.location.href='pending_disbursment.html'; }, 3000);
+    </script>
+</body>
+
+</html>

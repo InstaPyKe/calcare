@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload ID Documents - Calcare</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* Subtle split sample ID background watermarks */
+        @media (min-width: 900px) {
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image: 
+                    url('https://tse4.mm.bing.net/th/id/OIP.dFlIeMSrNN-N6jaEGP1dPgHaD4?r=0&pid=Api&h=220&P=0'),
+                    url('https://tse3.mm.bing.net/th/id/OIP.Q-Tqeyh_ZERM5gYDBF1ZNQHaEs?r=0&pid=Api&h=220&P=0');
+                background-position: left 5% center, right 5% center;
+                background-repeat: no-repeat;
+                background-size: 320px auto;
+                opacity: 0.15;
+                z-index: -1;
+                pointer-events: none;
+            }
+        }
+
+        @media (max-width: 899px) {
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image: 
+                    url('https://tse4.mm.bing.net/th/id/OIP.dFlIeMSrNN-N6jaEGP1dPgHaD4?r=0&pid=Api&h=220&P=0'),
+                    url('https://tse3.mm.bing.net/th/id/OIP.Q-Tqeyh_ZERM5gYDBF1ZNQHaEs?r=0&pid=Api&h=220&P=0');
+                background-position: center top 10%, center bottom 10%;
+                background-repeat: no-repeat;
+                background-size: 180px auto;
+                opacity: 0.08;
+                z-index: -1;
+                pointer-events: none;
+                filter: blur(1px);
+            }
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #2b1f3d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 24px 30px;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 54px !important;
+            height: 54px !important;
+            fill: #00FF00 !important;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: none;
+        }
+
+        .content-container {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Warning Banner */
+        .warning-banner {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            color: #664d03;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 20px;
+            width: 100%;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            text-align: left;
+        }
+
+        /* Upload Guidelines */
+        .guidelines-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            width: 100%;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+            text-align: left;
+        }
+
+        .guidelines-card h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #2b1f3d;
+            border-bottom: 1px solid #f1f3f5;
+            padding-bottom: 8px;
+        }
+
+        .guideline-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: #495057;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .guideline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Upload Boxes */
+        .upload-section {
+            width: 100%;
+            border: 2px dashed #ced4da;
+            border-radius: 14px;
+            padding: 24px 20px;
+            text-align: center;
+            margin-bottom: 16px;
+            background: #ffffff;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .upload-section:hover {
+            border-color: #5a3276;
+            background: #fdfcff;
+        }
+
+        .upload-section.selected {
+            border-color: #2e7d32;
+            border-style: solid;
+            background: #f4faf4;
+        }
+
+        .upload-icon-container {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        .upload-section:hover .upload-icon-container {
+            transform: scale(1.1);
+        }
+
+        .upload-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #2b1f3d;
+        }
+
+        .upload-desc {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 14px;
+            line-height: 1.4;
+        }
+
+        .upload-btn {
+            background-color: #5a3276;
+            color: #fff;
+            padding: 8px 18px;
+            font-size: 12px;
+            font-weight: 700;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(90, 50, 118, 0.15);
+            transition: all 0.2s;
+        }
+
+        .upload-btn:hover {
+            background-color: #492862;
+        }
+
+        .upload-btn.selected {
+            background-color: #2e7d32;
+            box-shadow: 0 2px 4px rgba(46, 125, 50, 0.15);
+        }
+
+        .format-info {
+            font-size: 11px;
+            color: #adb5bd;
+            margin-top: 8px;
+        }
+
+        /* Image Preview Thumbnail */
+        .preview-container {
+            display: none;
+            width: 100%;
+            max-height: 150px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 12px;
+            border: 1px solid #dee2e6;
+            background: #f1f3f5;
+        }
+
+        .preview-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Action Buttons */
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background-color: #ced4da;
+            color: #6c757d;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            border-radius: 30px;
+            cursor: not-allowed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-top: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit.active {
+            background-color: #5a3276;
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(90, 50, 118, 0.25);
+        }
+
+        .btn-submit.active:active {
+            transform: scale(0.98);
+        }
+
+        /* Magnified Slanted Pure Green Brand Style */
+        .brand-name {
+            font-family: 'Lobster', cursive !important;
+            color: #00FF00 !important;
+            font-size: 38px !important;
+            font-style: italic !important;
+            transform: skewX(-8deg) !important;
+            display: inline-block !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+        }
+        
+        .logo {
+            fill: #00FF00 !important;
+        }
+        
+        .logo path {
+            stroke: #00FF00 !important;
+            fill: none !important;
+        }
+    
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes logoPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .content-container {
+            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .logo {
+            animation: logoPulse 4s ease-in-out infinite;
+            transform-origin: center;
+        }
+        .back-arrow:hover {
+            background: #e9ecef !important;
+            transform: scale(1.05);
+        }
+        .back-arrow {
+            transition: all 0.2s ease !important;
+        }
+    
+    </style>
+</head>
+
+<body>
+    <div class="brand-header">
+        <svg class="logo" viewBox="0 0 100 100" fill="#00FF00" width="54" height="54">
+            <path d="M 50 10 L 85 30 L 50 50 L 15 30 Z M 15 45 L 50 65 L 85 45 M 15 60 L 50 80 L 85 60" stroke="#00FF00"
+                stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <div class="brand-name">Calcare</div>
+    </div>
+    
+    <div class="content-container">
+        <!-- Warning Banner with SVG warning icon -->
+        <div class="warning-banner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#664d03" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <div>
+                <strong>Incorrect Format Notice:</strong> Uploads must capture a real Kenyan ID card. Scanned photocopies, screens, or blurred photos will result in instant application rejection.
+            </div>
+        </div>
+
+        <!-- Capture Checklist Guidelines with SVG checks -->
+        <div class="guidelines-card">
+            <h3>Capture Requirements:</h3>
+            <div class="guideline-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Four corners of the ID must be fully visible inside the borders.</span>
+            </div>
+            <div class="guideline-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Make sure there are no bright flash reflections or dark shadows.</span>
+            </div>
+            <div class="guideline-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>All text details, serial numbers, and signatures must be fully legible.</span>
+            </div>
+        </div>
+
+        <!-- ID Front Upload -->
+        <div class="upload-section" id="sectionFront" onclick="document.getElementById('fileFront').click()">
+            <div class="upload-icon-container" id="iconFront">
+                <!-- SVG Document Icon -->
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+            </div>
+            <div class="upload-title" id="titleFront">Front of National ID</div>
+            <div class="upload-desc" id="descFront">Must show photo, full name, birth date, and ID number clearly</div>
+            <button type="button" class="upload-btn" id="btnFront">Select Front ID</button>
+            <div class="format-info" id="formatFront">Supported formats: JPG, PNG, PDF (Max 5MB)</div>
+            
+            <div class="preview-container" id="previewContainerFront">
+                <img src="" class="preview-img" id="previewFront" alt="Front Preview">
+            </div>
+
+            <input type="file" id="fileFront" accept="image/*,application/pdf" style="display: none;" onchange="handleFileChange(this, 'Front')">
+        </div>
+
+        <!-- ID Back Upload -->
+        <div class="upload-section" id="sectionBack" onclick="document.getElementById('fileBack').click()">
+            <div class="upload-icon-container" id="iconBack">
+                <!-- SVG Back ID Card layout Icon -->
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                    <path d="M7 15h4M17 15h-2"></path>
+                </svg>
+            </div>
+            <div class="upload-title" id="titleBack">Back of National ID</div>
+            <div class="upload-desc" id="descBack">Must show your signature, barcode, and issuance details clearly</div>
+            <button type="button" class="upload-btn" id="btnBack">Select Back ID</button>
+            <div class="format-info" id="formatBack">Supported formats: JPG, PNG, PDF (Max 5MB)</div>
+            
+            <div class="preview-container" id="previewContainerBack">
+                <img src="" class="preview-img" id="previewBack" alt="Back Preview">
+            </div>
+
+            <input type="file" id="fileBack" accept="image/*,application/pdf" style="display: none;" onchange="handleFileChange(this, 'Back')">
+        </div>
+
+        <!-- Submit Button with SVG upload icon -->
+        <button class="btn-submit" id="btnSubmit" disabled onclick="window.location.href='verification.html'">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Submit Documents
+        </button>
+    </div>
+
+    <script>
+        let hasFront = false;
+        let hasBack = false;
+
+        function handleFileChange(input, side) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const fileName = file.name;
+                const fileSize = (file.size / 1024 / 1024).toFixed(2); // size in MB
+
+                if (fileSize > 5.0) {
+                    alert("File size exceeds 5MB. Please choose a smaller file.");
+                    input.value = ''; // Reset input
+                    return;
+                }
+
+                // Update UI state
+                const section = document.getElementById('section' + side);
+                const title = document.getElementById('title' + side);
+                const desc = document.getElementById('desc' + side);
+                const btn = document.getElementById('btn' + side);
+                const iconContainer = document.getElementById('icon' + side);
+                const previewContainer = document.getElementById('previewContainer' + side);
+                const previewImg = document.getElementById('preview' + side);
+
+                section.classList.add('selected');
+                
+                // Set title with inline green SVG checkmark instead of emoji
+                title.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>' + (side === 'Front' ? 'Front' : 'Back') + ' ID Loaded';
+                
+                desc.textContent = 'Selected: ' + fileName + ' (' + fileSize + ' MB)';
+                btn.textContent = 'Change File';
+                btn.classList.add('selected');
+                
+                // Show green check document inside icon container
+                iconContainer.innerHTML = `
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <polyline points="9 15 11 17 15 13"></polyline>
+                    </svg>
+                `;
+
+                // Display file thumbnail preview if it's an image
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        previewContainer.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    // Hide preview container for non-images (PDFs)
+                    previewContainer.style.display = 'none';
+                }
+
+                if (side === 'Front') hasFront = true;
+                if (side === 'Back') hasBack = true;
+
+                // Enable submit button if both uploaded
+                const btnSubmit = document.getElementById('btnSubmit');
+                if (hasFront && hasBack) {
+                    btnSubmit.classList.add('active');
+                    btnSubmit.removeAttribute('disabled');
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

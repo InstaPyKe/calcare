@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifying Documents</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #2b1f3d;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 32px;
+        }
+
+        .logo {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 32px;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #1f1430;
+            text-align: left;
+        }
+
+        p {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.5;
+            text-align: left;
+        }
+    
+        /* Magnified Slanted Pure Green Brand Style */
+        .brand-name {
+            font-family: 'Lobster', cursive !important;
+            color: #00FF00 !important;
+            font-size: 38px !important;
+            font-style: italic !important;
+            transform: skewX(-8deg) !important;
+            display: inline-block !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+        }
+        .logo {
+            width: 54px !important;
+            height: 54px !important;
+            fill: #00FF00 !important;
+        }
+        .logo path {
+            stroke: #00FF00 !important;
+            fill: none !important;
+        }
+        .hero-container .brand-name {
+            font-size: 72px !important;
+        }
+        .hero-container .logo {
+            width: 90px !important;
+            height: 90px !important;
+        }
+    
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes logoPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .content-container {
+            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .logo {
+            animation: logoPulse 4s ease-in-out infinite;
+            transform-origin: center;
+        }
+        .back-arrow:hover {
+            background: #e9ecef !important;
+            transform: scale(1.05);
+        }
+        .back-arrow {
+            transition: all 0.2s ease !important;
+        }
+    
+    </style>
+</head>
+
+<body>
+    <svg class="logo" viewBox="0 0 100 100" fill="#00FF00">
+        <path d="M 50 10 L 85 30 L 50 50 L 15 30 Z M 15 45 L 50 65 L 85 45 M 15 60 L 50 80 L 85 60" stroke="#00FF00"
+            stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+    <h2>Waiting until uploaded documents are verified...</h2>
+    <p>We are verifying your photos. Your patience is greatly appreciated!</p>
+    <script>
+        setTimeout(() => { window.location.href = 'offerloading.html'; }, 3000);
+    </script>
+</body>
+
+</html>

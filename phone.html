@@ -1,0 +1,272 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcare - Mobile Number</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #2b1f3d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 24px 24px;
+        }
+
+        .top-bar {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 32px;
+        }
+
+        .hamburger-icon {
+            width: 22px;
+            height: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .hamburger-icon span {
+            display: block;
+            height: 2.5px;
+            width: 100%;
+            background-color: #2b1f3d;
+            border-radius: 2px;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 56px;
+            height: 56px;
+            margin-bottom: 8px;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 5px;
+            text-transform: none;
+            color: #2b1f3d;
+        }
+
+        .content-container {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 32px;
+        }
+
+        .field-label {
+            position: absolute;
+            top: -10px;
+            left: 16px;
+            background-color: #ffffff;
+            padding: 0 6px;
+            font-size: 13px;
+            color: #5a3276;
+            font-weight: 500;
+        }
+
+        .input-box {
+            width: 100%;
+            height: 56px;
+            border: 1.5px solid #5a3276;
+            border-radius: 28px;
+            padding: 0 20px 0 48px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2b1f3d;
+            outline: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .phone-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #2b1f3d;
+        }
+
+        .prefix {
+            font-weight: 700;
+            margin-right: 4px;
+            color: #2b1f3d;
+        }
+
+        .phone-input {
+            border: none;
+            outline: none;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            color: #888;
+            background: transparent;
+        }
+
+        .phone-input::placeholder {
+            color: #aaa;
+        }
+
+        .btn-next {
+            width: 100%;
+            padding: 16px;
+            background-color: #e5e5e5;
+            color: #9e9e9e;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 30px;
+            cursor: not-allowed;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .btn-next.active {
+            background-color: #5a3276;
+            color: #ffffff;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(90, 50, 118, 0.2);
+        }
+    
+        /* Magnified Slanted Pure Green Brand Style */
+        .brand-name {
+            font-family: 'Lobster', cursive !important;
+            color: #00FF00 !important;
+            font-size: 38px !important;
+            font-style: italic !important;
+            transform: skewX(-8deg) !important;
+            display: inline-block !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+        }
+        .logo {
+            width: 54px !important;
+            height: 54px !important;
+            fill: #00FF00 !important;
+        }
+        .logo path {
+            stroke: #00FF00 !important;
+            fill: none !important;
+        }
+        .hero-container .brand-name {
+            font-size: 72px !important;
+        }
+        .hero-container .logo {
+            width: 90px !important;
+            height: 90px !important;
+        }
+    
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes logoPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .content-container {
+            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .logo {
+            animation: logoPulse 4s ease-in-out infinite;
+            transform-origin: center;
+        }
+        .back-arrow:hover {
+            background: #e9ecef !important;
+            transform: scale(1.05);
+        }
+        .back-arrow {
+            transition: all 0.2s ease !important;
+        }
+    
+    </style>
+</head>
+
+<body>
+    <div class="top-bar">
+        <div class="hamburger-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <div class="brand-header">
+        <svg class="logo" viewBox="0 0 100 100" fill="#00FF00">
+            <path d="M 50 10 L 85 30 L 50 50 L 15 30 Z M 15 45 L 50 65 L 85 45 M 15 60 L 50 80 L 85 60" stroke="#00FF00"
+                stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <div class="brand-name">Calcare</div>
+    </div>
+    <div class="content-container">
+        <form style="width: 100%;" action="names.html">
+            <div class="input-wrapper">
+                <span class="field-label">Enter your mobile number</span>
+                <div class="input-box">
+                    <span class="phone-icon" style="display: inline-flex; align-items: center; color: #5a3276; margin-right: 8px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                        </svg>
+                    </span>
+                    <span class="prefix">+254 (0)</span>
+                    <input type="tel" id="mobileInput" class="phone-input" placeholder="123-456-789"
+                        oninput="toggleNextButton()" required>
+                </div>
+            </div>
+            <button type="submit" id="nextBtn" class="btn-next" disabled>NEXT</button>
+        </form>
+    </div>
+    <script>
+        function toggleNextButton() {
+            const input = document.getElementById('mobileInput');
+            const btn = document.getElementById('nextBtn');
+            const cleanVal = input.value.trim().replace(/[-\s]/g, '');
+            const isValid = /^[71]\d{8}$/.test(cleanVal);
+            if (isValid) {
+                btn.disabled = false;
+                btn.classList.add('active');
+            } else {
+                btn.disabled = true;
+                btn.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+
+</html>

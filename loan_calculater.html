@@ -1,0 +1,402 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Calculator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #2b1f3d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 24px 24px;
+        }
+
+        .top-bar {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .hamburger-icon {
+            width: 24px;
+            height: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .hamburger-icon span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: #5a3276;
+            border-radius: 2px;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 4px;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: none;
+        }
+
+        .content-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .summary-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 16px;
+        }
+
+        .summary-col {
+            width: 48%;
+        }
+
+        .summary-col:first-child {
+            border-right: 1px solid #e0e0e0;
+            padding-right: 12px;
+        }
+
+        .summary-col:last-child {
+            padding-left: 12px;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 4px;
+        }
+
+        .summary-value {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1a1a1a;
+        }
+
+        .summary-subtext {
+            font-size: 11px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .input-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1f1430;
+        }
+
+        .field-container {
+            position: relative;
+            width: 60%;
+        }
+
+        .field-label {
+            position: absolute;
+            top: -8px;
+            left: 16px;
+            background-color: #fff;
+            padding: 0 4px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .custom-input {
+            width: 100%;
+            height: 48px;
+            border: 1.5px solid #2b1f3d;
+            border-radius: 24px;
+            padding: 0 16px;
+            font-size: 16px;
+            font-weight: 700;
+            outline: none;
+        }
+
+        .slider-container {
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .range-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 12px;
+            background: #5a3276;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #ffb800;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .duration-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .duration-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1f1430;
+        }
+
+        .duration-field {
+            position: relative;
+            width: 100px;
+        }
+
+        .duration-input {
+            width: 100%;
+            height: 48px;
+            border: 1.5px solid #2b1f3d;
+            border-radius: 24px;
+            padding: 0 16px;
+            font-size: 16px;
+            font-weight: 700;
+            outline: none;
+        }
+
+        .duration-subtext {
+            font-size: 13px;
+            color: #444;
+        }
+
+        .btn-get-offer {
+            width: 100%;
+            padding: 16px;
+            background-color: #ffb800;
+            color: #2b1f3d;
+            font-size: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 184, 0, 0.3);
+        }
+    
+        /* Magnified Slanted Pure Green Brand Style */
+        .brand-name {
+            font-family: 'Lobster', cursive !important;
+            color: #00FF00 !important;
+            font-size: 38px !important;
+            font-style: italic !important;
+            transform: skewX(-8deg) !important;
+            display: inline-block !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+        }
+        .logo {
+            width: 54px !important;
+            height: 54px !important;
+            fill: #00FF00 !important;
+        }
+        .logo path {
+            stroke: #00FF00 !important;
+            fill: none !important;
+        }
+        .hero-container .brand-name {
+            font-size: 72px !important;
+        }
+        .hero-container .logo {
+            width: 90px !important;
+            height: 90px !important;
+        }
+    
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes logoPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .content-container {
+            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .logo {
+            animation: logoPulse 4s ease-in-out infinite;
+            transform-origin: center;
+        }
+        .back-arrow:hover {
+            background: #e9ecef !important;
+            transform: scale(1.05);
+        }
+        .back-arrow {
+            transition: all 0.2s ease !important;
+        }
+    
+    </style>
+</head>
+
+<body>
+    <div class="top-bar">
+        <div class="hamburger-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <div class="brand-header">
+        <svg class="logo" viewBox="0 0 100 100" fill="#00FF00">
+            <path d="M 50 10 L 85 30 L 50 50 L 15 30 Z M 15 45 L 50 65 L 85 45 M 15 60 L 50 80 L 85 60" stroke="#00FF00"
+                stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <div class="brand-name">Calcare</div>
+    </div>
+    <div class="content-container">
+        <div class="summary-grid">
+            <div class="summary-col">
+                <div class="summary-label">Loan amount</div>
+                <div class="summary-value">KSh 500</div>
+                <div class="summary-subtext">(the amount you will receive)</div>
+            </div>
+            <div class="summary-col">
+                <div class="summary-label">First installment (of 2)</div>
+                <div class="summary-value">KSh 348</div>
+                <div class="summary-subtext">(Total due amount: KSh 694)</div>
+            </div>
+        </div>
+        <form action="loan_details.html">
+            <div class="input-group">
+                <span class="input-label">I would like to borrow</span>
+                <div class="field-container">
+                    <span class="field-label">Amount</span>
+                    <input type="text" class="custom-input" value="500" readonly>
+                </div>
+            </div>
+            <div class="slider-container">
+                <input type="range" class="range-slider" min="500" max="5000" value="3000">
+            </div>
+            <div class="range-labels">
+                <span>500</span>
+                <span>5000</span>
+            </div>
+            <p style="font-size: 12px; color: #2e7d32; font-weight: 600; text-align: center; margin-top: 12px; line-height: 1.4;">
+                <span style="display: inline-flex; align-items: center; color: #ffb800; margin-right: 4px; vertical-align: middle; animation: logoPulse 2s ease-in-out infinite;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 18h6M10 22h4M15.09 14c.18-.19.33-.42.49-.67a6 6 0 0 0-7.18-9.13 6 6 0 0 0-1.84 5c.13.84.4 1.63.76 2.37.16.25.31.48.49.67a3.86 3.86 0 0 1 .84 2.4v1a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1a3.86 3.86 0 0 1 .84-2.4z"></path>
+                    </svg>
+                </span> Your first-time limit is KSh <span id="limit-text">3000</span>.<br>
+                Timely repayments can unlock limits up to KSh 200,000!
+            </p>
+            <div class="duration-group">
+                <span class="duration-label">For</span>
+                <div class="duration-field">
+                    <span class="field-label">days *</span>
+                    <input type="text" class="duration-input" value="61" readonly>
+                </div>
+                <span class="duration-subtext">* two installments</span>
+            </div>
+            <button type="submit" class="btn-get-offer">GET OFFER</button>
+        </form>
+    </div>
+
+    <script>
+        const maxLimit = parseInt(localStorage.getItem('calcare_loan_limit')) || 3000;
+        const minLimit = 500;
+        
+        const slider = document.querySelector('.range-slider');
+        const sliderLabels = document.querySelectorAll('.range-labels span');
+        const customInput = document.querySelector('.custom-input');
+        const summaryValue = document.querySelector('.summary-value');
+        const firstInstallmentValue = document.querySelectorAll('.summary-value')[1];
+        const totalDueSubtext = document.querySelectorAll('.summary-subtext')[1];
+        const limitText = document.getElementById('limit-text');
+        
+        slider.min = minLimit;
+        slider.max = maxLimit;
+        slider.value = maxLimit;
+        
+        sliderLabels[0].textContent = minLimit;
+        sliderLabels[1].textContent = maxLimit;
+        limitText.textContent = maxLimit;
+        
+        function updateLoanValues() {
+            const amount = parseInt(slider.value);
+            customInput.value = amount;
+            summaryValue.textContent = 'KSh ' + amount;
+            
+            const interest = Math.round(amount * 0.39);
+            const totalDue = amount + interest;
+            const installment = Math.round(totalDue / 2);
+            
+            firstInstallmentValue.textContent = 'KSh ' + installment;
+            totalDueSubtext.textContent = '(Total due amount: KSh ' + totalDue + ')';
+            
+            localStorage.setItem('calcare_loan_amount', amount);
+            localStorage.setItem('calcare_total_due', totalDue);
+        }
+        
+        updateLoanValues();
+        slider.addEventListener('input', updateLoanValues);
+    </script>
+</body>
+
+</html>
