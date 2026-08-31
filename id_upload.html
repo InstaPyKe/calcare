@@ -73,9 +73,9 @@
         }
 
         .logo {
-            width: 54px !important;
-            height: 54px !important;
-            fill: #00FF00 !important;
+            width: 54px;
+            height: 54px;
+            margin-bottom: 4px;
         }
 
         .brand-name {
@@ -91,6 +91,28 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        /* Tabs styling */
+        .doc-tabs {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 20px;
+            background: #e9ecef;
+            padding: 4px;
+            border-radius: 24px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         /* Warning Banner */
@@ -151,7 +173,7 @@
             width: 100%;
             border: 2px dashed #ced4da;
             border-radius: 14px;
-            padding: 24px 20px;
+            padding: 32px 20px;
             text-align: center;
             margin-bottom: 16px;
             background: #ffffff;
@@ -174,7 +196,7 @@
         }
 
         .upload-icon-container {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -186,7 +208,7 @@
         }
 
         .upload-title {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 700;
             margin-bottom: 6px;
             color: #2b1f3d;
@@ -195,7 +217,7 @@
         .upload-desc {
             font-size: 12px;
             color: #6c757d;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
             line-height: 1.4;
         }
 
@@ -233,10 +255,10 @@
         .preview-container {
             display: none;
             width: 100%;
-            max-height: 150px;
+            max-height: 180px;
             border-radius: 8px;
             overflow: hidden;
-            margin-top: 12px;
+            margin-top: 16px;
             border: 1px solid #dee2e6;
             background: #f1f3f5;
         }
@@ -299,7 +321,7 @@
             stroke: #00FF00 !important;
             fill: none !important;
         }
-    
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -322,14 +344,6 @@
             animation: logoPulse 4s ease-in-out infinite;
             transform-origin: center;
         }
-        .back-arrow:hover {
-            background: #e9ecef !important;
-            transform: scale(1.05);
-        }
-        .back-arrow {
-            transition: all 0.2s ease !important;
-        }
-    
     </style>
 </head>
 
@@ -343,6 +357,12 @@
     </div>
     
     <div class="content-container">
+        <!-- Document Type Selector Tabs -->
+        <div class="doc-tabs">
+            <button type="button" class="tab-btn" id="tabID" onclick="switchTab('ID')" style="background: #5a3276; color: #fff;">National ID</button>
+            <button type="button" class="tab-btn" id="tabDL" onclick="switchTab('DL')" style="background: #f1f3f5; color: #6c757d;">Driver's License</button>
+        </div>
+
         <!-- Warning Banner with SVG warning icon -->
         <div class="warning-banner">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#664d03" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
@@ -351,7 +371,7 @@
                 <line x1="12" y1="17" x2="12.01" y2="17"></line>
             </svg>
             <div>
-                <strong>Incorrect Format Notice:</strong> Uploads must capture a real Kenyan ID card. Scanned photocopies, screens, or blurred photos will result in instant application rejection.
+                <strong>Incorrect Format Notice:</strong> Uploads must capture a real document. Scanned photocopies, screens, or blurred photos will result in instant application rejection.
             </div>
         </div>
 
@@ -362,7 +382,7 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
                     <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
-                <span>Four corners of the ID must be fully visible inside the borders.</span>
+                <span>Four corners of the document must be fully visible inside the borders.</span>
             </div>
             <div class="guideline-item">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
@@ -374,13 +394,13 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
                     <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
-                <span>All text details, serial numbers, and signatures must be fully legible.</span>
+                <span>All text details, serial numbers, and photos must be fully legible.</span>
             </div>
         </div>
 
-        <!-- ID Front Upload -->
-        <div class="upload-section" id="sectionFront" onclick="document.getElementById('fileFront').click()">
-            <div class="upload-icon-container" id="iconFront">
+        <!-- Single Document Upload Zone -->
+        <div class="upload-section" id="sectionDoc" onclick="document.getElementById('fileDoc').click()">
+            <div class="upload-icon-container" id="iconDoc">
                 <!-- SVG Document Icon -->
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -390,38 +410,16 @@
                     <polyline points="10 9 9 9 8 9"></polyline>
                 </svg>
             </div>
-            <div class="upload-title" id="titleFront">Front of National ID</div>
-            <div class="upload-desc" id="descFront">Must show photo, full name, birth date, and ID number clearly</div>
-            <button type="button" class="upload-btn" id="btnFront">Select Front ID</button>
-            <div class="format-info" id="formatFront">Supported formats: JPG, PNG, PDF (Max 5MB)</div>
+            <div class="upload-title" id="titleDoc">Front of National ID</div>
+            <div class="upload-desc" id="descDoc">Must show photo, full name, birth date, and ID number clearly</div>
+            <button type="button" class="upload-btn" id="btnDoc">Select Front ID</button>
+            <div class="format-info" id="formatDoc">Supported formats: JPG, PNG, PDF (Max 5MB)</div>
             
-            <div class="preview-container" id="previewContainerFront">
-                <img src="" class="preview-img" id="previewFront" alt="Front Preview">
+            <div class="preview-container" id="previewContainerDoc">
+                <img src="" class="preview-img" id="previewDoc" alt="Document Preview">
             </div>
 
-            <input type="file" id="fileFront" accept="image/*,application/pdf" style="display: none;" onchange="handleFileChange(this, 'Front')">
-        </div>
-
-        <!-- ID Back Upload -->
-        <div class="upload-section" id="sectionBack" onclick="document.getElementById('fileBack').click()">
-            <div class="upload-icon-container" id="iconBack">
-                <!-- SVG Back ID Card layout Icon -->
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="4" width="18" height="16" rx="2"></rect>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                    <path d="M7 15h4M17 15h-2"></path>
-                </svg>
-            </div>
-            <div class="upload-title" id="titleBack">Back of National ID</div>
-            <div class="upload-desc" id="descBack">Must show your signature, barcode, and issuance details clearly</div>
-            <button type="button" class="upload-btn" id="btnBack">Select Back ID</button>
-            <div class="format-info" id="formatBack">Supported formats: JPG, PNG, PDF (Max 5MB)</div>
-            
-            <div class="preview-container" id="previewContainerBack">
-                <img src="" class="preview-img" id="previewBack" alt="Back Preview">
-            </div>
-
-            <input type="file" id="fileBack" accept="image/*,application/pdf" style="display: none;" onchange="handleFileChange(this, 'Back')">
+            <input type="file" id="fileDoc" accept="image/*,application/pdf" style="display: none;" onchange="handleFileChange(this)">
         </div>
 
         <!-- Submit Button with SVG upload icon -->
@@ -433,7 +431,7 @@
             </svg>
             Submit Documents
         </button>
-    
+
         <footer style="width: 100%; text-align: center; margin-top: 32px; padding: 16px 0 8px; border-top: 1px solid rgba(0,0,0,0.06); font-size: 11px; color: #888; font-weight: 600; z-index: 10; position: relative;">
             <span style="display: inline-flex; align-items: center; gap: 4px; justify-content: center; color: #5a3276;">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
@@ -442,13 +440,62 @@
                 Protected By GoK
             </span>
         </footer>
-</div>
+    </div>
 
     <script>
-        let hasFront = false;
-        let hasBack = false;
+        let selectedType = 'ID';
 
-        function handleFileChange(input, side) {
+        function switchTab(type) {
+            selectedType = type;
+            const tabID = document.getElementById('tabID');
+            const tabDL = document.getElementById('tabDL');
+            
+            if (type === 'ID') {
+                tabID.style.background = '#5a3276';
+                tabID.style.color = '#fff';
+                tabDL.style.background = '#f1f3f5';
+                tabDL.style.color = '#6c757d';
+                
+                document.getElementById('titleDoc').textContent = 'Front of National ID';
+                document.getElementById('descDoc').textContent = 'Must show photo, full name, birth date, and ID number clearly';
+                document.getElementById('btnDoc').textContent = 'Select Front ID';
+            } else {
+                tabDL.style.background = '#5a3276';
+                tabDL.style.color = '#fff';
+                tabID.style.background = '#f1f3f5';
+                tabID.style.color = '#6c757d';
+                
+                document.getElementById('titleDoc').textContent = "Front of Driver's License";
+                document.getElementById('descDoc').textContent = "Must show photo, full name, license number, and categories clearly";
+                document.getElementById('btnDoc').textContent = 'Select Front License';
+            }
+
+            // Reset file upload state on tab switch
+            const section = document.getElementById('sectionDoc');
+            const btn = document.getElementById('btnDoc');
+            const iconContainer = document.getElementById('iconDoc');
+            const previewContainer = document.getElementById('previewContainerDoc');
+            const btnSubmit = document.getElementById('btnSubmit');
+
+            section.classList.remove('selected');
+            btn.classList.remove('selected');
+            previewContainer.style.display = 'none';
+            btnSubmit.classList.remove('active');
+            btnSubmit.setAttribute('disabled', 'true');
+            document.getElementById('fileDoc').value = '';
+
+            iconContainer.innerHTML = `
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+            `;
+        }
+
+        function handleFileChange(input) {
             if (input.files && input.files[0]) {
                 const file = input.files[0];
                 const fileName = file.name;
@@ -456,29 +503,26 @@
 
                 if (fileSize > 5.0) {
                     alert("File size exceeds 5MB. Please choose a smaller file.");
-                    input.value = ''; // Reset input
+                    input.value = '';
                     return;
                 }
 
-                // Update UI state
-                const section = document.getElementById('section' + side);
-                const title = document.getElementById('title' + side);
-                const desc = document.getElementById('desc' + side);
-                const btn = document.getElementById('btn' + side);
-                const iconContainer = document.getElementById('icon' + side);
-                const previewContainer = document.getElementById('previewContainer' + side);
-                const previewImg = document.getElementById('preview' + side);
+                const section = document.getElementById('sectionDoc');
+                const title = document.getElementById('titleDoc');
+                const desc = document.getElementById('descDoc');
+                const btn = document.getElementById('btnDoc');
+                const iconContainer = document.getElementById('iconDoc');
+                const previewContainer = document.getElementById('previewContainerDoc');
+                const previewImg = document.getElementById('previewDoc');
 
                 section.classList.add('selected');
                 
-                // Set title with inline green SVG checkmark instead of emoji
-                title.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>' + (side === 'Front' ? 'Front' : 'Back') + ' ID Loaded';
+                title.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>' + (selectedType === 'ID' ? 'Front ID' : 'Front License') + ' Loaded';
                 
                 desc.textContent = 'Selected: ' + fileName + ' (' + fileSize + ' MB)';
                 btn.textContent = 'Change File';
                 btn.classList.add('selected');
                 
-                // Show green check document inside icon container
                 iconContainer.innerHTML = `
                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -487,7 +531,6 @@
                     </svg>
                 `;
 
-                // Display file thumbnail preview if it's an image
                 if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
@@ -496,19 +539,12 @@
                     }
                     reader.readAsDataURL(file);
                 } else {
-                    // Hide preview container for non-images (PDFs)
                     previewContainer.style.display = 'none';
                 }
 
-                if (side === 'Front') hasFront = true;
-                if (side === 'Back') hasBack = true;
-
-                // Enable submit button if both uploaded
                 const btnSubmit = document.getElementById('btnSubmit');
-                if (hasFront && hasBack) {
-                    btnSubmit.classList.add('active');
-                    btnSubmit.removeAttribute('disabled');
-                }
+                btnSubmit.classList.add('active');
+                btnSubmit.removeAttribute('disabled');
             }
         }
     </script>
@@ -567,11 +603,10 @@
                 }
 
                 draw() {
-                    // Draw realistic flared comet tail
                     for (let i = 0; i < this.history.length; i++) {
-                        const ratio = i / this.history.length; // 0 at tail end, 1 at head
-                        const tailRadius = this.radius * (1 + (1 - ratio) * 1.2); // Flared tail (gets wider at the back)
-                        const opacity = ratio * 0.12; // Fades out at the back
+                        const ratio = i / this.history.length;
+                        const tailRadius = this.radius * (1 + (1 - ratio) * 1.2);
+                        const opacity = ratio * 0.12;
                         
                         ctx.beginPath();
                         ctx.arc(this.history[i].x, this.history[i].y, tailRadius, 0, Math.PI * 2);
@@ -579,14 +614,13 @@
                         ctx.fill();
                     }
 
-                    // Draw glowing nucleus with radial gradient
                     const nucleusGrad = ctx.createRadialGradient(
                         this.x, this.y, 0,
                         this.x, this.y, this.radius * 1.5
                     );
-                    nucleusGrad.addColorStop(0, '#ffffff'); // Intense white nucleus
-                    nucleusGrad.addColorStop(0.2, '#bae6fd'); // Soft sky blue coma
-                    nucleusGrad.addColorStop(1, 'rgba(186, 230, 253, 0)'); // Fading outer edge
+                    nucleusGrad.addColorStop(0, '#ffffff');
+                    nucleusGrad.addColorStop(0.2, '#bae6fd');
+                    nucleusGrad.addColorStop(1, 'rgba(186, 230, 253, 0)');
 
                     ctx.beginPath();
                     ctx.arc(this.x, this.y, this.radius * 1.8, 0, Math.PI * 2);
@@ -664,7 +698,6 @@
             animate();
         })();
     </script>
-
 </body>
 
 </html>
