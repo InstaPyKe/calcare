@@ -15,7 +15,7 @@
         }
 
         body {
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.9);
             color: #2b1f3d;
             display: flex;
             flex-direction: column;
@@ -297,6 +297,162 @@
                 timerElement.textContent = timeLeft;
             }
         }, 1000);
+    </script>
+
+
+    <!-- Interactive Comet Collision Canvas Background -->
+    <canvas id="cometCanvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;"></canvas>
+    <script>
+        (function() {
+            const canvas = document.getElementById('cometCanvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            class Comet {
+                constructor(x, y, vx, vy, radius, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.vx = vx;
+                    this.vy = vy;
+                    this.radius = radius;
+                    this.color = color;
+                    this.history = [];
+                    this.maxHistory = 15;
+                }
+
+                update() {
+                    this.history.push({ x: this.x, y: this.y });
+                    if (this.history.length > this.maxHistory) {
+                        this.history.shift();
+                    }
+
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    if (this.x - this.radius < 0) {
+                        this.x = this.radius;
+                        this.vx = -this.vx;
+                    }
+                    if (this.x + this.radius > canvas.width) {
+                        this.x = canvas.width - this.radius;
+                        this.vx = -this.vx;
+                    }
+                    if (this.y - this.radius < 0) {
+                        this.y = this.radius;
+                        this.vy = -this.vy;
+                    }
+                    if (this.y + this.radius > canvas.height) {
+                        this.y = canvas.height - this.radius;
+                        this.vy = -this.vy;
+                    }
+                }
+
+                draw() {
+                    if (this.history.length > 1) {
+                        ctx.beginPath();
+                        ctx.moveTo(this.history[0].x, this.history[0].y);
+                        for (let i = 1; i < this.history.length; i++) {
+                            ctx.lineTo(this.history[i].x, this.history[i].y);
+                        }
+                        
+                        const grad = ctx.createLinearGradient(
+                            this.history[0].x, this.history[0].y,
+                            this.x, this.y
+                        );
+                        grad.addColorStop(0, 'transparent');
+                        grad.addColorStop(1, this.color + '22');
+
+                        ctx.strokeStyle = grad;
+                        ctx.lineWidth = this.radius * 1.5;
+                        ctx.lineCap = 'round';
+                        ctx.lineJoin = 'round';
+                        ctx.stroke();
+                    }
+
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.shadowColor = this.color;
+                    ctx.shadowBlur = 15;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+            }
+
+            const colors = ['#00FF00', '#ffb800', '#00ff88', '#ff3d00', '#5a3276'];
+            const comets = [];
+            const radiusValues = [25, 30, 20, 28, 24];
+            
+            for (let i = 0; i < 5; i++) {
+                const radius = radiusValues[i];
+                const x = radius + Math.random() * (canvas.width - radius * 2);
+                const y = radius + Math.random() * (canvas.height - radius * 2);
+                
+                const vx = (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1);
+                const vy = (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1);
+                
+                comets.push(new Comet(x, y, vx, vy, radius, colors[i]));
+            }
+
+            function checkCollisions() {
+                for (let i = 0; i < comets.length; i++) {
+                    for (let j = i + 1; j < comets.length; j++) {
+                        const c1 = comets[i];
+                        const c2 = comets[j];
+
+                        const dx = c2.x - c1.x;
+                        const dy = c2.y - c1.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        const minDist = c1.radius + c2.radius;
+
+                        if (dist < minDist) {
+                            const nx = dx / dist;
+                            const ny = dy / dist;
+                            
+                            const tx = -ny;
+                            const ty = nx;
+
+                            const dp1 = c1.vx * nx + c1.vy * ny;
+                            const dp2 = c2.vx * nx + c2.vy * ny;
+
+                            const dt1 = c1.vx * tx + c1.vy * ty;
+                            const dt2 = c2.vx * tx + c2.vy * ty;
+
+                            const new_dp1 = dp2;
+                            const new_dp2 = dp1;
+
+                            c1.vx = new_dp1 * nx + dt1 * tx;
+                            c1.vy = new_dp1 * ny + dt1 * ty;
+                            c2.vx = new_dp2 * nx + dt2 * tx;
+                            c2.vy = new_dp2 * ny + dt2 * ty;
+
+                            const overlap = minDist - dist;
+                            c1.x -= overlap * nx * 0.5;
+                            c1.y -= overlap * ny * 0.5;
+                            c2.x += overlap * nx * 0.5;
+                            c2.y += overlap * ny * 0.5;
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                checkCollisions();
+                comets.forEach(comet => {
+                    comet.update();
+                    comet.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
     </script>
 
 </body>
