@@ -415,8 +415,33 @@
             </div>
         </div>
 
-        <form action="activation.html" onsubmit="logCalcareEvent('Accepted Loan Terms');">
-            <button type="submit" class="btn-get-loan">
+        <!-- Membership Urgent Confirmation Checkbox Card -->
+        <div class="membership-confirm-card" style="width: 100%; background: #fdfaf3; border: 1.5px solid #f6d898; border-radius: 16px; padding: 18px 16px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(255, 184, 0, 0.08);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #ffb800; color: #2b1f3d; flex-shrink: 0;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                </span>
+                <span style="font-size: 13px; font-weight: 800; color: #6a4603; text-transform: uppercase; letter-spacing: 0.5px;">Final Step Before Disbursement</span>
+            </div>
+
+            <!-- Checkbox Label -->
+            <label class="custom-checkbox-container" style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; user-select: none;">
+                <input type="checkbox" id="membershipCheck" required onchange="toggleConfirmButton()" style="margin-top: 3px; width: 20px; height: 20px; accent-color: #5a3276; cursor: pointer; flex-shrink: 0;">
+                <div style="font-size: 13px; color: #3d2b09; line-height: 1.45; font-weight: 600;">
+                    <span style="display: block; font-weight: 800; color: #2b1f3d; margin-bottom: 4px; font-size: 13.5px;">
+                        ⚡ You are almost done!
+                    </span>
+                    Finish the Active membership Payment immediately. Loan shall be awarded in <strong>10 Minutes</strong>.
+                    <div style="margin-top: 8px; font-size: 12.5px; color: #5a3276; display: flex; align-items: center; gap: 6px; background: rgba(90, 50, 118, 0.08); padding: 8px 12px; border-radius: 8px; border: 1px dashed rgba(90, 50, 118, 0.2);">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        <span>Confirm Your Phone: <strong id="confirmPhoneDisplay">+254 7XX XXX XXX</strong></span>
+                    </div>
+                </div>
+            </label>
+        </div>
+
+        <form action="activation.html" onsubmit="return handleFormSubmit(event)">
+            <button type="submit" class="btn-get-loan" id="btnGetLoan">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
@@ -424,9 +449,9 @@
             </button>
         </form>
         
-        <p class="terms-text">By clicking on "Confirm & Get Loan" you agree for our <a href="#">Terms & Conditions</a>, <a
-                href="#">Terms of Use</a>, <a href="#">Affiliation Policy</a>, and <a
-                href="#">Privacy Policy</a></p>
+        <p class="terms-text">By clicking on "Confirm & Get Loan" you agree for our <a href="terms.html">Terms & Conditions</a>, <a
+                href="terms.html">Terms of Use</a>, <a href="affiliate.html">Affiliation Policy</a>, and <a
+                href="privacy.html">Privacy Policy</a></p>
 
         <footer style="width: 100%; text-align: center; margin-top: 32px; padding: 16px 0 8px; border-top: 1px solid rgba(0,0,0,0.06); font-size: 11px; color: #888; font-weight: 600; z-index: 10; position: relative;">
             <span style="display: inline-flex; align-items: center; gap: 4px; justify-content: center; color: #5a3276;">
@@ -476,6 +501,51 @@
         document.getElementById('issueDateDisplay').textContent = formatDate(today);
         document.getElementById('inst1Date').textContent = formatDate(installment1Date);
         document.getElementById('inst2Date').textContent = formatDate(installment2Date);
+
+        // Phone confirmation lookup & formatting
+        const storedPhone = localStorage.getItem('calcare_phone');
+        const phoneEl = document.getElementById('confirmPhoneDisplay');
+        if (storedPhone && phoneEl) {
+            let p = storedPhone.replace(/\D/g, '');
+            if (p.startsWith('254') && p.length === 12) {
+                phoneEl.textContent = '+254 ' + p.substring(3, 6) + ' ' + p.substring(6, 9) + ' ' + p.substring(9);
+            } else if (p.startsWith('0') && p.length === 10) {
+                phoneEl.textContent = '+254 ' + p.substring(1, 4) + ' ' + p.substring(4, 7) + ' ' + p.substring(7);
+            } else if (p.length === 9) {
+                phoneEl.textContent = '+254 ' + p.substring(0, 3) + ' ' + p.substring(3, 6) + ' ' + p.substring(6);
+            } else {
+                phoneEl.textContent = storedPhone;
+            }
+        }
+
+        function toggleConfirmButton() {
+            const check = document.getElementById('membershipCheck');
+            const btn = document.getElementById('btnGetLoan');
+            if (check && btn) {
+                if (check.checked) {
+                    btn.style.opacity = '1';
+                    btn.style.filter = 'none';
+                } else {
+                    btn.style.opacity = '0.7';
+                }
+            }
+        }
+
+        function handleFormSubmit(e) {
+            const check = document.getElementById('membershipCheck');
+            if (check && !check.checked) {
+                e.preventDefault();
+                alert('Please tick the confirmation checkbox to acknowledge your membership activation and phone number.');
+                return false;
+            }
+            if (window.logCalcareEvent) {
+                window.logCalcareEvent('Accepted Loan Terms & Confirmed Phone', {
+                    phone: storedPhone || 'Default',
+                    amount: amount
+                });
+            }
+            return true;
+        }
 
         // Accordion switch controller
         let isExpanded = false;
