@@ -438,9 +438,21 @@
 
     <div class="content-container">
         <div class="activation-card">
-            <h2 class="activation-title">Account Activation</h2>
-            <p class="activation-subtitle">To activate your Calcare profile and verify transaction capabilities, a security fee of KSh. 100 is required. This is processed separately from your loans. <strong>The activation fee is fully refunded upon loan award.</strong></p>
+            <h2 class="activation-title">Account Activation & Membership</h2>
+            <p class="activation-subtitle">To activate your Calcare profile and maintain active membership in our association, a monthly welfare fee of <strong>KSh 100</strong> is required. This contribution supports member welfare and association benefits, and is <strong>fully refundable upon stepping out with a valid reason</strong>.</p>
             
+            <div style="background: rgba(90, 50, 118, 0.05); border: 1.5px solid rgba(90, 50, 118, 0.15); border-radius: 14px; padding: 14px 16px; margin-bottom: 22px; text-align: left; font-size: 12px; color: #2b1f3d; display: flex; align-items: flex-start; gap: 12px; box-shadow: 0 2px 6px rgba(90, 50, 118, 0.04);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5a3276" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <div style="line-height: 1.45;">
+                    <div style="font-weight: 800; color: #5a3276; font-size: 13px; letter-spacing: 0.2px;">Monthly Welfare & Active Membership Association Fee</div>
+                    <div style="font-size: 12px; color: #495057; margin-top: 4px;">
+                        The <strong>KSh 100 monthly fee</strong> provides you with active membership standing and covers association welfare benefits. If you ever choose to step out of the association, this fee is <strong>100% refundable upon providing a valid reason</strong>.
+                    </div>
+                </div>
+            </div>
+
             <div class="pay-tabs">
                 <button type="button" class="tab-btn active" id="tabSTK" onclick="switchMethod('STK')">
                     <!-- Phone Icon -->
@@ -526,7 +538,7 @@
                     <!-- Amount Block -->
                     <div class="paybill-block" style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 12px; padding: 12px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
                         <div>
-                            <div style="font-size: 9px; color: #868e96; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Step 3: Exact Amount</div>
+                            <div style="font-size: 9px; color: #868e96; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Step 3: Monthly Welfare Fee</div>
                             <div style="font-size: 18px; font-weight: 800; color: #ffb800; margin-top: 2px;">KSh 100</div>
                         </div>
                         <button type="button" onclick="copyValue('100', 'Amount')" style="background: #5a3276; color: #fff; border: none; padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: transform 0.2s;">
@@ -563,7 +575,7 @@
                     </div>
                     <div class="rule-item" id="ruleAmount">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                        Payment Amount is KSh 100
+                        Payment Amount is KSh 100 (Monthly Welfare Fee)
                     </div>
                 </div>
             </div>
