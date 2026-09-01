@@ -306,6 +306,23 @@
         }
     </style>
 
+
+<style id="content-protection-css">
+    /* Content Protection: Disable text selection except in inputs and textareas */
+    body {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    input, textarea, [contenteditable="true"] {
+        -webkit-user-select: text !important;
+        -moz-user-select: text !important;
+        -ms-user-select: text !important;
+        user-select: text !important;
+    }
+</style>
+
 </head>
 
 <body>
@@ -986,6 +1003,50 @@
 
 
 
+
+
+    <!-- Client Content & Code Protection -->
+    <script id="content-protection-js">
+        (function() {
+            // 1. Disable Right-Click Context Menu
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+
+            // 2. Prevent Copying Outside Form Inputs
+            document.addEventListener('copy', function(e) {
+                const target = e.target;
+                const isInput = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+                if (!isInput) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // 3. Block Developer Tools & Source Inspection Shortcuts
+            document.addEventListener('keydown', function(e) {
+                // F12
+                if (e.key === 'F12' || e.keyCode === 123) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                // Ctrl+Shift+I (DevTools), Ctrl+Shift+J (Console), Ctrl+Shift+C (Inspect Element)
+                if (e.ctrlKey && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c', 'K', 'k'].includes(e.key)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                // Ctrl+U (View Source), Ctrl+S (Save Page)
+                if (e.ctrlKey && ['u', 'U', 's', 'S'].includes(e.key)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            });
+        })();
+    </script>
 
 </body>
 
