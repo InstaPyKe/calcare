@@ -475,25 +475,28 @@
             // Auto log page view
             window.logCalcareEvent('Page View');
 
-            // 1. Create and inject style block
+            // 1. Create and inject style block for Simple, Clean Platform Sidebar
             const css = `
-                /* Sidebar styles */
+                /* Simple & Compact Platform Sidebar styles */
                 .calcare-sidebar {
                     position: fixed;
                     top: 0;
                     left: 0;
-                    width: 280px;
+                    width: 250px;
+                    max-width: 80vw;
                     height: 100vh;
-                    background: #2b1f3d;
+                    background: #2b1f3d !important;
                     color: #ffffff;
-                    z-index: 9999;
+                    z-index: 99999;
                     transform: translateX(-100%);
-                    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-                    box-shadow: 4px 0 25px rgba(0,0,0,0.3);
+                    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+                    box-shadow: 6px 0 30px rgba(0, 0, 0, 0.35);
                     display: flex;
                     flex-direction: column;
-                    padding: 24px 20px;
+                    padding: 20px 16px;
                     text-align: left;
+                    font-family: 'Outfit', sans-serif;
+                    box-sizing: border-box;
                 }
                 .calcare-sidebar.open {
                     transform: translateX(0);
@@ -504,12 +507,13 @@
                     left: 0;
                     width: 100vw;
                     height: 100vh;
-                    background: rgba(0,0,0,0.4);
+                    background: rgba(0, 0, 0, 0.45);
                     backdrop-filter: blur(2px);
-                    z-index: 9998;
+                    -webkit-backdrop-filter: blur(2px);
+                    z-index: 99998;
                     opacity: 0;
                     pointer-events: none;
-                    transition: opacity 0.3s ease;
+                    transition: opacity 0.25s ease;
                 }
                 .sidebar-backdrop.show {
                     opacity: 1;
@@ -519,12 +523,21 @@
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    border-bottom: 1px solid rgba(255,255,255,0.1);
-                    padding-bottom: 16px;
-                    margin-bottom: 20px;
+                    padding-bottom: 14px;
+                    margin-bottom: 12px;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+                }
+                .sidebar-brand-box {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+                .sidebar-brand-logo {
+                    width: 28px;
+                    height: 28px;
                 }
                 .sidebar-title {
-                    font-size: 16px;
+                    font-size: 18px;
                     font-weight: 800;
                     color: #ffb800;
                     letter-spacing: 0.5px;
@@ -532,52 +545,68 @@
                 .sidebar-close-btn {
                     background: none;
                     border: none;
-                    color: #ffffff;
-                    font-size: 24px;
+                    color: rgba(255, 255, 255, 0.7);
+                    font-size: 22px;
                     cursor: pointer;
-                    padding: 4px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
                     line-height: 1;
+                    padding: 4px;
+                    transition: color 0.2s ease;
+                }
+                .sidebar-close-btn:hover {
+                    color: #ffffff;
                 }
                 .sidebar-menu {
                     overflow-y: auto;
                     flex-grow: 1;
                     display: flex;
                     flex-direction: column;
-                    gap: 10px;
-                    padding-right: 4px;
+                    gap: 6px;
                 }
                 .sidebar-menu::-webkit-scrollbar {
-                    width: 4px;
+                    width: 3px;
                 }
                 .sidebar-menu::-webkit-scrollbar-thumb {
-                    background: rgba(255,255,255,0.15);
+                    background: rgba(255, 255, 255, 0.15);
                     border-radius: 2px;
                 }
                 .menu-item {
                     display: flex;
                     align-items: center;
                     gap: 12px;
-                    padding: 12px 14px;
+                    padding: 10px 12px;
                     border-radius: 8px;
                     text-decoration: none;
-                    color: rgba(255,255,255,0.8);
+                    color: rgba(255, 255, 255, 0.88);
                     font-size: 13.5px;
                     font-weight: 600;
                     transition: all 0.2s ease;
-                    background: rgba(255,255,255,0.02);
-                    border: 1px solid rgba(255,255,255,0.04);
+                    background: rgba(255, 255, 255, 0.02);
                 }
                 .menu-item:hover {
-                    background: rgba(255,255,255,0.08);
+                    background: rgba(255, 255, 255, 0.1);
                     color: #ffffff;
-                    transform: translateX(4px);
+                    transform: translateX(3px);
                 }
                 .menu-item svg {
                     flex-shrink: 0;
                     color: #ffb800;
+                }
+                .sidebar-footer {
+                    padding-top: 14px;
+                    border-top: 1px solid rgba(255, 255, 255, 0.1);
+                    font-size: 11px;
+                    color: rgba(255, 255, 255, 0.5);
+                    font-weight: 600;
+                    text-align: center;
+                }
+                .sidebar-footer-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 4px;
+                    color: #ffb800;
+                    font-weight: 700;
+                    margin-bottom: 2px;
                 }
             `;
 
@@ -596,7 +625,13 @@
             const header = document.createElement('div');
             header.className = 'sidebar-header';
             header.innerHTML = `
-                <div class="sidebar-title">MENU</div>
+                <div class="sidebar-brand-box">
+                    <svg class="sidebar-brand-logo" viewBox="0 0 100 100" fill="#00FF00">
+                        <path d="M 50 10 L 85 30 L 50 50 L 15 30 Z M 15 45 L 50 65 L 85 45 M 15 60 L 50 80 L 85 60" stroke="#00FF00"
+                            stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <div class="sidebar-title">Calcare</div>
+                </div>
                 <button class="sidebar-close-btn">&times;</button>
             `;
             sidebar.appendChild(header);
@@ -604,7 +639,7 @@
             const menu = document.createElement('div');
             menu.className = 'sidebar-menu';
 
-            // Menu Items
+            // Clean, non-sensitive standard navigation items
             const items = [
                 {
                     name: 'Welfare Membership',
@@ -623,24 +658,19 @@
                     icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>`
                 },
                 {
-                    name: 'Email Us',
-                    href: 'mailto:Support@calcare.co.ke',
-                    icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>`
+                    name: 'Support Ticket',
+                    href: 'support.html',
+                    icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`
                 },
                 {
                     name: 'Terms & Conditions',
                     href: 'terms.html',
-                    icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
+                    icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`
                 },
                 {
                     name: 'Privacy Policy',
                     href: 'privacy.html',
                     icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`
-                },
-                {
-                    name: 'Support Ticket',
-                    href: 'support.html',
-                    icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`
                 }
             ];
 
@@ -653,10 +683,29 @@
                     ${item.icon}
                     <span>${item.name}</span>
                 `;
+                link.addEventListener('click', () => {
+                    if (window.logCalcareEvent) {
+                        window.logCalcareEvent('Clicked ' + item.name);
+                    }
+                });
                 menu.appendChild(link);
             });
 
             sidebar.appendChild(menu);
+
+            const footer = document.createElement('div');
+            footer.className = 'sidebar-footer';
+            footer.innerHTML = `
+                <div class="sidebar-footer-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    Protected By GoK
+                </div>
+                <div>Calcare &copy; 2026</div>
+            `;
+            sidebar.appendChild(footer);
+
             document.body.appendChild(sidebar);
 
             // 3. Bind trigger events
