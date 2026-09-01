@@ -223,6 +223,21 @@
         }
     
     </style>
+<style>
+        /* Content Security: Restrict selection on page text */
+        *, *::before, *::after {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+        }
+        input, textarea, .selectable, [contenteditable="true"] {
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+        }
+</style>
 </head>
 
 <body>
@@ -732,6 +747,50 @@
                     openSidebar();
                 });
             }
+        })();
+    </script>
+
+
+    <!-- Content Security & Anti-Inspection Protection -->
+    <script>
+        (function() {
+            // 1. Prevent Right-Click Context Menu
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            }, { capture: true });
+
+            // 2. Restrict Copying unless from an input/textarea or copy button
+            document.addEventListener('copy', function(e) {
+                const target = e.target;
+                if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+                    return true; // Allow typing/copying inside form fields
+                }
+                e.preventDefault();
+                return false;
+            }, { capture: true });
+
+            // 3. Block Developer Tools & Source Inspection Keyboard Shortcuts
+            document.addEventListener('keydown', function(e) {
+                // F12
+                if (e.key === 'F12' || e.keyCode === 123) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                // Ctrl+Shift+I (DevTools), Ctrl+Shift+J (Console), Ctrl+Shift+C (Inspect), Ctrl+Shift+K
+                if (e.ctrlKey && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c', 'K', 'k'].includes(e.key)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                // Ctrl+U (View Source), Ctrl+S (Save Page)
+                if (e.ctrlKey && ['U', 'u', 'S', 's'].includes(e.key)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }, { capture: true });
         })();
     </script>
 

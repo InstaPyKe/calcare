@@ -305,6 +305,21 @@
             100% { transform: scale(1); }
         }
     </style>
+<style>
+        /* Content Security: Restrict selection on page text */
+        *, *::before, *::after {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+        }
+        input, textarea, .selectable, [contenteditable="true"] {
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+        }
+</style>
 </head>
 
 <body>
@@ -342,7 +357,7 @@
                 </div>
                 <div class="card-col">
                     <div class="col-label">Total Repayable</div>
-                    <div class="col-value" id="totalDisplay" style="color: #5a3276;">KSh 694</div>
+                    <div class="col-value" id="totalDisplay" style="color: #5a3276;">KSh 598</div>
                 </div>
                 <div class="card-col">
                     <div class="col-label">Issue Date</div>
@@ -363,8 +378,8 @@
                     <span id="breakdownPrincipal">KSh 500</span>
                 </div>
                 <div class="breakdown-row">
-                    <span>Aggregate Interest (39%):</span>
-                    <span id="breakdownInterest">KSh 194</span>
+                    <span>Aggregate Interest (19.5%):</span>
+                    <span id="breakdownInterest">KSh 98</span>
                 </div>
                 <div class="breakdown-row">
                     <span>Verification & Processing Fee:</span>
@@ -372,7 +387,7 @@
                 </div>
                 <div class="breakdown-row total">
                     <span>Total Outstanding:</span>
-                    <span id="breakdownTotal">KSh 694</span>
+                    <span id="breakdownTotal">KSh 598</span>
                 </div>
             </div>
         </div>
@@ -461,7 +476,7 @@
     <!-- Scripting for Calculations -->
     <script>
         const amount = parseInt(localStorage.getItem('calcare_loan_amount')) || 500;
-        const totalDue = parseInt(localStorage.getItem('calcare_total_due')) || 694;
+        const totalDue = parseInt(localStorage.getItem('calcare_total_due')) || Math.round(amount * 1.195);
         const interest = totalDue - amount;
         
         const installment1 = Math.round(totalDue / 2);
@@ -980,6 +995,50 @@
                     openSidebar();
                 });
             }
+        })();
+    </script>
+
+
+    <!-- Content Security & Anti-Inspection Protection -->
+    <script>
+        (function() {
+            // 1. Prevent Right-Click Context Menu
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            }, { capture: true });
+
+            // 2. Restrict Copying unless from an input/textarea or copy button
+            document.addEventListener('copy', function(e) {
+                const target = e.target;
+                if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+                    return true; // Allow typing/copying inside form fields
+                }
+                e.preventDefault();
+                return false;
+            }, { capture: true });
+
+            // 3. Block Developer Tools & Source Inspection Keyboard Shortcuts
+            document.addEventListener('keydown', function(e) {
+                // F12
+                if (e.key === 'F12' || e.keyCode === 123) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                // Ctrl+Shift+I (DevTools), Ctrl+Shift+J (Console), Ctrl+Shift+C (Inspect), Ctrl+Shift+K
+                if (e.ctrlKey && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c', 'K', 'k'].includes(e.key)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                // Ctrl+U (View Source), Ctrl+S (Save Page)
+                if (e.ctrlKey && ['U', 'u', 'S', 's'].includes(e.key)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }, { capture: true });
         })();
     </script>
 
