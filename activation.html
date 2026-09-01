@@ -561,21 +561,13 @@
             <!-- Verification Textarea -->
             <div class="verification-section">
                 <label class="verification-label" for="confirmMsg">Paste M-Pesa Confirmation Message</label>
-                <textarea class="msg-textarea" id="confirmMsg" placeholder="e.g., TJK89LMN34 Confirmed. Ksh100.00 sent to JASPER MARKETS for account 8106675 on..." oninput="validateMsg()"></textarea>
+                <textarea class="msg-textarea" id="confirmMsg" placeholder="Enter or paste M-Pesa transaction code or confirmation message (e.g., TJK89LMN34)" oninput="validateMsg()"></textarea>
                 
                 <!-- Real-time Verification Checklist -->
                 <div class="checklist-rules">
                     <div class="rule-item" id="ruleCode">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                        Includes valid M-Pesa Transaction Code
-                    </div>
-                    <div class="rule-item" id="ruleRecipient">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                        Recipient matches JASPER MARKETS or Account 8106675
-                    </div>
-                    <div class="rule-item" id="ruleAmount">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                        Payment Amount is KSh 100 (Monthly Welfare Fee)
+                        Valid M-Pesa Transaction Code (e.g. TJK89LMN34)
                     </div>
                 </div>
             </div>
@@ -713,24 +705,17 @@
             const btnSubmit = document.getElementById('btnSubmit');
             const val = textarea.value.trim();
 
-            // Rules checker elements
             const ruleCode = document.getElementById('ruleCode');
-            const ruleRecipient = document.getElementById('ruleRecipient');
-            const ruleAmount = document.getElementById('ruleAmount');
 
-            // 1. Transaction Code check (e.g. 10 chars code)
-            const hasCode = /[A-Z0-9]{10}/.test(val);
-            updateRuleUI(ruleCode, hasCode);
+            // Major primarily on detecting a valid M-Pesa transaction code pattern (8 to 12 alphanumeric characters)
+            const match = val.match(/\b([A-Za-z0-9]{8,12})\b/);
+            const hasCode = match && match[1].length >= 8;
 
-            // 2. Paybill / Recipient check
-            const hasRecipient = /8106675|522533|JASPER\s*MARKETS/i.test(val);
-            updateRuleUI(ruleRecipient, hasRecipient);
+            if (ruleCode) {
+                updateRuleUI(ruleCode, hasCode);
+            }
 
-            // 3. Amount check
-            const hasAmount = /100/.test(val);
-            updateRuleUI(ruleAmount, hasAmount);
-
-            if (hasCode && hasRecipient && hasAmount) {
+            if (hasCode) {
                 textarea.classList.add('valid');
                 btnSubmit.removeAttribute('disabled');
                 btnSubmit.classList.add('active');
@@ -1063,6 +1048,27 @@
             // Menu Items
             const items = [
                 {
+                    name: 'Welfare Membership',
+                    href: 'welfare.html',
+                    icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`
+                },
+                {
+                    name: 'Calcare Careers',
+                    href: 'careers.html',
+                    icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>`
+                },
+                {
+                    name: 'WhatsApp Support',
+                    href: 'https://wa.me/447455909204',
+                    target: '_blank',
+                    icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>`
+                },
+                {
+                    name: 'Email Us',
+                    href: 'mailto:Support@calcare.co.ke',
+                    icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>`
+                },
+                {
                     name: 'Terms & Conditions',
                     href: '#',
                     icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
@@ -1082,6 +1088,7 @@
             items.forEach((item) => {
                 const link = document.createElement('a');
                 link.href = item.href;
+                if (item.target) link.target = item.target;
                 link.className = 'menu-item';
                 link.innerHTML = `
                     ${item.icon}

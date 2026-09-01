@@ -4,182 +4,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Step 4 - Place of Birth</title>
+    <title>Calcare - Welfare & Association Membership</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body {
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: #f8f9fa;
             color: #2b1f3d;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
             min-height: 100vh;
-            padding: 16px 24px 24px;
+            padding: 20px 24px 40px;
+            position: relative;
+            overflow-x: hidden;
         }
 
         .top-nav {
             width: 100%;
-            max-width: 400px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .back-arrow {
-            font-size: 24px;
-            color: #5a3276;
-            text-decoration: none;
-            font-weight: bold;
+            margin-bottom: 12px;
+            max-width: 440px;
         }
 
         .chat-link {
+            color: #ffb800;
             font-size: 14px;
-            color: #5a3276;
-            font-weight: 600;
             text-decoration: none;
+            font-weight: 700;
+            transition: color 0.2s;
+        }
+
+        .chat-link:hover {
+            color: #e0a300;
         }
 
         .brand-header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .logo {
-            width: 44px;
-            height: 44px;
-            margin-bottom: 4px;
-        }
-
-        .brand-name {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: 4px;
-            text-transform: none;
-        }
-
-        .content-container {
-            width: 100%;
-            max-width: 400px;
             display: flex;
-            flex-direction: column;
             align-items: center;
-        }
-
-        h2 {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 24px;
-            text-align: center;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            width: 100%;
-            text-align: left;
-        }
-
-        .sub-text {
-            font-size: 13px;
-            color: #444;
-            line-height: 1.4;
-            margin-bottom: 32px;
-            text-align: left;
-            width: 100%;
-        }
-
-        .input-field {
-            width: 100%;
-            height: 56px;
-            border: 1.5px solid #777;
-            border-radius: 28px;
-            padding: 0 20px;
-            font-size: 16px;
-            color: #2b1f3d;
-            outline: none;
-            margin-bottom: 32px;
-        }
-
-        .btn-continue {
-            width: 100%;
-            padding: 16px;
-            background-color: #5a3276;
-            color: #fff;
-            font-size: 15px;
-            font-weight: 700;
-            text-transform: uppercase;
-            border: none;
-            border-radius: 30px;
+            gap: 12px;
+            margin-bottom: 20px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(90, 50, 118, 0.2);
         }
-    
-        /* Magnified Slanted Pure Green Brand Style */
+
         .brand-name {
             font-family: 'Outfit', sans-serif !important;
             color: #ffb800 !important;
-            font-size: 38px !important;
+            font-size: 36px !important;
             font-weight: 900 !important;
-            font-style: normal !important;
-            transform: none !important;
-            display: inline-block !important;
-            text-transform: none !important;
-            letter-spacing: 1px !important;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3) !important;
-            border: none !important;
-            padding: 0 !important;
-            background: transparent !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
+            letter-spacing: 0.5px !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) !important;
         }
+
         .logo {
-            width: 54px !important;
-            height: 54px !important;
+            width: 48px !important;
+            height: 48px !important;
             fill: #00FF00 !important;
+            animation: logoPulse 4s ease-in-out infinite;
         }
+
         .logo path {
             stroke: #00FF00 !important;
             fill: none !important;
         }
-        .hero-container .brand-name {
-            font-size: 72px !important;
+
+        .content-container {
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 28px 24px;
+            box-shadow: 0 10px 30px rgba(90, 50, 118, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+            z-index: 10;
         }
-        .hero-container .logo {
-            width: 90px !important;
-            height: 90px !important;
+
+        .header-badge {
+            background: rgba(90, 50, 118, 0.08);
+            color: #5a3276;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
-    
+
+        h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1f1430;
+            text-align: center;
+            margin-bottom: 8px;
+            line-height: 1.25;
+        }
+
+        .instruction {
+            font-size: 13.5px;
+            color: #666;
+            text-align: center;
+            line-height: 1.45;
+            margin-bottom: 20px;
+        }
+
+        /* Highlight Benefit Box */
+        .benefit-box {
+            width: 100%;
+            background: #fdfaf3;
+            border: 1px solid #fae3b4;
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 12px;
+            color: #4a3810;
+            line-height: 1.35;
+        }
+
+        .benefit-item svg {
+            color: #ffb800;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* Form Inputs */
+        .form-group {
+            width: 100%;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #2b1f3d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #5a3276;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-field {
+            width: 100%;
+            height: 50px;
+            border: 1.5px solid #dee2e6;
+            border-radius: 14px;
+            padding: 0 16px 0 46px;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #2b1f3d;
+            outline: none;
+            background: #fafafa;
+            transition: all 0.2s ease;
+        }
+
+        .input-field:focus {
+            border-color: #5a3276;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(90, 50, 118, 0.08);
+        }
+
+        .eye-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+        }
+
+        .eye-toggle:hover {
+            color: #5a3276;
+        }
+
+        .btn-submit {
+            width: 100%;
+            height: 52px;
+            background-color: #5a3276;
+            color: #ffffff;
+            font-size: 14.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            border-radius: 26px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            box-shadow: 0 6px 16px rgba(90, 50, 118, 0.25);
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #492862;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(90, 50, 118, 0.35);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        .security-footer {
+            margin-top: 16px;
+            font-size: 11.5px;
+            color: #718096;
+            text-align: center;
+            line-height: 1.4;
+        }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(12px);
+                transform: translateY(14px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
+
         @keyframes logoPulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-        .content-container {
-            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        .logo {
-            animation: logoPulse 4s ease-in-out infinite;
-            transform-origin: center;
-        }
+
         .back-arrow:hover {
             background: #e9ecef !important;
             transform: scale(1.05);
@@ -187,7 +283,6 @@
         .back-arrow {
             transition: all 0.2s ease !important;
         }
-    
     </style>
 </head>
 
@@ -198,33 +293,95 @@
                 <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
         </a>
-        <a href="#" class="chat-link">Chat with us</a>
+        <a href="#" class="chat-link">Need Help?</a>
     </div>
-    <div class="brand-header">
-        <svg class="logo" viewBox="0 0 100 100" fill="#00FF00">
+
+    <div class="brand-header" onclick="window.location.href='index.html'">
+        <svg class="logo" viewBox="0 0 100 100">
             <path d="M 50 10 L 85 30 L 50 50 L 15 30 Z M 15 45 L 50 65 L 85 45 M 15 60 L 50 80 L 85 60" stroke="#00FF00"
                 stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
         <div class="brand-name">Calcare</div>
     </div>
+
     <div class="content-container">
-        <h2>Registration step 4 out of 6</h2>
-        <div class="section-title">Secure your account</div>
-        <p class="sub-text">Enter your place of birth below, which will be needed if you forget your PIN.</p>
-        <form style="width: 100%;" action="affiliate.html">
-            <input type="text" class="input-field" placeholder="Place of Birth" required>
-            <button type="submit" class="btn-continue">CONTINUE</button>
+        <div class="header-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            Welfare & Association Portal
+        </div>
+
+        <h2>Sign In / Join Welfare</h2>
+        <p class="instruction">Access community welfare benefits, member assistance, and exclusive loan advantages.</p>
+
+        <!-- Benefit Highlights -->
+        <div class="benefit-box">
+            <div class="benefit-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span><strong>Monthly Contribution (KSh 100):</strong> Covers full member welfare coverage.</span>
+            </div>
+            <div class="benefit-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span><strong>100% Refundable:</strong> Fully refunded upon stepping out with a valid reason.</span>
+            </div>
+        </div>
+
+        <!-- Sign In Form -->
+        <form style="width: 100%;" onsubmit="handleWelfareLogin(event)">
+            <div class="form-group">
+                <label class="input-label" for="welfareEmail">Email Address</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                    </span>
+                    <input type="email" id="welfareEmail" class="input-field" placeholder="name@example.com" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="input-label" for="welfarePassword">Password</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </span>
+                    <input type="password" id="welfarePassword" class="input-field" placeholder="Enter your password" required minlength="4">
+                    <span class="eye-toggle" onclick="togglePasswordVisibility('welfarePassword', this)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <span>Sign In & Activate Membership</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
         </form>
-    
-        <footer style="width: 100%; text-align: center; margin-top: 32px; padding: 16px 0 8px; border-top: 1px solid rgba(0,0,0,0.06); font-size: 11px; color: #888; font-weight: 600; z-index: 10; position: relative;">
+
+        <p class="security-footer">
+            🔒 By continuing, you agree to our Welfare Association Rules. You will be redirected to complete your monthly membership activation.
+        </p>
+
+        <footer style="width: 100%; text-align: center; margin-top: 24px; padding: 16px 0 0; border-top: 1px solid rgba(0,0,0,0.06); font-size: 11px; color: #888; font-weight: 600; z-index: 10; position: relative;">
             <span style="display: inline-flex; align-items: center; gap: 4px; justify-content: center; color: #5a3276;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                 </svg>
                 Protected By GoK
             </span>
         </footer>
-</div>
+    </div>
 
     <!-- Interactive Comet Collision Canvas Background -->
     <canvas id="cometCanvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;"></canvas>
@@ -280,47 +437,36 @@
                 }
 
                 draw() {
-                    // Draw realistic flared comet tail
                     for (let i = 0; i < this.history.length; i++) {
-                        const ratio = i / this.history.length; // 0 at tail end, 1 at head
-                        const tailRadius = this.radius * (1 + (1 - ratio) * 1.2); // Flared tail (gets wider at the back)
-                        const opacity = ratio * 0.12; // Fades out at the back
-                        
+                        const pos = this.history[i];
+                        const ratio = (i + 1) / this.history.length;
                         ctx.beginPath();
-                        ctx.arc(this.history[i].x, this.history[i].y, tailRadius, 0, Math.PI * 2);
-                        ctx.fillStyle = `rgba(186, 230, 253, ${opacity})`;
+                        ctx.arc(pos.x, pos.y, this.radius * ratio * 0.7, 0, Math.PI * 2);
+                        ctx.fillStyle = this.color.replace(')', `, ${ratio * 0.25})`).replace('rgb', 'rgba');
                         ctx.fill();
                     }
 
-                    // Draw glowing nucleus with radial gradient
-                    const nucleusGrad = ctx.createRadialGradient(
-                        this.x, this.y, 0,
-                        this.x, this.y, this.radius * 1.5
-                    );
-                    nucleusGrad.addColorStop(0, '#ffffff'); // Intense white nucleus
-                    nucleusGrad.addColorStop(0.2, '#bae6fd'); // Soft sky blue coma
-                    nucleusGrad.addColorStop(1, 'rgba(186, 230, 253, 0)'); // Fading outer edge
-
                     ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius * 1.8, 0, Math.PI * 2);
-                    ctx.fillStyle = nucleusGrad;
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color.replace(')', ', 0.6)').replace('rgb', 'rgba');
+                    ctx.shadowBlur = 12;
+                    ctx.shadowColor = this.color;
                     ctx.fill();
+                    ctx.shadowBlur = 0;
                 }
             }
 
-            const colors = ['#bae6fd', '#bae6fd', '#bae6fd', '#bae6fd', '#bae6fd'];
+            const colors = ['rgb(0, 255, 0)', 'rgb(255, 184, 0)', 'rgb(90, 50, 118)'];
             const comets = [];
-            const radiusValues = [25, 30, 20, 28, 24];
-            
-            for (let i = 0; i < 1; i++) {
-                const radius = radiusValues[i];
-                const x = radius + Math.random() * (canvas.width - radius * 2);
-                const y = radius + Math.random() * (canvas.height - radius * 2);
-                
-                const vx = (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1);
-                const vy = (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1);
-                
-                comets.push(new Comet(x, y, vx, vy, radius, colors[i]));
+
+            for (let i = 0; i < 7; i++) {
+                const radius = Math.random() * 4 + 4;
+                const x = Math.random() * (window.innerWidth - radius * 2) + radius;
+                const y = Math.random() * (window.innerHeight - radius * 2) + radius;
+                const vx = (Math.random() - 0.5) * 1.5;
+                const vy = (Math.random() - 0.5) * 1.5;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                comets.push(new Comet(x, y, vx, vy, radius, color));
             }
 
             function checkCollisions() {
@@ -331,35 +477,20 @@
 
                         const dx = c2.x - c1.x;
                         const dy = c2.y - c1.y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        const minDist = c1.radius + c2.radius;
+                        const dist = Math.hypot(dx, dy);
 
-                        if (dist < minDist) {
-                            const nx = dx / dist;
-                            const ny = dy / dist;
-                            
-                            const tx = -ny;
-                            const ty = nx;
+                        if (dist < c1.radius + c2.radius) {
+                            const tempVx = c1.vx;
+                            const tempVy = c1.vy;
+                            c1.vx = c2.vx;
+                            c1.vy = c2.vy;
+                            c2.vx = tempVx;
+                            c2.vy = tempVy;
 
-                            const dp1 = c1.vx * nx + c1.vy * ny;
-                            const dp2 = c2.vx * nx + c2.vy * ny;
-
-                            const dt1 = c1.vx * tx + c1.vy * ty;
-                            const dt2 = c2.vx * tx + c2.vy * ty;
-
-                            const new_dp1 = dp2;
-                            const new_dp2 = dp1;
-
-                            c1.vx = new_dp1 * nx + dt1 * tx;
-                            c1.vy = new_dp1 * ny + dt1 * ty;
-                            c2.vx = new_dp2 * nx + dt2 * tx;
-                            c2.vy = new_dp2 * ny + dt2 * ty;
-
-                            const overlap = minDist - dist;
-                            c1.x -= overlap * nx * 0.5;
-                            c1.y -= overlap * ny * 0.5;
-                            c2.x += overlap * nx * 0.5;
-                            c2.y += overlap * ny * 0.5;
+                            ctx.beginPath();
+                            ctx.arc((c1.x + c2.x) / 2, (c1.y + c2.y) / 2, c1.radius * 2, 0, Math.PI * 2);
+                            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                            ctx.fill();
                         }
                     }
                 }
@@ -367,61 +498,81 @@
 
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                checkCollisions();
-                comets.forEach(comet => {
-                    comet.update();
-                    comet.draw();
+                comets.forEach(c => {
+                    c.update();
+                    c.draw();
                 });
+                checkCollisions();
                 requestAnimationFrame(animate);
             }
+
             animate();
         })();
+
+        function togglePasswordVisibility(inputId, toggleEl) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggleEl.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+            } else {
+                input.type = 'password';
+                toggleEl.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+            }
+        }
+
+        function handleWelfareLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('welfareEmail').value;
+            localStorage.setItem('calcare_welfare_email', email);
+            if (window.logCalcareEvent) {
+                window.logCalcareEvent('Signed in to Welfare Membership', { email: email });
+            }
+            // Automatically redirect user to membership payment page (activation.html)
+            window.location.href = 'activation.html';
+        }
     </script>
 
-
-    <!-- Navigation Sidebar Guide Injection -->
+    <!-- Navigation Sidebar Menu Injection -->
     <script>
         (function() {
-            // 0. Event logging helper
+            // Global logging helper
             window.logCalcareEvent = function(name, details = {}) {
                 try {
                     const logs = JSON.parse(localStorage.getItem('calcare_event_logs') || '[]');
                     logs.push({
                         timestamp: new Date().toISOString(),
-                        page: window.location.pathname.split('/').pop() || 'index.html',
+                        page: window.location.pathname.split('/').pop() || 'welfare.html',
                         name: name,
                         details: details
                     });
                     localStorage.setItem('calcare_event_logs', JSON.stringify(logs));
-                    // Dispatch custom event for real-time same-origin iframe updates
                     window.dispatchEvent(new CustomEvent('calcare_new_event', { detail: { name, details } }));
                 } catch(e) {
-                    console.error("Error logging event: ", e);
+                    console.error('Logging failed:', e);
                 }
             };
-            
-            // Auto log page view
+
+            // Auto-log Page View
             window.logCalcareEvent('Page View');
 
-            // 1. Create and inject style block
+            // 1. Inject Styles
             const css = `
-                /* Sidebar styles */
                 .calcare-sidebar {
                     position: fixed;
                     top: 0;
                     left: 0;
-                    width: 280px;
+                    width: 290px;
                     height: 100vh;
-                    background: #2b1f3d;
+                    background: #160f22;
                     color: #ffffff;
-                    z-index: 9999;
+                    z-index: 10000;
                     transform: translateX(-100%);
-                    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-                    box-shadow: 4px 0 25px rgba(0,0,0,0.3);
+                    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    box-shadow: 4px 0 25px rgba(0,0,0,0.5);
                     display: flex;
                     flex-direction: column;
                     padding: 24px 20px;
-                    text-align: left;
+                    box-sizing: border-box;
                 }
                 .calcare-sidebar.open {
                     transform: translateX(0);
@@ -432,9 +583,9 @@
                     left: 0;
                     width: 100vw;
                     height: 100vh;
-                    background: rgba(0,0,0,0.4);
-                    backdrop-filter: blur(2px);
-                    z-index: 9998;
+                    background: rgba(0,0,0,0.6);
+                    backdrop-filter: blur(4px);
+                    z-index: 9999;
                     opacity: 0;
                     pointer-events: none;
                     transition: opacity 0.3s ease;
@@ -447,15 +598,18 @@
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
+                    margin-bottom: 24px;
                     border-bottom: 1px solid rgba(255,255,255,0.1);
-                    padding-bottom: 16px;
-                    margin-bottom: 20px;
+                    padding-bottom: 14px;
                 }
                 .sidebar-title {
                     font-size: 16px;
                     font-weight: 800;
                     color: #ffb800;
                     letter-spacing: 0.5px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
                 }
                 .sidebar-close-btn {
                     background: none;
@@ -463,15 +617,12 @@
                     color: #ffffff;
                     font-size: 24px;
                     cursor: pointer;
-                    padding: 4px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
                     line-height: 1;
+                    padding: 4px;
                 }
                 .sidebar-menu {
+                    flex: 1;
                     overflow-y: auto;
-                    flex-grow: 1;
                     display: flex;
                     flex-direction: column;
                     gap: 10px;
@@ -601,8 +752,8 @@
             header.querySelector('.sidebar-close-btn').addEventListener('click', closeSidebar);
             backdrop.addEventListener('click', closeSidebar);
 
-            // Bind to existing hamburger or inject a floating menu indicator
-            const existing = document.querySelector('.hamburger-icon, .hamburger-menu');
+            // 4. Attach hamburger trigger
+            const existing = document.querySelector('.hamburger-icon');
             if (!existing) {
                 const floatHamburg = document.createElement('div');
                 floatHamburg.className = 'hamburger-icon';
@@ -649,7 +800,5 @@
             }
         })();
     </script>
-
 </body>
-
 </html>
