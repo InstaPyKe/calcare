@@ -548,7 +548,7 @@
             const check = document.getElementById('membershipCheck');
             if (check && !check.checked) {
                 e.preventDefault();
-                alert('Please tick the confirmation checkbox to acknowledge your membership activation and phone number.');
+                window.showCalcareNotification('Please tick the confirmation checkbox to confirm your disbursement phone number.', 'warning', 4500, 'Confirmation Required');
                 return false;
             }
             if (window.logCalcareEvent) {
@@ -1045,6 +1045,175 @@
                     return false;
                 }
             });
+        })();
+    </script>
+
+
+    <!-- Calcare Professional Notification HUD -->
+    <style id="calcare-toast-styles">
+        #calcare-toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 90%;
+            max-width: 420px;
+            pointer-events: none;
+        }
+        .calcare-toast {
+            background: rgba(22, 15, 34, 0.96);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            pointer-events: auto;
+            animation: toastSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .calcare-toast.hide {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.94);
+        }
+        .calcare-toast-body {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 13px 15px;
+        }
+        .calcare-toast-icon-box {
+            width: 36px;
+            height: 36px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .calcare-toast-content {
+            flex: 1;
+            text-align: left;
+        }
+        .calcare-toast-title {
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            margin-bottom: 2px;
+            font-family: 'Outfit', sans-serif;
+        }
+        .calcare-toast-msg {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.4;
+            font-family: 'Outfit', sans-serif;
+        }
+        .calcare-toast-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 20px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0 4px;
+            transition: color 0.2s;
+        }
+        .calcare-toast-close:hover {
+            color: #ffffff;
+        }
+        .calcare-toast-bar {
+            height: 3px;
+            width: 100%;
+            animation: toastProgress linear forwards;
+            transform-origin: left;
+        }
+        @keyframes toastSlideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-25px) scale(0.92);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        @keyframes toastProgress {
+            from {
+                transform: scaleX(1);
+            }
+            to {
+                transform: scaleX(0);
+            }
+        }
+    </style>
+    <script id="calcare-toast-script">
+        (function() {
+            window.showCalcareNotification = function(message, type = 'error', duration = 4000, title = '') {
+                let container = document.getElementById('calcare-toast-container');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = 'calcare-toast-container';
+                    document.body.appendChild(container);
+                }
+
+                const toast = document.createElement('div');
+                toast.className = 'calcare-toast';
+                
+                let defaultTitle = 'Notification';
+                let iconSvg = '';
+                let accentColor = '#ffb800';
+
+                if (type === 'error') {
+                    defaultTitle = 'Invalid Format / Error';
+                    accentColor = '#ff3366';
+                    iconSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="' + accentColor + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+                    try { if (navigator.vibrate) navigator.vibrate([30, 40, 30]); } catch(e) {}
+                } else if (type === 'warning') {
+                    defaultTitle = 'Action Required';
+                    accentColor = '#ffb800';
+                    iconSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="' + accentColor + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
+                } else if (type === 'success') {
+                    defaultTitle = 'Success';
+                    accentColor = '#00FF00';
+                    iconSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="' + accentColor + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="16 9 10 15 7 12"></polyline></svg>';
+                } else {
+                    defaultTitle = 'Information';
+                    accentColor = '#38bdf8';
+                    iconSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="' + accentColor + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+                }
+
+                const displayTitle = title || defaultTitle;
+
+                toast.innerHTML = 
+                    '<div class="calcare-toast-body">' +
+                        '<div class="calcare-toast-icon-box" style="background:' + accentColor + '1a; border:1px solid ' + accentColor + '33;">' +
+                            iconSvg +
+                        '</div>' +
+                        '<div class="calcare-toast-content">' +
+                            '<div class="calcare-toast-title" style="color:' + accentColor + ';">' + displayTitle + '</div>' +
+                            '<div class="calcare-toast-msg">' + message + '</div>' +
+                        '</div>' +
+                        '<button type="button" class="calcare-toast-close" onclick="this.closest(\'.calcare-toast\').remove()">&times;</button>' +
+                    '</div>' +
+                    '<div class="calcare-toast-bar" style="background:' + accentColor + '; animation-duration:' + duration + 'ms;"></div>';
+
+                container.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.classList.add('hide');
+                    setTimeout(() => { try { toast.remove(); } catch(e) {} }, 350);
+                }, duration);
+            };
+
+            // Override default alert to use the modern HUD
+            window.alert = function(msg) {
+                window.showCalcareNotification(msg, 'warning', 4500, 'Notice');
+            };
         })();
     </script>
 
