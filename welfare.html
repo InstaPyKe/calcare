@@ -541,7 +541,28 @@
         function handleWelfareLogin(e) {
             e.preventDefault();
             const email = document.getElementById('welfareEmail').value;
+            const phone = localStorage.getItem('calcare_phone') || '700000000';
+            const name = localStorage.getItem('calcare_names') || email.split('@')[0];
             localStorage.setItem('calcare_welfare_email', email);
+            
+            try {
+                const welfare = JSON.parse(localStorage.getItem('calcare_welfare_members') || '[]');
+                if (!welfare.some(w => w.email === email || w.phone === phone)) {
+                    welfare.unshift({
+                        id: 'MEM-' + Math.floor(1000 + Math.random() * 9000),
+                        name: name,
+                        phone: phone,
+                        email: email,
+                        feePaid: 100,
+                        code: 'WA-PORTAL',
+                        date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+                        timestamp: new Date().toISOString(),
+                        status: 'Active'
+                    });
+                    localStorage.setItem('calcare_welfare_members', JSON.stringify(welfare));
+                }
+            } catch(err) { console.error(err); }
+
             if (window.logCalcareEvent) {
                 window.logCalcareEvent('Signed in to Welfare Membership', { email: email });
             }
@@ -1195,5 +1216,7 @@
         </div>
     </a>
 
+    <!-- Master System Enforcement -->
+    <script src="calcare_system.js"></script>
 </body>
 </html>

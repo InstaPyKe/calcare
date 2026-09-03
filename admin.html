@@ -3,123 +3,821 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcare - Admin Event Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <title>Calcare - Super Admin Portal & System Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        :root {
+            --bg-primary: #0a0614;
+            --bg-secondary: #120c22;
+            --bg-card: rgba(26, 18, 46, 0.7);
+            --bg-card-hover: rgba(35, 25, 62, 0.85);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(255, 184, 0, 0.4);
+            --accent-green: #00FF00;
+            --accent-gold: #ffb800;
+            --accent-purple: #793ea0;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
         }
 
         body {
-            background-color: #0f0a1c;
-            color: #f1f3f5;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(90, 50, 118, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 184, 0, 0.08) 0%, transparent 40%);
+            background-attachment: fixed;
         }
 
-        /* Top Header Navbar */
+        /* Top Navbar */
         .admin-navbar {
-            background: rgba(22, 15, 34, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 16px 32px;
+            background: rgba(14, 9, 26, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 16px 36px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 1000;
+            gap: 24px;
         }
 
         .brand-section {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            flex-shrink: 0;
         }
 
         .admin-logo {
-            width: 32px;
-            height: 32px;
-            fill: #00FF00;
+            width: 38px;
+            height: 38px;
+            fill: var(--accent-green);
+            filter: drop-shadow(0 0 12px rgba(0, 255, 0, 0.45));
+            transition: transform 0.2s ease;
+        }
+        .brand-section:hover .admin-logo {
+            transform: scale(1.05);
+        }
+
+        .brand-title-box {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
 
         .brand-title {
-            font-size: 20px;
-            font-weight: 800;
+            font-size: 21px;
+            font-weight: 900;
             letter-spacing: 0.5px;
             color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            line-height: 1.1;
         }
 
         .brand-badge {
-            background: linear-gradient(135deg, #00FF00, #ffb800);
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-gold));
             color: #000000;
-            font-size: 10px;
-            font-weight: 800;
-            padding: 2px 8px;
+            font-size: 9.5px;
+            font-weight: 900;
+            padding: 2.5px 8px;
             border-radius: 20px;
             text-transform: uppercase;
+            letter-spacing: 0.6px;
         }
 
-        .nav-status {
-            font-size: 13px;
-            color: #ffb800;
+        .brand-subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
             font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        /* Center Status Cluster */
+        .status-cluster {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
         }
 
-        .status-pulse {
-            width: 8px;
-            height: 8px;
-            background: #ffb800;
+        @media (max-width: 960px) {
+            .status-cluster {
+                display: none;
+            }
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        .status-pill.active {
+            border-color: rgba(34, 197, 94, 0.35);
+            color: #4ade80;
+            background: rgba(34, 197, 94, 0.08);
+        }
+
+        .status-pill.warning {
+            border-color: rgba(255, 184, 0, 0.35);
+            color: var(--accent-gold);
+            background: rgba(255, 184, 0, 0.08);
+        }
+
+        .status-pill.danger {
+            border-color: rgba(239, 68, 68, 0.35);
+            color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.08);
+        }
+
+        .status-dot {
+            width: 7.5px;
+            height: 7.5px;
             border-radius: 50%;
-            animation: pulse 1.5s infinite;
+            background: currentColor;
+            animation: pulse 1.8s infinite;
         }
 
         @keyframes pulse {
-            0% { transform: scale(0.9); opacity: 0.6; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(0.9); opacity: 0.6; }
+            0% { transform: scale(0.9); opacity: 0.7; }
+            50% { transform: scale(1.3); opacity: 1; filter: drop-shadow(0 0 4px currentColor); }
+            100% { transform: scale(0.9); opacity: 0.7; }
         }
 
-        /* Split-Pane Dashboard Container */
-        .dashboard-container {
+        /* Action Cluster */
+        .nav-actions {
             display: flex;
-            flex: 1;
-            width: 100%;
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 24px;
-            gap: 24px;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
-        /* Left Side: Mobile Device Simulator Pane */
-        .left-pane {
-            flex: 0 0 450px;
+        .nav-divider {
+            width: 1px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 0 4px;
+        }
+
+        .admin-profile-badge {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 5px 14px 5px 6px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+        }
+
+        @media (max-width: 640px) {
+            .admin-profile-badge {
+                display: none;
+            }
+        }
+
+        .admin-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-purple), #2b1f3d);
+            border: 1.5px solid var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-gold);
+        }
+
+        .admin-role-text {
+            font-size: 12px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .btn-top {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-top:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .btn-top.btn-primary {
+            background: linear-gradient(135deg, var(--accent-gold), #ff9800);
+            color: #000000;
+            border: none;
+            box-shadow: 0 4px 14px rgba(255, 184, 0, 0.3);
+            font-weight: 800;
+        }
+
+        .btn-top.btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(255, 184, 0, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .btn-top.btn-logout {
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.25);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .btn-top.btn-logout:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        /* Navigation Tabs Bar */
+        .tab-bar-container {
+            background: rgba(11, 7, 20, 0.96);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 36px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            position: sticky;
+            top: 70px;
+            z-index: 950;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .tab-bar-container::-webkit-scrollbar {
+            height: 3px;
+        }
+        .tab-bar-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 184, 0, 0.3);
+            border-radius: 2px;
+        }
+
+        .nav-tab {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            padding: 9px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .nav-tab:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-tab.active {
+            color: #000000;
+            background: var(--accent-gold);
+            font-weight: 800;
+            box-shadow: 0 4px 14px rgba(255, 184, 0, 0.35);
+        }
+
+        .nav-tab .tab-badge {
+            background: rgba(0, 0, 0, 0.2);
+            color: inherit;
+            font-size: 10.5px;
+            font-weight: 800;
+            padding: 2.5px 7px;
+            border-radius: 12px;
+        }
+
+        .nav-tab.active .tab-badge {
+            background: rgba(0, 0, 0, 0.85);
+            color: #ffffff;
+        }
+
+        /* Main Container */
+        .admin-main {
+            flex: 1;
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 32px 36px 48px;
             display: flex;
             flex-direction: column;
+            gap: 32px;
+        }
+
+        /* KPI Metric Cards Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 22px;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 26px 28px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.16);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-gold);
+        }
+
+        .kpi-card.green::before { background: var(--accent-green); }
+        .kpi-card.purple::before { background: var(--accent-purple); }
+        .kpi-card.blue::before { background: var(--accent-blue); }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: flex-start;
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .kpi-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            margin: 4px 0 2px;
+        }
+
+        .kpi-subtext {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+
+        .kpi-subtext .trend-up {
+            color: #4ade80;
+            font-weight: 800;
+        }
+
+        /* Master System Switches Bar */
+        .system-switches-bar {
+            background: linear-gradient(135deg, rgba(30, 20, 54, 0.8), rgba(20, 14, 38, 0.9));
+            border: 1.5px solid rgba(255, 184, 0, 0.22);
+            border-radius: 24px;
+            padding: 24px 28px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            box-shadow: 0 10px 32px rgba(0,0,0,0.35);
+        }
+
+        @media (max-width: 768px) {
+            .system-switches-bar {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .switch-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.32);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 20px 24px;
+            gap: 20px;
+        }
+
+        .switch-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .switch-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .switch-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+
+        /* Toggle Slider Component */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 56px;
+            height: 30px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #334155;
+            transition: .3s;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        }
+
+        input:checked + .slider {
+            background-color: #22c55e;
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+        }
+
+        input:checked + .slider.danger-slider {
+            background-color: #ef4444;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(25px);
+        }
+
+        /* Panel Sections & Tables */
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            gap: 28px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel-container {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 30px 34px;
+            display: flex;
+            flex-direction: column;
+            gap: 26px;
+        }
+
+        .panel-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .panel-heading {
+            font-size: 19px;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .panel-heading-tag {
+            font-size: 11.5px;
+            font-weight: 700;
+            background: rgba(255, 184, 0, 0.12);
+            color: var(--accent-gold);
+            padding: 3.5px 9px;
+            border-radius: 8px;
+        }
+
+        .panel-controls {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid var(--border-color);
+            color: #ffffff;
+            padding: 11px 16px 11px 42px;
+            border-radius: 14px;
+            font-size: 13.5px;
+            font-weight: 600;
+            outline: none;
+            width: 280px;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 12px rgba(255, 184, 0, 0.25);
+            width: 320px;
+        }
+
+        .search-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .filter-select {
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid var(--border-color);
+            color: #ffffff;
+            padding: 11px 16px;
+            border-radius: 14px;
+            font-size: 13.5px;
+            font-weight: 700;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Custom Data Table */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 18px;
+            border: 1px solid var(--border-color);
+            background: rgba(14, 9, 26, 0.4);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13.5px;
+        }
+
+        .data-table th {
+            background: rgba(18, 12, 34, 0.95);
+            color: var(--text-secondary);
+            font-size: 11.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            padding: 16px 22px;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 18px 22px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+            font-weight: 600;
+            vertical-align: middle;
+        }
+
+        .data-table tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .status-badge.pending {
+            background: rgba(255, 184, 0, 0.12);
+            color: var(--accent-gold);
+            border: 1px solid rgba(255, 184, 0, 0.3);
+        }
+
+        .status-badge.approved {
+            background: rgba(34, 197, 94, 0.12);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .status-badge.disbursed {
+            background: rgba(168, 85, 247, 0.12);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .status-badge.rejected {
+            background: rgba(239, 68, 68, 0.12);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-badge.incomplete {
+            background: rgba(148, 163, 184, 0.12);
+            color: #cbd5e1;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+
+        .action-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-table-action {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-color);
+            color: #ffffff;
+            padding: 7px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+
+        .btn-table-action:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-table-action.btn-green {
+            background: rgba(34, 197, 94, 0.15);
+            border-color: rgba(34, 197, 94, 0.4);
+            color: #4ade80;
+        }
+        .btn-table-action.btn-green:hover { background: rgba(34, 197, 94, 0.3); }
+
+        .btn-table-action.btn-red {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #f87171;
+        }
+        .btn-table-action.btn-red:hover { background: rgba(239, 68, 68, 0.3); }
+
+        .btn-table-action.btn-whatsapp {
+            background: rgba(37, 211, 102, 0.18);
+            border-color: rgba(37, 211, 102, 0.5);
+            color: #25d366;
+            font-weight: 800;
+        }
+        .btn-table-action.btn-whatsapp:hover {
+            background: #25d366;
+            color: #000;
+        }
+
+        .btn-table-action.btn-disburse {
+            background: rgba(168, 85, 247, 0.18);
+            border-color: rgba(168, 85, 247, 0.4);
+            color: #c084fc;
+        }
+        .btn-table-action.btn-disburse:hover {
+            background: #a855f7;
+            color: #fff;
+        }
+
+        /* Split-View for Live Emulator Tab */
+        .emulator-layout {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 1024px) {
+            .emulator-layout {
+                grid-template-columns: 1fr;
+            }
         }
 
         .device-emulator {
             width: 100%;
             max-width: 390px;
-            height: 780px;
+            height: 760px;
             background: #1e1b29;
             border: 12px solid #2f2a42;
             border-radius: 48px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(90, 50, 118, 0.15);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(90, 50, 118, 0.2);
             overflow: hidden;
             position: relative;
             display: flex;
             flex-direction: column;
+            margin: 0 auto;
         }
 
         .emulator-speaker {
@@ -144,787 +842,1785 @@
             overflow: hidden;
         }
 
-        /* Right Side: Command Center Pane */
-        .right-pane {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            min-width: 0; /* Prevents flex items from overflowing */
-        }
-
-        /* Widgets/Cards grid */
-        .stats-grid {
+        /* Form Controls in Settings */
+        .settings-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
         }
 
-        .stat-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 16px;
-            padding: 20px;
+        .setting-field {
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            position: relative;
-            overflow: hidden;
+            gap: 10px;
         }
 
-        .stat-card::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.3), transparent);
-        }
-
-        .stat-label {
-            font-size: 12px;
-            font-weight: 600;
+        .setting-label {
+            font-size: 12.5px;
+            font-weight: 800;
+            color: #cbd5e1;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: #a0aec0;
         }
 
-        .stat-value {
-            font-size: 22px;
-            font-weight: 800;
+        .setting-input {
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 14px 18px;
             color: #ffffff;
-        }
-
-        /* Control Panel layout */
-        .control-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            flex: 1;
-        }
-
-        .panel-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 20px;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            backdrop-filter: blur(16px);
-        }
-
-        .panel-title {
-            font-size: 16px;
-            font-weight: 800;
-            color: #ffb800;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* State Form Controls */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            overflow-y: auto;
-            max-height: 480px;
-            padding-right: 4px;
-        }
-
-        .form-grid::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .form-grid::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .form-group.full-width {
-            grid-column: span 2;
-        }
-
-        .form-label {
-            font-size: 11px;
-            font-weight: 700;
-            color: #a0aec0;
-            text-transform: uppercase;
-        }
-
-        .form-input {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 10px 14px;
-            color: #ffffff;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             outline: none;
             transition: all 0.2s;
         }
 
-        .form-input:focus {
-            border-color: #ffb800;
-            box-shadow: 0 0 8px rgba(255, 184, 0, 0.15);
+        .setting-input:focus {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 12px rgba(255, 184, 0, 0.25);
         }
 
-        /* Button controls styling */
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .action-btn {
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-update {
-            background-color: #ffb800;
-            color: #000000;
-        }
-
-        .btn-update:hover {
-            background-color: #e0a300;
-            transform: translateY(-2px);
-        }
-
-        .btn-approve {
-            background-color: #2e7d32;
-            color: #ffffff;
-        }
-
-        .btn-approve:hover {
-            background-color: #246327;
-            transform: translateY(-2px);
-        }
-
-        .btn-reject {
-            background-color: #d93838;
-            color: #ffffff;
-        }
-
-        .btn-reject:hover {
-            background-color: #b32a2a;
-            transform: translateY(-2px);
-        }
-
-        .btn-reset {
-            background: transparent;
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            color: #ff4d4d;
-        }
-
-        .btn-reset:hover {
-            background: rgba(255, 77, 77, 0.1);
-            border-color: #ff4d4d;
-        }
-
-        .btn-disburse {
-            background-color: #5a3276;
-            color: #ffffff;
-        }
-
-        .btn-disburse:hover {
-            background-color: #492862;
-            transform: translateY(-2px);
-        }
-
-        /* Timeline styles */
+        /* Timeline & Activity Feed */
         .timeline-container {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
+            max-height: 540px;
             overflow-y: auto;
-            flex-grow: 1;
-            padding-right: 6px;
-            max-height: 480px;
+            padding-right: 8px;
         }
 
         .timeline-container::-webkit-scrollbar {
             width: 4px;
         }
-
         .timeline-container::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 2px;
         }
 
         .timeline-item {
-            background: rgba(255, 255, 255, 0.015);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 12px;
-            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px 20px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            animation: slideIn 0.3s ease-out;
+            gap: 8px;
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .event-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .event-time {
-            font-size: 11px;
-            color: #718096;
-            font-weight: 600;
-        }
-
-        .event-page {
-            font-size: 10px;
-            font-weight: 800;
-            padding: 2px 6px;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-
-        .badge-index { background: rgba(90, 50, 118, 0.2); color: #c084fc; }
-        .badge-phone { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-        .badge-review { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-        .badge-disbursment { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-        .badge-other { background: rgba(255, 255, 255, 0.08); color: #cbd5e1; }
-
-        .event-name {
-            font-size: 13.5px;
-            font-weight: 700;
-            color: #e2e8f0;
-        }
-
-        .event-details {
-            font-size: 11px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 6px;
-            padding: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            overflow-x: auto;
-        }
-
-        .event-details pre {
-            font-family: monospace;
-            color: #a0aec0;
-            white-space: pre-wrap;
-        }
-
-        .no-events {
+        .empty-state {
             text-align: center;
-            font-size: 13px;
-            color: #718096;
-            padding: 40px 0;
+            padding: 56px 24px;
+            color: var(--text-muted);
+            font-size: 14.5px;
             font-weight: 600;
+        }
+
+        /* Toast notification */
+        .toast-popup {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: #1e1b29;
+            border: 1px solid var(--accent-gold);
+            color: #ffffff;
+            padding: 16px 26px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.55);
+            z-index: 10000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toast-popup.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        /* Comprehensive Mobile Responsiveness for Tables and Views */
+        .overview-grid, .controls-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 24px;
+        }
+
+        .controls-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        @media (max-width: 1024px) {
+            .overview-grid, .controls-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-navbar {
+                padding: 12px 16px;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+
+            .brand-title {
+                font-size: 18px;
+            }
+
+            .brand-logo {
+                width: 30px;
+                height: 30px;
+            }
+
+            .tab-bar-container {
+                padding: 8px 14px;
+                top: 57px;
+            }
+
+            .nav-tab {
+                padding: 7px 12px;
+                font-size: 12px;
+                gap: 7px;
+            }
+
+            .admin-main {
+                padding: 16px 14px 36px;
+                gap: 18px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .kpi-card {
+                padding: 18px 16px;
+                border-radius: 18px;
+            }
+
+            .kpi-value {
+                font-size: 26px;
+            }
+
+            .panel-container {
+                padding: 20px 16px;
+                border-radius: 18px;
+                gap: 18px;
+            }
+
+            .panel-header-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 14px;
+            }
+
+            .panel-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .search-wrapper, .search-input, .filter-select {
+                width: 100% !important;
+            }
+
+            .search-input:focus {
+                width: 100% !important;
+            }
+
+            /* Responsive Mobile Card Layout for Tables */
+            .table-responsive {
+                border: none !important;
+                background: transparent !important;
+                overflow-x: visible !important;
+            }
+
+            .data-table, .data-table thead, .data-table tbody, .data-table th, .data-table td, .data-table tr {
+                display: block !important;
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+
+            .data-table thead tr {
+                position: absolute !important;
+                top: -9999px !important;
+                left: -9999px !important;
+                display: none !important;
+            }
+
+            .data-table tr {
+                background: rgba(22, 14, 38, 0.85) !important;
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid var(--border-color) !important;
+                border-radius: 20px !important;
+                padding: 16px 18px !important;
+                margin-bottom: 16px !important;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 10px !important;
+                box-sizing: border-box !important;
+            }
+
+            .data-table tr:hover {
+                border-color: rgba(255, 184, 0, 0.35) !important;
+                background: rgba(26, 17, 45, 0.95) !important;
+            }
+
+            .data-table td {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 7px 0 !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+                font-size: 13.5px !important;
+                white-space: normal !important;
+                text-align: right !important;
+                word-break: break-word !important;
+                gap: 12px !important;
+            }
+
+            .data-table td:last-child {
+                border-bottom: none !important;
+                padding-top: 10px !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+
+            .data-table td[data-label]::before {
+                content: attr(data-label);
+                font-size: 11.5px;
+                font-weight: 800;
+                color: var(--text-secondary);
+                text-transform: uppercase;
+                letter-spacing: 0.6px;
+                text-align: left;
+                flex-shrink: 0;
+            }
+
+            .data-table td[data-label="Administrative Actions"]::before,
+            .data-table td[data-label="Direct Recovery Actions"]::before,
+            .data-table td[data-label="Audit Actions"]::before,
+            .data-table td[data-label="Actions"]::before {
+                align-self: flex-start;
+                margin-bottom: 6px;
+            }
+
+            .data-table td.empty-state {
+                display: block !important;
+                text-align: center !important;
+                padding: 32px 16px !important;
+                color: var(--text-muted) !important;
+            }
+
+            .data-table td.empty-state::before {
+                display: none !important;
+            }
+
+            .action-cell {
+                width: 100% !important;
+                display: grid !important;
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)) !important;
+                gap: 8px !important;
+            }
+
+            .btn-table-action {
+                width: 100% !important;
+                justify-content: center !important;
+                padding: 9px 12px !important;
+                font-size: 12px !important;
+                border-radius: 10px !important;
+                text-align: center !important;
+            }
+        }
+
+        /* Small Phones (Down to 280px like Galaxy Fold Outer Screen) */
+        @media (max-width: 480px) {
+            .admin-navbar {
+                padding: 10px 12px;
+                gap: 10px;
+            }
+
+            .brand-section {
+                gap: 10px;
+            }
+
+            .admin-logo {
+                width: 28px;
+                height: 28px;
+            }
+
+            .brand-title {
+                font-size: 16px;
+            }
+
+            .brand-badge {
+                font-size: 8.5px;
+                padding: 2px 6px;
+            }
+
+            .nav-actions {
+                gap: 6px;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .btn-top {
+                padding: 6px 10px;
+                font-size: 11px;
+                border-radius: 8px;
+                gap: 5px;
+                flex: 1;
+                justify-content: center;
+            }
+
+            .admin-profile-badge {
+                width: 100%;
+                justify-content: center;
+                order: 10;
+            }
+
+            .admin-role-text {
+                font-size: 11px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 200px;
+            }
+
+            .tab-bar-container {
+                padding: 6px 8px;
+                top: 54px;
+            }
+
+            .nav-tab {
+                padding: 6px 10px;
+                font-size: 11.5px;
+                gap: 6px;
+                border-radius: 10px;
+            }
+
+            .admin-main {
+                padding: 12px 8px 32px;
+                gap: 14px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .kpi-card {
+                padding: 16px 14px;
+                border-radius: 16px;
+                gap: 8px;
+            }
+
+            .kpi-value {
+                font-size: 24px;
+            }
+
+            .system-switches-bar {
+                padding: 16px 12px;
+                border-radius: 16px;
+                gap: 12px;
+            }
+
+            .switch-box {
+                padding: 14px 14px;
+                border-radius: 14px;
+                gap: 12px;
+            }
+
+            .switch-title {
+                font-size: 14.5px;
+            }
+
+            .switch-desc {
+                font-size: 12px;
+            }
+
+            .panel-container {
+                padding: 16px 12px;
+                border-radius: 16px;
+                gap: 14px;
+            }
+
+            .panel-heading {
+                font-size: 16.5px;
+            }
+
+            .settings-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .setting-field[style*="grid-column"] {
+                grid-column: span 1 !important;
+            }
+
+            .setting-input {
+                padding: 11px 14px;
+                font-size: 13.5px;
+            }
+
+            .data-table {
+                font-size: 12px;
+                min-width: 520px;
+            }
+
+            .data-table th, .data-table td {
+                padding: 10px 12px;
+            }
+
+            .device-emulator {
+                max-width: 100%;
+                height: 520px;
+                border-width: 8px;
+                border-radius: 32px;
+            }
+        }
+
+        /* 280px Ultra-Compact Viewports */
+        @media (max-width: 320px) {
+            .admin-navbar {
+                padding: 8px;
+            }
+
+            .brand-title {
+                font-size: 14px;
+            }
+
+            .brand-badge {
+                font-size: 7.5px;
+                padding: 1px 4px;
+            }
+
+            .nav-actions {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 5px;
+            }
+
+            .btn-top {
+                width: 100%;
+                padding: 5px 8px;
+                font-size: 10.5px;
+            }
+
+            .nav-divider {
+                display: none;
+            }
+
+            .admin-role-text {
+                font-size: 9.5px;
+                max-width: 160px;
+            }
+
+            .tab-bar-container {
+                padding: 4px;
+            }
+
+            .nav-tab {
+                padding: 5px 8px;
+                font-size: 10.5px;
+            }
+
+            .admin-main {
+                padding: 8px 4px 24px;
+                gap: 10px;
+            }
+
+            .panel-container {
+                padding: 12px 8px;
+                border-radius: 12px;
+                gap: 12px;
+            }
+
+            .kpi-card {
+                padding: 12px 10px;
+            }
+
+            .data-table {
+                min-width: 460px;
+            }
+
+            .device-emulator {
+                height: 420px;
+                border-width: 4px;
+                border-radius: 18px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Top Admin Header Bar -->
+    <!-- Top Admin Header -->
     <header class="admin-navbar">
-        <div class="brand-section">
+        <!-- Brand Section -->
+        <div class="brand-section" onclick="switchTab('tabOverview')">
             <svg class="admin-logo" viewBox="0 0 100 100">
                 <path d="M 50 10 L 85 30 L 50 50 L 15 30 Z M 15 45 L 50 65 L 85 45 M 15 60 L 50 80 L 85 60" stroke="#00FF00"
                     stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            <div class="brand-title">CALCARE</div>
-            <div class="brand-badge">ADMIN CONTROL</div>
+            <div class="brand-title-box">
+                <div class="brand-title">
+                    CALCARE
+                    <span class="brand-badge">PRO ADMIN</span>
+                </div>
+            </div>
         </div>
-        <div class="nav-status">
-            <div class="status-pulse"></div>
-            Live Session Synchronized
+
+        <!-- Center Dynamic Status Cluster -->
+        <div class="status-cluster">
+            <div class="status-pill active" id="pillLoansStatus">
+                <div class="status-dot"></div>
+                Loans: <span id="textLoansStatus">Accepting</span>
+            </div>
+            <div class="status-pill" id="pillMaintenanceStatus">
+                <div class="status-dot" style="background:#22c55e;"></div>
+                System: <span id="textMaintenanceStatus">Operational</span>
+            </div>
+        </div>
+
+        <!-- Right Action Controls -->
+        <div class="nav-actions">
+            <button class="btn-top" onclick="seedSampleDemoData()" title="Populate realistic Kenyan applicants &amp; payments for testing">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Seed Data
+            </button>
+            <button class="btn-top" onclick="exportDataToCSV()" title="Export all applicants, leads, and payment records to CSV">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export CSV
+            </button>
+            <button class="btn-top btn-primary" onclick="switchTab('tabEmulator')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                Simulator
+            </button>
+
+            <div class="nav-divider"></div>
+
+            <div class="admin-profile-badge">
+                <div class="admin-avatar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <span class="admin-role-text" id="adminEmailBadge">bravinsimiyu04@gmail.com</span>
+            </div>
+
+            <button class="btn-top btn-logout" onclick="adminLogout()" title="Log out of Admin Session">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Logout
+            </button>
         </div>
     </header>
 
-    <!-- Split Pane Dashboard Content -->
-    <main class="dashboard-container">
-        
-        <!-- Left: Device Frame Emulator -->
-        <section class="left-pane">
-            <div class="device-emulator">
-                <div class="emulator-speaker"></div>
-                <iframe src="index.html" class="emulator-iframe" id="appIframe"></iframe>
+    <!-- Navigation Tabs Bar -->
+    <nav class="tab-bar-container">
+        <button class="nav-tab active" onclick="switchTab('tabOverview')" id="btnTabOverview">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+            <span>Overview</span>
+        </button>
+        <button class="nav-tab" onclick="switchTab('tabApplicants')" id="btnTabApplicants">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Loan Applicants</span>
+            <span class="tab-badge" id="badgeApplicants">0</span>
+        </button>
+        <button class="nav-tab" onclick="switchTab('tabLeads')" id="btnTabLeads">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            <span>Lead Recovery</span>
+            <span class="tab-badge" id="badgeLeads">0</span>
+        </button>
+        <button class="nav-tab" onclick="switchTab('tabWelfare')" id="btnTabWelfare">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>
+            <span>Welfare Members</span>
+            <span class="tab-badge" id="badgeWelfare">0</span>
+        </button>
+        <button class="nav-tab" onclick="switchTab('tabPayments')" id="btnTabPayments">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            <span>M-Pesa Payments</span>
+            <span class="tab-badge" id="badgePayments">0</span>
+        </button>
+        <button class="nav-tab" onclick="switchTab('tabControls')" id="btnTabControls">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span>System Controls</span>
+        </button>
+        <button class="nav-tab" onclick="switchTab('tabEmulator')" id="btnTabEmulator">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            <span>Live Simulator</span>
+        </button>
+        <button class="nav-tab" onclick="switchTab('tabEvents')" id="btnTabEvents">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <span>Event Stream</span>
+        </button>
+    </nav>
+
+    <!-- Main Workspace Area -->
+    <main class="admin-main">
+
+        <!-- ================= TAB 1: OVERVIEW ================= -->
+        <section class="tab-content active" id="tabOverview">
+            <!-- 4 Core Metric KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card" onclick="switchTab('tabApplicants')" style="cursor: pointer;">
+                    <div class="kpi-header">
+                        <span class="kpi-label">Total Loan Applicants</span>
+                        <div class="kpi-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffb800" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                    </div>
+                    <div class="kpi-value" id="kpiTotalApplicants">0</div>
+                    <div class="kpi-subtext">
+                        <span class="trend-up" id="kpiApprovedCount">0 Approved</span> • <span id="kpiPendingCount">0 Pending</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card green" onclick="switchTab('tabWelfare')" style="cursor: pointer;">
+                    <div class="kpi-header">
+                        <span class="kpi-label">Active Welfare Members</span>
+                        <div class="kpi-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00FF00" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>
+                        </div>
+                    </div>
+                    <div class="kpi-value" id="kpiWelfareMembers">0</div>
+                    <div class="kpi-subtext">
+                        <span class="trend-up">KSh <span id="kpiWelfareRevenue">0</span></span> In Welfare Pool
+                    </div>
+                </div>
+
+                <div class="kpi-card purple" onclick="switchTab('tabLeads')" style="cursor: pointer;">
+                    <div class="kpi-header">
+                        <span class="kpi-label">Recoverable Leads (Drop-offs)</span>
+                        <div class="kpi-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        </div>
+                    </div>
+                    <div class="kpi-value" id="kpiRecoverableLeads">0</div>
+                    <div class="kpi-subtext">
+                        Visitors who provided phone but didn't finish
+                    </div>
+                </div>
+
+                <div class="kpi-card blue" onclick="switchTab('tabPayments')" style="cursor: pointer;">
+                    <div class="kpi-header">
+                        <span class="kpi-label">M-Pesa Verification Queue</span>
+                        <div class="kpi-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                        </div>
+                    </div>
+                    <div class="kpi-value" id="kpiPaymentCodes">0</div>
+                    <div class="kpi-subtext">
+                        <span class="trend-up" id="kpiVerifiedPayments">0 Verified</span> Codes Logged
+                    </div>
+                </div>
+            </div>
+
+            <!-- Master System Quick Switches -->
+            <div class="system-switches-bar">
+                <div class="switch-box">
+                    <div class="switch-info">
+                        <div class="switch-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffb800" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            Loan Applications Switch
+                        </div>
+                        <div class="switch-desc" id="loansSwitchDesc">Allow new applicants to submit loan requests across the platform.</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleLoanApps" onchange="handleLoansToggle(this)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="switch-box">
+                    <div class="switch-info">
+                        <div class="switch-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                            System Maintenance Mode
+                        </div>
+                        <div class="switch-desc" id="maintenanceSwitchDesc">Lock all public user pages under a branded maintenance screen.</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleMaintenance" class="danger-slider" onchange="handleMaintenanceToggle(this)">
+                        <span class="slider danger-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Recent Applicants & Recent Leads Snapshot -->
+            <div class="overview-grid">
+                <!-- Left: Recent Applicants -->
+                <div class="panel-container">
+                    <div class="panel-header-row">
+                        <h3 class="panel-heading">
+                            Recent Loan Applicants
+                            <span class="panel-heading-tag">Real-time</span>
+                        </h3>
+                        <button class="btn-top" onclick="switchTab('tabApplicants')">
+                            <span>View All</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Applicant</th>
+                                    <th>Phone</th>
+                                    <th>Requested</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="overviewApplicantsBody">
+                                <tr><td colspan="5" class="empty-state">No applicants recorded yet. Click "Seed Demo Data" or apply through the simulator.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Right: High Priority Drop-off Leads -->
+                <div class="panel-container">
+                    <div class="panel-header-row">
+                        <h3 class="panel-heading">
+                            High Priority Leads
+                            <span class="panel-heading-tag" style="background: rgba(192, 132, 252, 0.15); color: #c084fc;">Recover</span>
+                        </h3>
+                        <button class="btn-top" onclick="switchTab('tabLeads')">
+                            <span>View All</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Phone</th>
+                                    <th>Drop-off Step</th>
+                                    <th>Reach Out</th>
+                                </tr>
+                            </thead>
+                            <tbody id="overviewLeadsBody">
+                                <tr><td colspan="3" class="empty-state">No drop-off leads found.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Right: Real-time Stats & Controls -->
-        <section class="right-pane">
-            
-            <!-- Quick stats header widgets -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="stat-label">Active Flow Screen</span>
-                    <span class="stat-value" id="statScreen">Welcome Portal</span>
+        <!-- ================= TAB 2: LOAN APPLICANTS ================= -->
+        <section class="tab-content" id="tabApplicants">
+            <div class="panel-container">
+                <div class="panel-header-row">
+                    <div>
+                        <h2 class="panel-heading">
+                            Total Loan Applications Management
+                            <span class="panel-heading-tag" id="tagApplicantsCount">0 Records</span>
+                        </h2>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Review applicant credentials, manage approval workflows, and trigger live disbursements.</p>
+                    </div>
+                    <div class="panel-controls">
+                        <div class="search-wrapper">
+                            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" id="searchApplicants" class="search-input" placeholder="Search by name, phone, ID..." oninput="renderApplicantsTable()">
+                        </div>
+                        <select id="filterApplicantStatus" class="filter-select" onchange="renderApplicantsTable()">
+                            <option value="ALL">All Statuses</option>
+                            <option value="pending">Pending Review</option>
+                            <option value="approved">Approved</option>
+                            <option value="disbursed">Disbursed</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                        <button class="btn-top btn-primary" onclick="seedSampleDemoData()">+ Seed Applicants</button>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <span class="stat-label">Current Limit</span>
-                    <span class="stat-value" id="statLimit">KSh 0</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Requested Amount</span>
-                    <span class="stat-value" id="statAmount">KSh 0</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Admin Approval Status</span>
-                    <span class="stat-value" id="statStatus">Pending Review</span>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Applicant Legal Name</th>
+                                <th>Phone Number</th>
+                                <th>National ID</th>
+                                <th>Loan Limit</th>
+                                <th>Requested Amount</th>
+                                <th>Submission Date</th>
+                                <th>Status</th>
+                                <th>Administrative Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applicantsTableBody">
+                            <tr><td colspan="8" class="empty-state">No loan applicants found.</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </section>
 
-            <!-- Two Column Control Layout -->
-            <div class="control-layout">
+        <!-- ================= TAB 3: LEAD RECOVERY ================= -->
+        <section class="tab-content" id="tabLeads">
+            <div class="panel-container">
+                <div class="panel-header-row">
+                    <div>
+                        <h2 class="panel-heading">
+                            Lead Recovery & Abandoned Inquiries
+                            <span class="panel-heading-tag" style="background: rgba(192, 132, 252, 0.15); color: #c084fc;">Conversion Hub</span>
+                        </h2>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Contacts of visitors who entered their phone number on Calcare but dropped off before finalizing their application.</p>
+                    </div>
+                    <div class="panel-controls">
+                        <div class="search-wrapper">
+                            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" id="searchLeads" class="search-input" placeholder="Search phone number..." oninput="renderLeadsTable()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Phone Number</th>
+                                <th>Captured Name</th>
+                                <th>Drop-off Page</th>
+                                <th>First Visit Timestamp</th>
+                                <th>Status</th>
+                                <th>Direct Recovery Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leadsTableBody">
+                            <tr><td colspan="6" class="empty-state">No dropped-off leads recorded yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: WELFARE MEMBERS ================= -->
+        <section class="tab-content" id="tabWelfare">
+            <div class="panel-container">
+                <div class="panel-header-row">
+                    <div>
+                        <h2 class="panel-heading">
+                            Active Calcare Welfare Members Roster
+                            <span class="panel-heading-tag" style="background: rgba(34, 197, 94, 0.15); color: #4ade80;">Verified Directory</span>
+                        </h2>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Members who have registered and activated their monthly welfare membership.</p>
+                    </div>
+                    <div class="panel-controls">
+                        <div class="search-wrapper">
+                            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" id="searchWelfare" class="search-input" placeholder="Search member, email, phone..." oninput="renderWelfareTable()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Member Name</th>
+                                <th>Phone Number</th>
+                                <th>Email Address</th>
+                                <th>Fee Paid</th>
+                                <th>M-Pesa Code</th>
+                                <th>Join Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="welfareTableBody">
+                            <tr><td colspan="8" class="empty-state">No welfare members registered yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 5: M-PESA PAYMENTS ================= -->
+        <section class="tab-content" id="tabPayments">
+            <div class="panel-container">
+                <div class="panel-header-row">
+                    <div>
+                        <h2 class="panel-heading">
+                            M-Pesa Transactions & Activation Codes Ledger
+                            <span class="panel-heading-tag" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">Payment Verification</span>
+                        </h2>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Track and verify confirmation codes submitted during welfare account activation.</p>
+                    </div>
+                    <div class="panel-controls">
+                        <div class="search-wrapper">
+                            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" id="searchPayments" class="search-input" placeholder="Search M-Pesa code or phone..." oninput="renderPaymentsTable()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>M-Pesa Code</th>
+                                <th>Payer Phone Number</th>
+                                <th>Amount (KSh)</th>
+                                <th>Payment Purpose</th>
+                                <th>Submission Timestamp</th>
+                                <th>Verification Status</th>
+                                <th>Audit Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentsTableBody">
+                            <tr><td colspan="7" class="empty-state">No M-Pesa payments logged yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 6: MASTER CONTROLS & SETTINGS ================= -->
+        <section class="tab-content" id="tabControls">
+            <div class="controls-grid">
                 
-                <!-- Col 1: LocalStorage State Manager -->
-                <div class="panel-card">
-                    <h3 class="panel-title">User State Editor</h3>
+                <!-- System Configuration -->
+                <div class="panel-container">
+                    <h3 class="panel-heading">Platform System Control Center</h3>
                     
-                    <form class="form-grid" id="stateEditorForm" onsubmit="event.preventDefault();">
-                        <div class="form-group">
-                            <label class="form-label">Phone Number</label>
-                            <input type="text" id="adminPhone" class="form-input" placeholder="e.g. 712345678">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Legal Name</label>
-                            <input type="text" id="adminNames" class="form-input" placeholder="e.g. John Doe">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">National ID</label>
-                            <input type="text" id="adminID" class="form-input" placeholder="e.g. 12345678">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Secure PIN</label>
-                            <input type="text" id="adminPIN" class="form-input" placeholder="e.g. 1234">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Place of Birth</label>
-                            <input type="text" id="adminPOB" class="form-input" placeholder="e.g. Mombasa">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Loan Limit (KSh)</label>
-                            <input type="number" id="adminLimit" class="form-input" placeholder="e.g. 3000">
-                        </div>
-                        <div class="form-group full-width">
-                            <label class="form-label">Requested Amount (KSh)</label>
-                            <input type="number" id="adminAmount" class="form-input" placeholder="e.g. 1500">
-                        </div>
-                    </form>
-
-                    <div class="button-group">
-                        <button class="action-btn btn-update" onclick="updateIframeState()">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                            Apply State Modifications
-                        </button>
-                        
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px;">
-                            <button class="action-btn btn-approve" onclick="setAdminDecision('approved')">Approve Loan</button>
-                            <button class="action-btn btn-reject" onclick="setAdminDecision('rejected')">Reject Loan</button>
+                    <div class="settings-grid">
+                        <div class="setting-field">
+                            <label class="setting-label">Loan Applications Acceptance</label>
+                            <select id="settingLoanStatus" class="setting-input" onchange="updateSystemSettings()">
+                                <option value="true">Enabled (Accepting New Loans)</option>
+                                <option value="false">Paused (Temporarily Paused)</option>
+                            </select>
                         </div>
 
-                        <button class="action-btn btn-disburse" onclick="simulateDisbursal()">Simulate Disbursal Screen</button>
+                        <div class="setting-field">
+                            <label class="setting-label">System Maintenance Mode</label>
+                            <select id="settingMaintenanceStatus" class="setting-input" onchange="updateSystemSettings()">
+                                <option value="false">Normal (Platform Fully Online)</option>
+                                <option value="true">Maintenance (Lock Public Pages)</option>
+                            </select>
+                        </div>
 
-                        <button class="action-btn btn-reset" onclick="resetUserState()">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg>
-                            Reset All User Data
-                        </button>
+                        <div class="setting-field" style="grid-column: span 2;">
+                            <label class="setting-label">Maintenance Banner Notice</label>
+                            <input type="text" id="settingMaintenanceMsg" class="setting-input" value="We are currently upgrading Calcare financial infrastructure to serve you better." oninput="updateSystemSettings()">
+                        </div>
+
+                        <div class="setting-field">
+                            <label class="setting-label">Estimated Completion ETA</label>
+                            <input type="text" id="settingMaintenanceEta" class="setting-input" value="15 - 30 minutes" oninput="updateSystemSettings()">
+                        </div>
+
+                        <div class="setting-field">
+                            <label class="setting-label">Default Max Loan Limit (KSh)</label>
+                            <input type="number" id="settingDefaultLimit" class="setting-input" value="3000" oninput="updateSystemSettings()">
+                        </div>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: 8px; display: flex; gap: 12px; flex-wrap: wrap;">
+                        <button class="btn-top btn-primary" onclick="showToast('System configuration saved successfully!')">Save System Settings</button>
+                        <button class="btn-top" onclick="seedSampleDemoData()">Seed 10 Sample Records</button>
+                        <button class="btn-top" style="color: var(--accent-red); border-color: rgba(239, 68, 68, 0.3);" onclick="hardResetAllData()">Reset System Storage</button>
                     </div>
                 </div>
 
-                <!-- Col 2: Real-time Event Logger Feed -->
-                <div class="panel-card">
-                    <h3 class="panel-title">
-                        Real-time Event Timeline
-                        <button class="action-btn btn-reset" style="padding: 4px 10px; font-size: 11px; margin: 0;" onclick="clearEventLogs()">Clear Feed</button>
-                    </h3>
+                <!-- Live State Injector for Emulator -->
+                <div class="panel-container">
+                    <h3 class="panel-heading">Manual User Session Injector</h3>
+                    <p style="font-size: 13px; color: var(--text-secondary);">Directly edit and inject values into the active user session in the simulator:</p>
                     
-                    <div class="timeline-container" id="timelineContainer">
-                        <div class="no-events">No events logged yet. Interact with the application flow on the left to trigger events.</div>
+                    <div class="settings-grid">
+                        <div class="setting-field">
+                            <label class="setting-label">Mobile Number</label>
+                            <input type="text" id="manualPhone" class="setting-input" placeholder="712345678">
+                        </div>
+                        <div class="setting-field">
+                            <label class="setting-label">Legal Name</label>
+                            <input type="text" id="manualName" class="setting-input" placeholder="John Kamau">
+                        </div>
+                        <div class="setting-field">
+                            <label class="setting-label">National ID</label>
+                            <input type="text" id="manualID" class="setting-input" placeholder="12345678">
+                        </div>
+                        <div class="setting-field">
+                            <label class="setting-label">Secure PIN</label>
+                            <input type="text" id="manualPIN" class="setting-input" placeholder="1234">
+                        </div>
+                        <div class="setting-field">
+                            <label class="setting-label">Loan Limit (KSh)</label>
+                            <input type="number" id="manualLimit" class="setting-input" placeholder="3000">
+                        </div>
+                        <div class="setting-field">
+                            <label class="setting-label">Requested Amount (KSh)</label>
+                            <input type="number" id="manualAmount" class="setting-input" placeholder="1500">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;">
+                        <button class="btn-top btn-primary" onclick="applyManualState()">Apply & Reload Simulator</button>
+                        <button class="btn-top" onclick="setAdminDecision('approved')">Set Decision: APPROVED</button>
+                        <button class="btn-top" style="color: var(--accent-red);" onclick="setAdminDecision('rejected')">Set Decision: REJECTED</button>
                     </div>
                 </div>
 
             </div>
+        </section>
 
+        <!-- ================= TAB 7: LIVE SIMULATOR ================= -->
+        <section class="tab-content" id="tabEmulator">
+            <div class="emulator-layout">
+                <!-- Device Frame -->
+                <div class="device-emulator">
+                    <div class="emulator-speaker"></div>
+                    <iframe src="index.html" class="emulator-iframe" id="appIframe"></iframe>
+                </div>
+
+                <!-- Simulator Navigator Controls -->
+                <div class="panel-container">
+                    <h3 class="panel-heading">Simulator Navigator & Diagnostics</h3>
+                    
+                    <div class="setting-field">
+                        <label class="setting-label">Jump to Screen</label>
+                        <select id="selectSimulatorPage" class="setting-input" onchange="navigateIframe(this.value)">
+                            <option value="index.html">1. Welcome Landing (index.html)</option>
+                            <option value="phone.html">2. Mobile Number Input (phone.html)</option>
+                            <option value="names.html">3. Full Name Input (names.html)</option>
+                            <option value="id.html">4. National ID Input (id.html)</option>
+                            <option value="pin.html">5. Security PIN Setup (pin.html)</option>
+                            <option value="placeofbirth.html">6. Place of Birth (placeofbirth.html)</option>
+                            <option value="affiliate.html">7. Affiliate Selection (affiliate.html)</option>
+                            <option value="consents.html">8. Legal Consents (consents.html)</option>
+                            <option value="waiting.html">9. Verification Transition (waiting.html)</option>
+                            <option value="otp.html">10. SMS OTP Verification (otp.html)</option>
+                            <option value="id_upload.html">11. ID Upload & Scan (id_upload.html)</option>
+                            <option value="verification.html">12. Verification Animation (verification.html)</option>
+                            <option value="offerloading.html">13. Offer Generator (offerloading.html)</option>
+                            <option value="loan_calculater.html">14. Loan Slider Calculator (loan_calculater.html)</option>
+                            <option value="loan_details.html">15. Loan Confirmation & Welfare Modal (loan_details.html)</option>
+                            <option value="activation.html">16. Welfare Activation & STK Push (activation.html)</option>
+                            <option value="pending_review.html">17. Administrative Review (pending_review.html)</option>
+                            <option value="pending_disbursment.html">18. Final Loan Disbursal (pending_disbursment.html)</option>
+                            <option value="welfare.html">19. Welfare Portal (welfare.html)</option>
+                            <option value="support.html">20. Helpdesk Support (support.html)</option>
+                        </select>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+                        <button class="btn-top" onclick="reloadIframe()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+                            Reload Screen
+                        </button>
+                        <button class="btn-top btn-primary" onclick="setAdminDecision('approved')">Approve Review</button>
+                        <button class="btn-top" style="color: #ef4444;" onclick="setAdminDecision('rejected')">Reject Review</button>
+                        <button class="btn-top" onclick="navigateIframe('pending_disbursment.html')">Test Disbursal</button>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: 16px;">
+                        <h4 style="font-size: 14px; font-weight: 800; color: #ffb800; margin-bottom: 8px;">Active Session Values in Storage:</h4>
+                        <div id="liveSessionDetails" style="font-size: 13px; color: var(--text-secondary); line-height: 1.8; background: rgba(0,0,0,0.3); padding: 14px; border-radius: 12px;">
+                            Loading session...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 8: EVENT STREAM ================= -->
+        <section class="tab-content" id="tabEvents">
+            <div class="panel-container">
+                <div class="panel-header-row">
+                    <div>
+                        <h2 class="panel-heading">Real-time Application Event Stream</h2>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Chronological diagnostic logs emitted across all user interactions and pages.</p>
+                    </div>
+                    <button class="btn-top" style="color: var(--accent-red);" onclick="clearEventLogs()">Clear Event Feed</button>
+                </div>
+
+                <div class="timeline-container" id="timelineContainer">
+                    <div class="empty-state">No events logged yet. Interact with the application to see live events.</div>
+                </div>
+            </div>
         </section>
 
     </main>
 
+    <!-- Global Toast Alert -->
+    <div class="toast-popup" id="adminToast">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffb800" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="toastMsg">Notification</span>
+    </div>
+
+    <!-- Core Scripts -->
     <script>
+        // Security Authentication Guard (Admin PIN 334455)
+        if (sessionStorage.getItem('calcare_admin_auth') !== 'true') {
+            window.location.href = 'admin_login.html';
+        }
+
+        function adminLogout() {
+            sessionStorage.removeItem('calcare_admin_auth');
+            sessionStorage.removeItem('calcare_admin_auth_time');
+            window.location.href = 'admin_login.html';
+        }
+
         const iframe = document.getElementById('appIframe');
 
-        // Main logger initialization to catch administrative dashboard clicks
-        window.logCalcareEvent = function(name, details = {}) {
-            try {
-                const logs = JSON.parse(localStorage.getItem('calcare_event_logs') || '[]');
-                logs.push({
-                    timestamp: new Date().toISOString(),
-                    page: 'admin.html',
-                    name: name,
-                    details: details
-                });
-                localStorage.setItem('calcare_event_logs', JSON.stringify(logs));
-                renderTimeline();
-            } catch(e) {
-                console.error(e);
-            }
-        };
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
 
-        // Render events timeline list
-        function renderTimeline() {
-            const logs = JSON.parse(localStorage.getItem('calcare_event_logs') || '[]');
-            const container = document.getElementById('timelineContainer');
-            
-            if (logs.length === 0) {
-                container.innerHTML = '<div class="no-events">No events logged yet. Interact with the application flow on the left to trigger events.</div>';
+            const targetContent = document.getElementById(tabId);
+            if (targetContent) targetContent.classList.add('active');
+
+            const btnId = 'btn' + tabId.charAt(0).toUpperCase() + tabId.slice(1);
+            const targetBtn = document.getElementById(btnId);
+            if (targetBtn) targetBtn.classList.add('active');
+
+            // Refresh data on switch
+            syncAllData();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('adminToast');
+            const toastMsg = document.getElementById('toastMsg');
+            toastMsg.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        // ================= DATA LAYER & AGGREGATION =================
+        function getCollection(key, defaultVal = []) {
+            try {
+                return JSON.parse(localStorage.getItem(key)) || defaultVal;
+            } catch(e) {
+                return defaultVal;
+            }
+        }
+
+        function setCollection(key, val) {
+            localStorage.setItem(key, JSON.stringify(val));
+        }
+
+        // Parse logs to ensure all live user events reflect in applicants and leads collections
+        function autoSyncFromLogs() {
+            const logs = getCollection('calcare_event_logs', []);
+            let applicants = getCollection('calcare_applicants', []);
+            let leads = getCollection('calcare_leads', []);
+            let payments = getCollection('calcare_mpesa_payments', []);
+            let welfare = getCollection('calcare_welfare_members', []);
+
+            // Check current active user session
+            const currentPhone = localStorage.getItem('calcare_phone');
+            const currentName = localStorage.getItem('calcare_names');
+            const currentId = localStorage.getItem('calcare_national_id');
+            const currentAmount = localStorage.getItem('calcare_loan_amount');
+            const currentLimit = localStorage.getItem('calcare_loan_limit');
+            const currentDecision = localStorage.getItem('calcare_admin_decision') || 'pending';
+
+            if (currentPhone) {
+                // If user selected amount or confirmed phone -> create/update applicant
+                if (currentAmount || currentName) {
+                    let existingApp = applicants.find(a => a.phone === currentPhone);
+                    if (!existingApp) {
+                        applicants.unshift({
+                            id: 'APP-' + Math.floor(1000 + Math.random() * 9000),
+                            name: currentName || 'Applicant',
+                            phone: currentPhone,
+                            nationalId: currentId || 'Pending',
+                            amount: parseInt(currentAmount) || 500,
+                            limit: parseInt(currentLimit) || 3000,
+                            status: currentDecision,
+                            date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+                            timestamp: new Date().toISOString()
+                        });
+                    } else {
+                        if (currentName) existingApp.name = currentName;
+                        if (currentId) existingApp.nationalId = currentId;
+                        if (currentAmount) existingApp.amount = parseInt(currentAmount);
+                        existingApp.status = currentDecision;
+                    }
+                } else {
+                    // It is a drop-off lead
+                    let existingLead = leads.find(l => l.phone === currentPhone);
+                    if (!existingLead && !applicants.some(a => a.phone === currentPhone)) {
+                        leads.unshift({
+                            id: 'LEAD-' + Math.floor(1000 + Math.random() * 9000),
+                            phone: currentPhone,
+                            name: currentName || 'Visitor',
+                            lastPage: 'phone.html',
+                            date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+                            timestamp: new Date().toISOString()
+                        });
+                    }
+                }
+            }
+
+            setCollection('calcare_applicants', applicants);
+            setCollection('calcare_leads', leads);
+        }
+
+        // ================= RENDERING TABLES & METRICS =================
+        function syncAllData() {
+            autoSyncFromLogs();
+            renderKPIs();
+            renderApplicantsTable();
+            renderLeadsTable();
+            renderWelfareTable();
+            renderPaymentsTable();
+            renderTimeline();
+            loadSettings();
+            updateSessionDisplay();
+        }
+
+        function renderKPIs() {
+            const applicants = getCollection('calcare_applicants', []);
+            const leads = getCollection('calcare_leads', []);
+            const welfare = getCollection('calcare_welfare_members', []);
+            const payments = getCollection('calcare_mpesa_payments', []);
+
+            // Total applicants
+            document.getElementById('kpiTotalApplicants').textContent = applicants.length;
+            const approved = applicants.filter(a => a.status === 'approved' || a.status === 'disbursed').length;
+            const pending = applicants.filter(a => a.status === 'pending').length;
+            document.getElementById('kpiApprovedCount').textContent = approved + ' Approved';
+            document.getElementById('kpiPendingCount').textContent = pending + ' Pending';
+
+            // Welfare members
+            document.getElementById('kpiWelfareMembers').textContent = welfare.length;
+            document.getElementById('kpiWelfareRevenue').textContent = (welfare.length * 100).toLocaleString();
+
+            // Leads
+            document.getElementById('kpiRecoverableLeads').textContent = leads.length;
+
+            // Payments
+            document.getElementById('kpiPaymentCodes').textContent = payments.length;
+            const verifiedPay = payments.filter(p => p.status === 'Verified').length;
+            document.getElementById('kpiVerifiedPayments').textContent = verifiedPay + ' Verified';
+
+            // Badges in Tabs
+            document.getElementById('badgeApplicants').textContent = applicants.length;
+            document.getElementById('badgeLeads').textContent = leads.length;
+            document.getElementById('badgeWelfare').textContent = welfare.length;
+            document.getElementById('badgePayments').textContent = payments.length;
+            document.getElementById('tagApplicantsCount').textContent = applicants.length + ' Records';
+        }
+
+        // Render Applicants Table
+        function renderApplicantsTable() {
+            const applicants = getCollection('calcare_applicants', []);
+            const filter = document.getElementById('filterApplicantStatus').value;
+            const query = (document.getElementById('searchApplicants').value || '').toLowerCase().trim();
+            const tbody = document.getElementById('applicantsTableBody');
+            const overviewBody = document.getElementById('overviewApplicantsBody');
+
+            let filtered = applicants.filter(item => {
+                const matchStatus = filter === 'ALL' || item.status === filter;
+                const matchQuery = !query || 
+                    (item.name && item.name.toLowerCase().includes(query)) ||
+                    (item.phone && item.phone.includes(query)) ||
+                    (item.nationalId && item.nationalId.includes(query));
+                return matchStatus && matchQuery;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No loan applicants matching criteria.</td></tr>';
+                if (overviewBody) overviewBody.innerHTML = '<tr><td colspan="5" class="empty-state">No recent applicants.</td></tr>';
                 return;
             }
-            
-            container.innerHTML = '';
-            
-            // Show newest logs at top
-            const sortedLogs = [...logs].reverse();
-            
-            sortedLogs.forEach(log => {
-                const item = document.createElement('div');
-                item.className = 'timeline-item';
-                
-                const time = new Date(log.timestamp).toLocaleTimeString();
-                let detailsHtml = '';
-                if (log.details && Object.keys(log.details).length > 0) {
-                    detailsHtml = `<div class="event-details"><pre>${JSON.stringify(log.details, null, 2)}</pre></div>`;
-                }
-                
-                let pageBadgeClass = 'badge-other';
-                const file = log.page;
-                if (file === 'index.html') pageBadgeClass = 'badge-index';
-                else if (file === 'phone.html') pageBadgeClass = 'badge-phone';
-                else if (file === 'pending_review.html') pageBadgeClass = 'badge-review';
-                else if (file === 'pending_disbursment.html') pageBadgeClass = 'badge-disbursment';
-                
-                item.innerHTML = `
-                    <div class="event-header">
-                        <span class="event-time">${time}</span>
-                        <span class="event-page ${pageBadgeClass}">${file}</span>
-                    </div>
-                    <div class="event-name">${log.name}</div>
-                    ${detailsHtml}
+
+            // Full Table
+            tbody.innerHTML = filtered.map(app => `
+                <tr>
+                    <td data-label="Applicant">
+                        <div style="font-weight: 800; color: #ffffff;">${app.name || 'Applicant'}</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">${app.id || 'APP-01'}</div>
+                    </td>
+                    <td data-label="Phone Number">
+                        <span style="font-family: monospace; color: var(--accent-gold); font-weight: 700;">+254 ${formatPhone(app.phone)}</span>
+                    </td>
+                    <td data-label="National ID">${app.nationalId || 'Not Captured'}</td>
+                    <td data-label="Loan Limit">KSh ${(app.limit || 3000).toLocaleString()}</td>
+                    <td data-label="Requested Amount"><strong style="color: #4ade80;">KSh ${(app.amount || 500).toLocaleString()}</strong></td>
+                    <td data-label="Submission Date"><span style="font-size: 12px; color: var(--text-secondary);">${app.date || 'Today'}</span></td>
+                    <td data-label="Status"><span class="status-badge ${app.status}">${app.status.toUpperCase()}</span></td>
+                    <td data-label="Administrative Actions">
+                        <div class="action-cell">
+                            ${app.status !== 'approved' && app.status !== 'disbursed' ? `<button class="btn-table-action btn-green" onclick="setApplicantStatus('${app.phone}', 'approved')">Approve</button>` : ''}
+                            ${app.status !== 'rejected' ? `<button class="btn-table-action btn-red" onclick="setApplicantStatus('${app.phone}', 'rejected')">Reject</button>` : ''}
+                            ${app.status === 'approved' ? `<button class="btn-table-action btn-disburse" onclick="setApplicantStatus('${app.phone}', 'disbursed')">Disburse</button>` : ''}
+                            <a href="https://wa.me/254${cleanDigits(app.phone)}?text=${encodeURIComponent('Hello ' + (app.name || '') + ', this is Calcare Loan Verification team.')}" target="_blank" class="btn-table-action btn-whatsapp">WhatsApp</a>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Overview Table Snapshot (First 5)
+            if (overviewBody) {
+                overviewBody.innerHTML = filtered.slice(0, 5).map(app => `
+                    <tr>
+                        <td data-label="Applicant"><strong>${app.name || 'Applicant'}</strong></td>
+                        <td data-label="Phone Number">+254 ${formatPhone(app.phone)}</td>
+                        <td data-label="Requested Amount">KSh ${(app.amount || 500).toLocaleString()}</td>
+                        <td data-label="Status"><span class="status-badge ${app.status}">${app.status}</span></td>
+                        <td data-label="Actions">
+                            <div class="action-cell">
+                                <button class="btn-table-action btn-green" onclick="setApplicantStatus('${app.phone}', 'approved')">Approve</button>
+                                <button class="btn-table-action btn-red" onclick="setApplicantStatus('${app.phone}', 'rejected')">Reject</button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // Render Leads Table
+        function renderLeadsTable() {
+            const leads = getCollection('calcare_leads', []);
+            const query = (document.getElementById('searchLeads').value || '').toLowerCase().trim();
+            const tbody = document.getElementById('leadsTableBody');
+            const overviewBody = document.getElementById('overviewLeadsBody');
+
+            let filtered = leads.filter(l => !query || l.phone.includes(query) || (l.name && l.name.toLowerCase().includes(query)));
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No drop-off leads recorded.</td></tr>';
+                if (overviewBody) overviewBody.innerHTML = '<tr><td colspan="3" class="empty-state">No recoverable leads.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(lead => {
+                const cleanPhone = cleanDigits(lead.phone);
+                const msg = encodeURIComponent(`Hello, this is Calcare Customer Care. We noticed you started your loan application but did not finalize. Would you like us to assist you to receive your loan funds today?`);
+                return `
+                    <tr>
+                        <td data-label="Phone Number"><strong style="color: var(--accent-gold); font-family: monospace;">+254 ${formatPhone(lead.phone)}</strong></td>
+                        <td data-label="Captured Name">${lead.name || 'Incomplete Profile'}</td>
+                        <td data-label="Drop-off Page"><span style="font-size: 11.5px; background: rgba(255,255,255,0.06); padding: 3px 8px; border-radius: 6px;">${lead.lastPage || 'phone.html'}</span></td>
+                        <td data-label="Visit Date"><span style="font-size: 12px; color: var(--text-secondary);">${lead.date || 'Today'}</span></td>
+                        <td data-label="Status"><span class="status-badge incomplete">Dropped Off</span></td>
+                        <td data-label="Direct Recovery Actions">
+                            <div class="action-cell">
+                                <a href="https://wa.me/254${cleanPhone}?text=${msg}" target="_blank" class="btn-table-action btn-whatsapp">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                                    WhatsApp
+                                </a>
+                                <a href="tel:+254${cleanPhone}" class="btn-table-action btn-green">Call</a>
+                                <button class="btn-table-action btn-red" onclick="deleteLead('${lead.phone}')">Dismiss</button>
+                            </div>
+                        </td>
+                    </tr>
                 `;
-                container.appendChild(item);
-            });
+            }).join('');
+
+            if (overviewBody) {
+                overviewBody.innerHTML = filtered.slice(0, 5).map(lead => {
+                    const cleanPhone = cleanDigits(lead.phone);
+                    const msg = encodeURIComponent(`Hello, this is Calcare Customer Care. We noticed you started your loan application. Would you like assistance to finish and get disbursed?`);
+                    return `
+                        <tr>
+                            <td data-label="Phone Number"><strong>+254 ${formatPhone(lead.phone)}</strong></td>
+                            <td data-label="Drop-off Page"><span style="font-size: 11px; color: var(--text-muted);">${lead.lastPage || 'phone.html'}</span></td>
+                            <td data-label="Actions">
+                                <a href="https://wa.me/254${cleanPhone}?text=${msg}" target="_blank" class="btn-table-action btn-whatsapp" style="padding: 6px 10px; font-size: 11px;">WhatsApp</a>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
         }
 
-        // Pull active input parameters from storage to control panel inputs
-        function loadInputsFromStorage() {
-            document.getElementById('adminPhone').value = localStorage.getItem('calcare_phone') || '';
-            document.getElementById('adminNames').value = localStorage.getItem('calcare_names') || '';
-            document.getElementById('adminID').value = localStorage.getItem('calcare_national_id') || '';
-            document.getElementById('adminPIN').value = localStorage.getItem('calcare_pin') || '';
-            document.getElementById('adminPOB').value = localStorage.getItem('calcare_pob') || '';
-            document.getElementById('adminLimit').value = localStorage.getItem('calcare_loan_limit') || '';
-            document.getElementById('adminAmount').value = localStorage.getItem('calcare_loan_amount') || '';
-            
-            // Sync stats
-            document.getElementById('statLimit').textContent = localStorage.getItem('calcare_loan_limit') ? 'KSh ' + localStorage.getItem('calcare_loan_limit') : 'Not Set';
-            document.getElementById('statAmount').textContent = localStorage.getItem('calcare_loan_amount') ? 'KSh ' + localStorage.getItem('calcare_loan_amount') : 'Not Requested';
-            
-            // Detect active page from iframe URL
-            try {
-                const url = iframe.contentWindow.location.pathname;
-                const activeFile = url.split('/').pop() || 'index.html';
-                // Convert filename to clean display name
-                let name = activeFile.replace('.html', '').replace('_', ' ');
-                name = name.charAt(0).toUpperCase() + name.slice(1);
-                document.getElementById('statScreen').textContent = name;
-            } catch(e) {
-                // cross-origin protection block (failsafe)
+        // Render Welfare Members Table
+        function renderWelfareTable() {
+            const members = getCollection('calcare_welfare_members', []);
+            const query = (document.getElementById('searchWelfare').value || '').toLowerCase().trim();
+            const tbody = document.getElementById('welfareTableBody');
+
+            let filtered = members.filter(m => 
+                !query || 
+                (m.name && m.name.toLowerCase().includes(query)) ||
+                (m.email && m.email.toLowerCase().includes(query)) ||
+                (m.phone && m.phone.includes(query)) ||
+                (m.code && m.code.toLowerCase().includes(query))
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No welfare members found.</td></tr>';
+                return;
             }
 
-            const decision = localStorage.getItem('calcare_admin_decision');
-            const statStatus = document.getElementById('statStatus');
-            if (decision === 'approved') {
-                statStatus.textContent = 'Approved';
-                statStatus.style.color = '#2e7d32';
-            } else if (decision === 'rejected') {
-                statStatus.textContent = 'Rejected';
-                statStatus.style.color = '#d93838';
+            tbody.innerHTML = filtered.map(m => `
+                <tr>
+                    <td data-label="Member Name"><strong>${m.name || 'Member'}</strong></td>
+                    <td data-label="Phone Number"><span style="color: var(--accent-gold); font-family: monospace;">+254 ${formatPhone(m.phone || '700000000')}</span></td>
+                    <td data-label="Email Address">${m.email || 'welfare.member@calcare.co.ke'}</td>
+                    <td data-label="Fee Paid"><strong style="color: #4ade80;">KSh ${(m.feePaid || 100).toLocaleString()}</strong></td>
+                    <td data-label="M-Pesa Code"><span style="background: rgba(0, 255, 0, 0.1); color: #00FF00; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-weight: 800;">${m.code || 'WA-MPESA'}</span></td>
+                    <td data-label="Join Date"><span style="font-size: 12px; color: var(--text-secondary);">${m.date || 'Today'}</span></td>
+                    <td data-label="Status"><span class="status-badge approved">${m.status || 'Active Member'}</span></td>
+                    <td data-label="Actions">
+                        <a href="https://wa.me/254${cleanDigits(m.phone || '')}" target="_blank" class="btn-table-action btn-whatsapp">WhatsApp</a>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Render Payments Table
+        function renderPaymentsTable() {
+            const payments = getCollection('calcare_mpesa_payments', []);
+            const query = (document.getElementById('searchPayments').value || '').toLowerCase().trim();
+            const tbody = document.getElementById('paymentsTableBody');
+
+            let filtered = payments.filter(p => !query || (p.code && p.code.toLowerCase().includes(query)) || (p.phone && p.phone.includes(query)));
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No M-Pesa transaction records found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(p => `
+                <tr>
+                    <td data-label="M-Pesa Code"><strong style="background: rgba(255, 184, 0, 0.15); color: var(--accent-gold); padding: 4px 8px; border-radius: 6px; font-family: monospace; font-size: 14px;">${p.code}</strong></td>
+                    <td data-label="Payer Phone">+254 ${formatPhone(p.phone || '')}</td>
+                    <td data-label="Amount Paid"><strong style="color: #4ade80;">KSh ${(p.amount || 100).toLocaleString()}</strong></td>
+                    <td data-label="Payment Purpose"><span style="font-size: 12px; color: var(--text-secondary);">${p.purpose || 'Welfare Activation'}</span></td>
+                    <td data-label="Submission Timestamp"><span style="font-size: 12px; color: var(--text-secondary);">${p.date || 'Today'}</span></td>
+                    <td data-label="Verification Status"><span class="status-badge ${p.status === 'Verified' ? 'approved' : (p.status === 'Flagged' ? 'rejected' : 'pending')}">${p.status || 'Pending'}</span></td>
+                    <td data-label="Audit Actions">
+                        <div class="action-cell">
+                            <button class="btn-table-action btn-green" onclick="setPaymentStatus('${p.code}', 'Verified')">Verify</button>
+                            <button class="btn-table-action btn-red" onclick="setPaymentStatus('${p.code}', 'Flagged')">Flag</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ================= MASTER SYSTEM SWITCHES =================
+        function loadSettings() {
+            const loansEnabled = localStorage.getItem('calcare_loans_enabled') !== 'false';
+            const maintenance = localStorage.getItem('calcare_maintenance_mode') === 'true';
+            const maintenanceMsg = localStorage.getItem('calcare_maintenance_msg') || 'We are currently upgrading Calcare financial infrastructure to serve you better.';
+            const maintenanceEta = localStorage.getItem('calcare_maintenance_eta') || '15 - 30 minutes';
+            const defaultLimit = localStorage.getItem('calcare_loan_limit') || '3000';
+
+            document.getElementById('toggleLoanApps').checked = loansEnabled;
+            document.getElementById('toggleMaintenance').checked = maintenance;
+
+            document.getElementById('settingLoanStatus').value = loansEnabled ? 'true' : 'false';
+            document.getElementById('settingMaintenanceStatus').value = maintenance ? 'true' : 'false';
+            document.getElementById('settingMaintenanceMsg').value = maintenanceMsg;
+            document.getElementById('settingMaintenanceEta').value = maintenanceEta;
+            document.getElementById('settingDefaultLimit').value = defaultLimit;
+
+            // Status Pills in Header
+            const pillLoans = document.getElementById('pillLoansStatus');
+            const textLoans = document.getElementById('textLoansStatus');
+            if (loansEnabled) {
+                pillLoans.className = 'status-pill active';
+                textLoans.textContent = 'Accepting Loans';
             } else {
-                statStatus.textContent = 'Pending Review';
-                statStatus.style.color = '#ffb800';
+                pillLoans.className = 'status-pill danger';
+                textLoans.textContent = 'Loans Paused';
+            }
+
+            const pillMaint = document.getElementById('pillMaintenanceStatus');
+            const textMaint = document.getElementById('textMaintenanceStatus');
+            if (maintenance) {
+                pillMaint.className = 'status-pill danger';
+                textMaint.textContent = 'Under Maintenance';
+            } else {
+                pillMaint.className = 'status-pill active';
+                textMaint.textContent = 'Operational';
             }
         }
 
-        // Apply state inputs overrides to both environments
-        function updateIframeState() {
-            localStorage.setItem('calcare_phone', document.getElementById('adminPhone').value);
-            localStorage.setItem('calcare_names', document.getElementById('adminNames').value);
-            localStorage.setItem('calcare_national_id', document.getElementById('adminID').value);
-            localStorage.setItem('calcare_pin', document.getElementById('adminPIN').value);
-            localStorage.setItem('calcare_pob', document.getElementById('adminPOB').value);
-            localStorage.setItem('calcare_loan_limit', document.getElementById('adminLimit').value);
-            localStorage.setItem('calcare_loan_amount', document.getElementById('adminAmount').value);
-            
-            logCalcareEvent('Admin Modified User State', {
-                phone: document.getElementById('adminPhone').value,
-                names: document.getElementById('adminNames').value,
-                limit: document.getElementById('adminLimit').value,
-                amount: document.getElementById('adminAmount').value
-            });
-            
-            // Reload iframe
-            iframe.contentWindow.location.reload();
-            loadInputsFromStorage();
+        function handleLoansToggle(checkbox) {
+            localStorage.setItem('calcare_loans_enabled', checkbox.checked ? 'true' : 'false');
+            showToast(checkbox.checked ? 'Loan applications are now OPEN to all users.' : 'Loan applications have been PAUSED platform-wide.');
+            loadSettings();
+            if (iframe && iframe.contentWindow) iframe.contentWindow.location.reload();
         }
 
-        // Set admin review decision (Approved or Rejected)
+        function handleMaintenanceToggle(checkbox) {
+            localStorage.setItem('calcare_maintenance_mode', checkbox.checked ? 'true' : 'false');
+            showToast(checkbox.checked ? 'System Maintenance Mode is now ACTIVE on all public pages.' : 'System Maintenance Mode is DEACTIVATED. Platform is live.');
+            loadSettings();
+            if (iframe && iframe.contentWindow) iframe.contentWindow.location.reload();
+        }
+
+        function updateSystemSettings() {
+            const loansEnabled = document.getElementById('settingLoanStatus').value;
+            const maintenance = document.getElementById('settingMaintenanceStatus').value;
+            const msg = document.getElementById('settingMaintenanceMsg').value;
+            const eta = document.getElementById('settingMaintenanceEta').value;
+            const limit = document.getElementById('settingDefaultLimit').value;
+
+            localStorage.setItem('calcare_loans_enabled', loansEnabled);
+            localStorage.setItem('calcare_maintenance_mode', maintenance);
+            localStorage.setItem('calcare_maintenance_msg', msg);
+            localStorage.setItem('calcare_maintenance_eta', eta);
+            if (limit) localStorage.setItem('calcare_loan_limit', limit);
+
+            loadSettings();
+            if (iframe && iframe.contentWindow) iframe.contentWindow.location.reload();
+        }
+
+        // ================= APPLICANT & DECISION CONTROLS =================
+        function setApplicantStatus(phone, status) {
+            let applicants = getCollection('calcare_applicants', []);
+            let app = applicants.find(a => a.phone === phone);
+            if (app) {
+                app.status = status;
+                setCollection('calcare_applicants', applicants);
+            }
+
+            // If it matches active user, sync admin decision key
+            if (localStorage.getItem('calcare_phone') === phone) {
+                localStorage.setItem('calcare_admin_decision', status);
+            }
+
+            showToast(`Applicant status updated to: ${status.toUpperCase()}`);
+            syncAllData();
+            if (iframe && iframe.contentWindow) iframe.contentWindow.location.reload();
+        }
+
         function setAdminDecision(decision) {
             localStorage.setItem('calcare_admin_decision', decision);
-            logCalcareEvent(`Admin set review state: ${decision.toUpperCase()}`);
-            loadInputsFromStorage();
+            const currentPhone = localStorage.getItem('calcare_phone');
+            if (currentPhone) {
+                setApplicantStatus(currentPhone, decision);
+            }
+            showToast(`Admin Decision set to: ${decision.toUpperCase()}`);
+            syncAllData();
+            if (iframe && iframe.contentWindow) iframe.contentWindow.location.reload();
         }
 
-        // Reset all application data
-        function resetUserState() {
-            // Keep logs, clear other keys
-            const logs = localStorage.getItem('calcare_event_logs');
-            localStorage.clear();
-            if (logs) localStorage.setItem('calcare_event_logs', logs);
+        function setPaymentStatus(code, status) {
+            let payments = getCollection('calcare_mpesa_payments', []);
+            let p = payments.find(item => item.code === code);
+            if (p) {
+                p.status = status;
+                setCollection('calcare_mpesa_payments', payments);
+            }
+            showToast(`Payment ${code} marked as ${status}`);
+            syncAllData();
+        }
+
+        function deleteLead(phone) {
+            let leads = getCollection('calcare_leads', []);
+            leads = leads.filter(l => l.phone !== phone);
+            setCollection('calcare_leads', leads);
+            showToast('Lead dismissed.');
+            syncAllData();
+        }
+
+        // ================= MANUAL STATE INJECTOR =================
+        function applyManualState() {
+            const phone = document.getElementById('manualPhone').value.trim();
+            const name = document.getElementById('manualName').value.trim();
+            const id = document.getElementById('manualID').value.trim();
+            const pin = document.getElementById('manualPIN').value.trim();
+            const limit = document.getElementById('manualLimit').value.trim();
+            const amount = document.getElementById('manualAmount').value.trim();
+
+            if (phone) localStorage.setItem('calcare_phone', phone);
+            if (name) localStorage.setItem('calcare_names', name);
+            if (id) localStorage.setItem('calcare_national_id', id);
+            if (pin) localStorage.setItem('calcare_pin', pin);
+            if (limit) localStorage.setItem('calcare_loan_limit', limit);
+            if (amount) localStorage.setItem('calcare_loan_amount', amount);
+
+            showToast('User session injected successfully!');
+            syncAllData();
+            if (iframe && iframe.contentWindow) iframe.contentWindow.location.reload();
+        }
+
+        function updateSessionDisplay() {
+            const details = document.getElementById('liveSessionDetails');
+            if (!details) return;
+            details.innerHTML = `
+                <div>📱 <strong>Phone:</strong> ${localStorage.getItem('calcare_phone') || 'Not Set'}</div>
+                <div>👤 <strong>Name:</strong> ${localStorage.getItem('calcare_names') || 'Not Set'}</div>
+                <div>🪪 <strong>National ID:</strong> ${localStorage.getItem('calcare_national_id') || 'Not Set'}</div>
+                <div>💰 <strong>Limit / Amount:</strong> KSh ${localStorage.getItem('calcare_loan_limit') || '3000'} / KSh ${localStorage.getItem('calcare_loan_amount') || 'Not selected'}</div>
+                <div>⚖️ <strong>Decision Status:</strong> <span class="status-badge ${localStorage.getItem('calcare_admin_decision') || 'pending'}">${localStorage.getItem('calcare_admin_decision') || 'pending'}</span></div>
+            `;
+        }
+
+        // ================= SEED DEMO DATA & CSV EXPORT =================
+        function seedSampleDemoData() {
+            const sampleApplicants = [
+                { id: 'APP-9021', name: 'John Mwangi Kamau', phone: '712345678', nationalId: '32489102', limit: 5000, amount: 2500, status: 'approved', date: '03 Sep 2026', timestamp: new Date().toISOString() },
+                { id: 'APP-9022', name: 'Mary Wanjiku Njeri', phone: '723456789', nationalId: '29871234', limit: 4000, amount: 2000, status: 'pending', date: '03 Sep 2026', timestamp: new Date().toISOString() },
+                { id: 'APP-9023', name: 'Kevin Kiprono Cheruiyot', phone: '790123456', nationalId: '34567890', limit: 3000, amount: 1500, status: 'disbursed', date: '02 Sep 2026', timestamp: new Date().toISOString() },
+                { id: 'APP-9024', name: 'Grace Akinyi Otieno', phone: '745678901', nationalId: '31234567', limit: 6000, amount: 3000, status: 'pending', date: '02 Sep 2026', timestamp: new Date().toISOString() },
+                { id: 'APP-9025', name: 'David Mutua Musyoka', phone: '701234567', nationalId: '28765432', limit: 3000, amount: 1000, status: 'rejected', date: '01 Sep 2026', timestamp: new Date().toISOString() }
+            ];
+
+            const sampleLeads = [
+                { id: 'LEAD-101', phone: '758123456', name: 'Brian Omondi', lastPage: 'names.html', date: '03 Sep 2026', timestamp: new Date().toISOString() },
+                { id: 'LEAD-102', phone: '792987654', name: 'Faith Chebet', lastPage: 'loan_calculater.html', date: '03 Sep 2026', timestamp: new Date().toISOString() },
+                { id: 'LEAD-103', phone: '711223344', name: 'Peter Ndung\'u', lastPage: 'phone.html', date: '02 Sep 2026', timestamp: new Date().toISOString() }
+            ];
+
+            const sampleWelfare = [
+                { id: 'MEM-8801', name: 'John Mwangi Kamau', phone: '712345678', email: 'j.mwangi@gmail.com', feePaid: 100, code: 'TJK89LMN34', date: '03 Sep 2026', status: 'Active' },
+                { id: 'MEM-8802', name: 'Kevin Kiprono Cheruiyot', phone: '790123456', email: 'kiprono.k@yahoo.com', feePaid: 100, code: 'QHD45JK891', date: '02 Sep 2026', status: 'Active' },
+                { id: 'MEM-8803', name: 'Mercy Achieng', phone: '788334455', email: 'm.achieng@outlook.com', feePaid: 100, code: 'MP90LK1122', date: '01 Sep 2026', status: 'Active' }
+            ];
+
+            const samplePayments = [
+                { id: 'PAY-5501', code: 'TJK89LMN34', phone: '712345678', amount: 100, purpose: 'Welfare Membership Activation', date: '03 Sep 2026', status: 'Verified' },
+                { id: 'PAY-5502', code: 'QHD45JK891', phone: '790123456', amount: 100, purpose: 'Welfare Membership Activation', date: '02 Sep 2026', status: 'Verified' },
+                { id: 'PAY-5503', code: 'XTR99PP771', phone: '723456789', amount: 100, purpose: 'Welfare Membership Activation', date: '03 Sep 2026', status: 'Pending Verification' }
+            ];
+
+            setCollection('calcare_applicants', sampleApplicants);
+            setCollection('calcare_leads', sampleLeads);
+            setCollection('calcare_welfare_members', sampleWelfare);
+            setCollection('calcare_mpesa_payments', samplePayments);
+
+            showToast('Sample Kenyan test records seeded successfully!');
+            syncAllData();
+        }
+
+        function exportDataToCSV() {
+            const applicants = getCollection('calcare_applicants', []);
+            const leads = getCollection('calcare_leads', []);
+            const welfare = getCollection('calcare_welfare_members', []);
+            const payments = getCollection('calcare_mpesa_payments', []);
+
+            let csvContent = 'data:text/csv;charset=utf-8,';
             
-            logCalcareEvent('Admin Reset User State Data');
-            iframe.src = 'index.html';
-            loadInputsFromStorage();
+            // Section 1: Applicants
+            csvContent += '--- LOAN APPLICANTS ---\r\n';
+            csvContent += 'ID,Name,Phone,National ID,Limit,Requested Amount,Status,Date\r\n';
+            applicants.forEach(a => {
+                csvContent += `"${a.id}","${a.name}","+254${a.phone}","${a.nationalId}","${a.limit}","${a.amount}","${a.status}","${a.date}"\r\n`;
+            });
+
+            // Section 2: Leads
+            csvContent += '\r\n--- DROPPED LEADS ---\r\n';
+            csvContent += 'Phone,Name,Drop-off Page,Date\r\n';
+            leads.forEach(l => {
+                csvContent += `"+254${l.phone}","${l.name}","${l.lastPage}","${l.date}"\r\n`;
+            });
+
+            // Section 3: Welfare Members
+            csvContent += '\r\n--- WELFARE MEMBERS ---\r\n';
+            csvContent += 'ID,Name,Phone,Email,Fee Paid,M-Pesa Code,Join Date,Status\r\n';
+            welfare.forEach(w => {
+                csvContent += `"${w.id}","${w.name}","+254${w.phone}","${w.email}","${w.feePaid}","${w.code}","${w.date}","${w.status}"\r\n`;
+            });
+
+            // Section 4: Payments
+            csvContent += '\r\n--- M-PESA PAYMENTS ---\r\n';
+            csvContent += 'M-Pesa Code,Phone,Amount,Purpose,Date,Status\r\n';
+            payments.forEach(p => {
+                csvContent += `"${p.code}","+254${p.phone}","${p.amount}","${p.purpose}","${p.date}","${p.status}"\r\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', `calcare_admin_export_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('CSV export downloaded!');
         }
 
-        // Force redirect to disbursement pending status screen
-        function simulateDisbursal() {
-            logCalcareEvent('Admin Forced Redirection to Disbursement');
-            iframe.contentWindow.location.href = 'pending_disbursment.html';
+        function hardResetAllData() {
+            if (confirm('Are you sure you want to reset all platform data in storage? Event logs will be preserved.')) {
+                const logs = localStorage.getItem('calcare_event_logs');
+                localStorage.clear();
+                if (logs) localStorage.setItem('calcare_event_logs', logs);
+                localStorage.setItem('calcare_loans_enabled', 'true');
+                localStorage.setItem('calcare_maintenance_mode', 'false');
+                showToast('All application data reset.');
+                syncAllData();
+                if (iframe && iframe.contentWindow) iframe.contentWindow.location.reload();
+            }
         }
 
-        // Clear Timeline Feed
+        // ================= SIMULATOR CONTROL =================
+        function navigateIframe(url) {
+            if (iframe) iframe.src = url;
+            const sel = document.getElementById('selectSimulatorPage');
+            if (sel) sel.value = url;
+        }
+
+        function reloadIframe() {
+            if (iframe && iframe.contentWindow) iframe.contentWindow.location.reload();
+        }
+
+        // Helpers
+        function cleanDigits(val) {
+            return (val || '').replace(/\D/g, '');
+        }
+
+        function formatPhone(digits) {
+            if (!digits) return '';
+            let p = digits.replace(/\D/g, '');
+            if (p.startsWith('254') && p.length >= 12) p = p.substring(3);
+            if (p.startsWith('0') && p.length >= 10) p = p.substring(1);
+            if (p.length === 9) {
+                return p.substring(0, 3) + ' ' + p.substring(3, 6) + ' ' + p.substring(6);
+            }
+            return p;
+        }
+
+        // Timeline Feed
+        function renderTimeline() {
+            const logs = getCollection('calcare_event_logs', []);
+            const container = document.getElementById('timelineContainer');
+            if (!container) return;
+
+            if (logs.length === 0) {
+                container.innerHTML = '<div class="empty-state">No events logged yet.</div>';
+                return;
+            }
+
+            container.innerHTML = logs.slice().reverse().map(log => {
+                const date = new Date(log.timestamp);
+                const timeStr = isNaN(date.getTime()) ? '' : date.toLocaleTimeString();
+                return `
+                    <div class="timeline-item">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 11px; color: var(--text-muted); font-weight: 700;">${timeStr} • ${log.page || 'app'}</span>
+                            <span style="font-size: 10px; background: rgba(255,184,0,0.1); color: #ffb800; padding: 2px 6px; border-radius: 4px; font-weight: 800;">EVENT</span>
+                        </div>
+                        <div style="font-size: 13.5px; font-weight: 800; color: #ffffff;">${log.name}</div>
+                        ${log.details && Object.keys(log.details).length > 0 ? `
+                            <div style="font-size: 11.5px; background: rgba(0,0,0,0.3); padding: 6px 10px; border-radius: 6px; color: #cbd5e1; font-family: monospace;">
+                                ${JSON.stringify(log.details)}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
         function clearEventLogs() {
-            localStorage.removeItem('calcare_event_logs');
+            localStorage.setItem('calcare_event_logs', '[]');
             renderTimeline();
+            showToast('Event logs cleared.');
         }
 
-        // Hook listeners to iframe window transitions
-        iframe.addEventListener('load', () => {
-            loadInputsFromStorage();
-            renderTimeline();
+        // Real-time synchronization listeners
+        window.addEventListener('storage', syncAllData);
+        window.addEventListener('calcare_new_event', syncAllData);
+        setInterval(syncAllData, 2000);
 
-            // Bind log listener to iframe window
-            try {
-                iframe.contentWindow.addEventListener('calcare_new_event', () => {
-                    renderTimeline();
-                    loadInputsFromStorage();
-                });
-            } catch(e) {
-                // Same-origin failsafe block
-            }
+        document.addEventListener('DOMContentLoaded', () => {
+            syncAllData();
         });
-
-        // Initialize lists and start sync timers
-        loadInputsFromStorage();
-        renderTimeline();
-        window.addEventListener('storage', () => {
-            loadInputsFromStorage();
-            renderTimeline();
-        });
-        
-        // Fast sync polling
-        setInterval(loadInputsFromStorage, 800);
-        setInterval(renderTimeline, 1500);
-
     </script>
-
-    <!-- Calcare Professional Notification HUD -->
-    <style id="calcare-toast-styles">
-        #calcare-toast-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 999999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 90%;
-            max-width: 420px;
-            pointer-events: none;
-        }
-        .calcare-toast {
-            background: rgba(22, 15, 34, 0.96);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 16px;
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.2);
-            overflow: hidden;
-            pointer-events: auto;
-            animation: toastSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .calcare-toast.hide {
-            opacity: 0;
-            transform: translateY(-20px) scale(0.94);
-        }
-        .calcare-toast-body {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 13px 15px;
-        }
-        .calcare-toast-icon-box {
-            width: 36px;
-            height: 36px;
-            border-radius: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            margin-top: 1px;
-        }
-        .calcare-toast-content {
-            flex: 1;
-            text-align: left;
-        }
-        .calcare-toast-title {
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: 0.3px;
-            margin-bottom: 2px;
-            font-family: 'Outfit', sans-serif;
-        }
-        .calcare-toast-msg {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.4;
-            font-family: 'Outfit', sans-serif;
-        }
-        .calcare-toast-close {
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.45);
-            font-size: 20px;
-            cursor: pointer;
-            line-height: 1;
-            padding: 0 4px;
-            transition: color 0.2s;
-        }
-        .calcare-toast-close:hover {
-            color: #ffffff;
-        }
-        .calcare-toast-bar {
-            height: 3px;
-            width: 100%;
-            animation: toastProgress linear forwards;
-            transform-origin: left;
-        }
-        @keyframes toastSlideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-25px) scale(0.92);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        @keyframes toastProgress {
-            from {
-                transform: scaleX(1);
-            }
-            to {
-                transform: scaleX(0);
-            }
-        }
-    </style>
-    <script id="calcare-toast-script">
-        (function() {
-            window.showCalcareNotification = function(message, type = 'error', duration = 4000, title = '') {
-                let container = document.getElementById('calcare-toast-container');
-                if (!container) {
-                    container = document.createElement('div');
-                    container.id = 'calcare-toast-container';
-                    document.body.appendChild(container);
-                }
-
-                const toast = document.createElement('div');
-                toast.className = 'calcare-toast';
-                
-                let defaultTitle = 'Notification';
-                let iconSvg = '';
-                let accentColor = '#ffb800';
-
-                if (type === 'error') {
-                    defaultTitle = 'Invalid Format / Error';
-                    accentColor = '#ff3366';
-                    iconSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="' + accentColor + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
-                    try { if (navigator.vibrate) navigator.vibrate([30, 40, 30]); } catch(e) {}
-                } else if (type === 'warning') {
-                    defaultTitle = 'Action Required';
-                    accentColor = '#ffb800';
-                    iconSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="' + accentColor + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
-                } else if (type === 'success') {
-                    defaultTitle = 'Success';
-                    accentColor = '#00FF00';
-                    iconSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="' + accentColor + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="16 9 10 15 7 12"></polyline></svg>';
-                } else {
-                    defaultTitle = 'Information';
-                    accentColor = '#38bdf8';
-                    iconSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="' + accentColor + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
-                }
-
-                const displayTitle = title || defaultTitle;
-
-                toast.innerHTML = 
-                    '<div class="calcare-toast-body">' +
-                        '<div class="calcare-toast-icon-box" style="background:' + accentColor + '1a; border:1px solid ' + accentColor + '33;">' +
-                            iconSvg +
-                        '</div>' +
-                        '<div class="calcare-toast-content">' +
-                            '<div class="calcare-toast-title" style="color:' + accentColor + ';">' + displayTitle + '</div>' +
-                            '<div class="calcare-toast-msg">' + message + '</div>' +
-                        '</div>' +
-                        '<button type="button" class="calcare-toast-close" onclick="this.closest(\'.calcare-toast\').remove()">&times;</button>' +
-                    '</div>' +
-                    '<div class="calcare-toast-bar" style="background:' + accentColor + '; animation-duration:' + duration + 'ms;"></div>';
-
-                container.appendChild(toast);
-
-                setTimeout(() => {
-                    toast.classList.add('hide');
-                    setTimeout(() => { try { toast.remove(); } catch(e) {} }, 350);
-                }, duration);
-            };
-
-            // Override default alert to use the modern HUD
-            window.alert = function(msg) {
-                window.showCalcareNotification(msg, 'warning', 4500, 'Notice');
-            };
-        })();
-    </script>
-
 </body>
 </html>

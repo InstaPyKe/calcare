@@ -532,6 +532,22 @@
             document.getElementById('supportForm').style.display = 'none';
             document.getElementById('ticketSuccessCard').style.display = 'block';
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedName = localStorage.getItem('calcare_names');
+            const storedPhone = localStorage.getItem('calcare_phone');
+            const nameInput = document.getElementById('ticketName');
+            const contactInput = document.getElementById('ticketContact');
+
+            if (nameInput && storedName) {
+                nameInput.value = storedName;
+            }
+            if (contactInput && storedPhone) {
+                let p = storedPhone.replace(/\D/g, '');
+                if (p.length === 9) contactInput.value = '0' + p;
+                else contactInput.value = storedPhone;
+            }
+        });
     </script>
 
     <!-- Navigation Sidebar Menu Injection -->
@@ -1282,5 +1298,7 @@
         })();
     </script>
 
+    <!-- Master System Enforcement -->
+    <script src="calcare_system.js"></script>
 </body>
 </html>

@@ -244,7 +244,7 @@
         <div class="section-title">Secure your account</div>
         <p class="sub-text">Enter your PIN below, which will be used to log in to the Calcare app and will serve as your
             security key</p>
-        <form style="width: 100%;" action="placeofbirth.html" onsubmit="logCalcareEvent('Set Secure PIN', { pin: '****' });">
+        <form style="width: 100%;" action="placeofbirth.html" onsubmit="return handlePINSubmit(event);">
             <div class="input-wrapper" style="position: relative; width: 100%;">
                 <span class="eye-icon" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; display: flex; align-items: center; justify-content: center; color: #5a3276; width: 30px; height: 30px; z-index: 10;">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-open">
@@ -275,18 +275,35 @@
         function validatePIN() {
             const input = document.getElementById('pinInput');
             const btn = document.querySelector('.btn-continue');
-            const pinVal = input.value.trim();
+            const pinVal = input.value.trim().replace(/\D/g, '');
+            input.value = pinVal;
             const isValid = /^\d{4}$/.test(pinVal);
             
             if (isValid) {
                 btn.disabled = false;
                 btn.style.opacity = '1';
                 btn.style.cursor = 'pointer';
+                localStorage.setItem('calcare_pin', pinVal);
             } else {
                 btn.disabled = true;
                 btn.style.opacity = '0.6';
                 btn.style.cursor = 'not-allowed';
             }
+        }
+
+        function handlePINSubmit(e) {
+            const input = document.getElementById('pinInput');
+            const pinVal = input.value.trim().replace(/\D/g, '');
+            if (!/^\d{4}$/.test(pinVal)) {
+                e.preventDefault();
+                window.showCalcareNotification('PIN must be 4 digits.', 'error', 4000, 'Invalid PIN');
+                return false;
+            }
+            localStorage.setItem('calcare_pin', pinVal);
+            if (window.logCalcareEvent) {
+                window.logCalcareEvent('Set Secure PIN', { pin: '****' });
+            }
+            return true;
         }
         
         const eyeIcon = document.querySelector('.eye-icon');
@@ -1106,6 +1123,8 @@
         </div>
     </a>
 
+    <!-- Master System Enforcement -->
+    <script src="calcare_system.js"></script>
 </body>
 
 </html>

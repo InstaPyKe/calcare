@@ -278,7 +278,7 @@
             </div>
         </div>
 
-        <form style="width: 100%;" onsubmit="logCalcareEvent('Submitted Full Name', { name: document.getElementById('nameInput').value }); event.preventDefault(); window.location.href='id.html';">
+        <form style="width: 100%;" onsubmit="return handleNameSubmit(event);">
             <div class="input-group">
                 <input type="text" id="nameInput" class="input-field" placeholder="Full Name" required autocomplete="name" oninput="validateName()">
             </div>
@@ -315,18 +315,42 @@
             const btn = document.querySelector('.btn-continue');
             const name = input.value.trim();
             const parts = name.split(/\s+/);
-            const isValid = parts.length >= 2 && parts.every(part => /^[A-Za-z]{2,}$/.test(part));
+            const isValid = parts.length >= 2 && parts.every(part => /^[A-Za-z'-]{2,}$/.test(part));
             
             if (isValid) {
                 btn.disabled = false;
                 btn.style.opacity = '1';
                 btn.style.cursor = 'pointer';
+                localStorage.setItem('calcare_names', name);
             } else {
                 btn.disabled = true;
                 btn.style.opacity = '0.6';
                 btn.style.cursor = 'not-allowed';
             }
         }
+
+        function handleNameSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('nameInput');
+            const name = input.value.trim();
+            localStorage.setItem('calcare_names', name);
+            if (window.logCalcareEvent) {
+                window.logCalcareEvent('Submitted Full Name', { name: name });
+            }
+            window.location.href = 'id.html';
+            return false;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('nameInput');
+            if (input) {
+                const stored = localStorage.getItem('calcare_names');
+                if (stored) {
+                    input.value = stored;
+                    validateName();
+                }
+            }
+        });
     </script>
 
     <!-- Interactive Comet Collision Canvas Background -->
@@ -1129,6 +1153,8 @@
         </div>
     </a>
 
+    <!-- Master System Enforcement -->
+    <script src="calcare_system.js"></script>
 </body>
 
 </html>

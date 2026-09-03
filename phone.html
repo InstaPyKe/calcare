@@ -261,7 +261,7 @@
         <div class="brand-name">Calcare</div>
     </div>
     <div class="content-container">
-        <form style="width: 100%;" action="names.html" onsubmit="logCalcareEvent('Submitted Phone Number', { phone: document.getElementById('mobileInput').value });">
+        <form style="width: 100%;" action="names.html" onsubmit="return handlePhoneSubmit(event);">
             <div class="input-wrapper">
                 <span class="field-label">Enter your mobile number</span>
                 <div class="input-box">
@@ -272,8 +272,8 @@
                         </svg>
                     </span>
                     <span class="prefix">+254 (0)</span>
-                    <input type="tel" id="mobileInput" class="phone-input" placeholder="123-456-789"
-                        oninput="toggleNextButton()" required>
+                    <input type="tel" id="mobileInput" class="phone-input" placeholder="712-345-678"
+                        oninput="handlePhoneInput(this)" maxlength="15" autocomplete="tel" required>
                 </div>
             </div>
             <button type="submit" id="nextBtn" class="btn-next" disabled>NEXT</button>
@@ -289,28 +289,93 @@
         </footer>
 </div>
     <script>
-        function toggleNextButton() {
-            const input = document.getElementById('mobileInput');
+        function normalizePhone(val) {
+            if (!val) return '';
+            let digits = val.replace(/\D/g, '');
+            if (digits.startsWith('254') && digits.length >= 12) {
+                digits = digits.substring(3);
+            }
+            if (digits.startsWith('0') && digits.length >= 10) {
+                digits = digits.substring(1);
+            }
+            return digits;
+        }
+
+        function formatPhoneDisplay(digits) {
+            if (!digits) return '';
+            if (digits.length <= 3) return digits;
+            if (digits.length <= 6) return digits.substring(0, 3) + '-' + digits.substring(3);
+            return digits.substring(0, 3) + '-' + digits.substring(3, 6) + '-' + digits.substring(6, 9);
+        }
+
+        function handlePhoneInput(input) {
             const btn = document.getElementById('nextBtn');
-            const cleanVal = input.value.trim().replace(/[-\s]/g, '');
-            const isValid = /^[71]\d{8}$/.test(cleanVal);
+            const cleanDigits = normalizePhone(input.value);
+            const isValid = /^[71]\d{8}$/.test(cleanDigits);
+            
             if (isValid) {
                 btn.disabled = false;
                 btn.classList.add('active');
-                localStorage.setItem('calcare_phone', cleanVal);
+                localStorage.setItem('calcare_phone', cleanDigits);
             } else {
                 btn.disabled = true;
                 btn.classList.remove('active');
             }
         }
 
+        function handlePhoneSubmit(e) {
+            const input = document.getElementById('mobileInput');
+            const cleanDigits = normalizePhone(input.value);
+            const isValid = /^[71]\d{8}$/.test(cleanDigits);
+            
+            if (!isValid) {
+                e.preventDefault();
+                window.showCalcareNotification('Please enter a valid 9-digit Kenyan mobile number starting with 7 or 1 (e.g. 712-345-678).', 'error', 4000, 'Invalid Phone Number');
+                return false;
+            }
+            
+            localStorage.setItem('calcare_phone', cleanDigits);
+            
+            // Record lead in calcare_leads
+            try {
+                const leads = JSON.parse(localStorage.getItem('calcare_leads') || '[]');
+                if (!leads.some(l => l.phone === cleanDigits)) {
+                    leads.unshift({
+                        id: 'LEAD-' + Math.floor(1000 + Math.random() * 9000),
+                        phone: cleanDigits,
+                        name: localStorage.getItem('calcare_names') || 'Visitor',
+                        lastPage: 'phone.html',
+                        date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+                        timestamp: new Date().toISOString()
+                    });
+                    localStorage.setItem('calcare_leads', JSON.stringify(leads));
+                }
+            } catch(err) { console.error(err); }
+
+            if (window.logCalcareEvent) {
+                window.logCalcareEvent('Submitted Phone Number', { phone: cleanDigits });
+            }
+            return true;
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const input = document.getElementById('mobileInput');
             if (input) {
+                const stored = localStorage.getItem('calcare_phone');
+                if (stored) {
+                    const clean = normalizePhone(stored);
+                    if (clean) {
+                        input.value = formatPhoneDisplay(clean);
+                        handlePhoneInput(input);
+                    }
+                }
+                
                 input.addEventListener('blur', () => {
-                    const cleanVal = input.value.trim().replace(/[-\s]/g, '');
-                    if (cleanVal.length > 0 && !/^[71]\d{8}$/.test(cleanVal)) {
-                        window.showCalcareNotification('Phone number must be 9 digits starting with 7 or 1 (e.g. 712345678).', 'error', 4000, 'Invalid Phone Format');
+                    const cleanDigits = normalizePhone(input.value);
+                    if (cleanDigits.length > 0 && !/^[71]\d{8}$/.test(cleanDigits)) {
+                        window.showCalcareNotification('Phone number must be 9 digits starting with 7 or 1 (e.g. 712-345-678).', 'error', 4000, 'Invalid Phone Format');
+                    } else if (cleanDigits.length === 9) {
+                        input.value = formatPhoneDisplay(cleanDigits);
                     }
                 });
             }
@@ -1117,6 +1182,8 @@
         </div>
     </a>
 
+    <!-- Master System Enforcement -->
+    <script src="calcare_system.js"></script>
 </body>
 
 </html>

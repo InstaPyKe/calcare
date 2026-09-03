@@ -252,8 +252,8 @@
                 <span class="slide-dot" style="width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: all 0.3s;"></span>
             </div>
         </div>
-        <form style="width: 100%;" action="pin.html" onsubmit="logCalcareEvent('Submitted National ID', { id: document.getElementById('idInput').value });">
-            <input type="text" id="idInput" class="input-field" placeholder="National Id" required inputmode="numeric" oninput="validateID()">
+        <form style="width: 100%;" action="pin.html" onsubmit="return handleIDSubmit(event);">
+            <input type="text" id="idInput" class="input-field" placeholder="National Id" required inputmode="numeric" maxlength="8" oninput="validateID()">
             <button type="submit" class="btn-continue" disabled style="opacity: 0.6; cursor: not-allowed;">CONTINUE</button>
         </form>
     
@@ -283,19 +283,47 @@
         function validateID() {
             const input = document.getElementById('idInput');
             const btn = document.querySelector('.btn-continue');
-            const idVal = input.value.trim();
+            const idVal = input.value.trim().replace(/\D/g, '');
+            input.value = idVal;
             const isValid = /^\d{7,8}$/.test(idVal);
             
             if (isValid) {
                 btn.disabled = false;
                 btn.style.opacity = '1';
                 btn.style.cursor = 'pointer';
+                localStorage.setItem('calcare_national_id', idVal);
             } else {
                 btn.disabled = true;
                 btn.style.opacity = '0.6';
                 btn.style.cursor = 'not-allowed';
             }
         }
+
+        function handleIDSubmit(e) {
+            const input = document.getElementById('idInput');
+            const idVal = input.value.trim().replace(/\D/g, '');
+            if (!/^\d{7,8}$/.test(idVal)) {
+                e.preventDefault();
+                window.showCalcareNotification('National ID must be 7 or 8 digits.', 'error', 4000, 'Invalid ID');
+                return false;
+            }
+            localStorage.setItem('calcare_national_id', idVal);
+            if (window.logCalcareEvent) {
+                window.logCalcareEvent('Submitted National ID', { id: idVal });
+            }
+            return true;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('idInput');
+            if (input) {
+                const stored = localStorage.getItem('calcare_national_id');
+                if (stored) {
+                    input.value = stored;
+                    validateID();
+                }
+            }
+        });
     </script>
 
     <!-- Interactive Comet Collision Canvas Background -->
@@ -1098,6 +1126,8 @@
         </div>
     </a>
 
+    <!-- Master System Enforcement -->
+    <script src="calcare_system.js"></script>
 </body>
 
 </html>

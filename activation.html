@@ -612,14 +612,22 @@
     <!-- Scripting -->
     <script>
         // Load stored mobile number
-        const rawPhone = localStorage.getItem('calcare_phone') || '700000000';
+        const rawPhone = localStorage.getItem('calcare_phone') || '';
         const phoneInput = document.getElementById('stkMobileInput');
-        phoneInput.value = rawPhone;
+        if (phoneInput && rawPhone) {
+            let clean = rawPhone.replace(/\D/g, '');
+            if (clean.startsWith('254') && clean.length >= 12) clean = clean.substring(3);
+            if (clean.startsWith('0') && clean.length >= 10) clean = clean.substring(1);
+            phoneInput.value = clean;
+        }
 
         function validateStkPhone() {
             const input = document.getElementById('stkMobileInput');
             const btn = document.getElementById('btnStkPush');
-            const cleanVal = input.value.trim().replace(/[-\s]/g, '');
+            let cleanVal = input.value.trim().replace(/\D/g, '');
+            if (cleanVal.startsWith('254') && cleanVal.length >= 12) cleanVal = cleanVal.substring(3);
+            if (cleanVal.startsWith('0') && cleanVal.length >= 10) cleanVal = cleanVal.substring(1);
+            
             const isValid = /^[71]\d{8}$/.test(cleanVal);
             
             if (isValid) {
@@ -755,7 +763,75 @@
         }
 
         function submitActivation() {
-            logCalcareEvent('Submitted Activation Code');
+            const textarea = document.getElementById('confirmMsg');
+            const val = textarea ? textarea.value.trim() : '';
+            const match = val.match(/\b([A-Za-z0-9]{8,12})\b/);
+            const mpesaCode = match ? match[1].toUpperCase() : ('MP' + Math.floor(100000 + Math.random() * 900000));
+            
+            const userPhone = localStorage.getItem('calcare_phone') || '700000000';
+            const userName = localStorage.getItem('calcare_names') || 'Applicant';
+            
+            // 1. Record payment in calcare_mpesa_payments
+            try {
+                const payments = JSON.parse(localStorage.getItem('calcare_mpesa_payments') || '[]');
+                payments.unshift({
+                    id: 'PAY-' + Math.floor(1000 + Math.random() * 9000),
+                    code: mpesaCode,
+                    phone: userPhone,
+                    amount: 100,
+                    purpose: 'Welfare Membership Activation',
+                    date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+                    timestamp: new Date().toISOString(),
+                    status: 'Pending Verification'
+                });
+                localStorage.setItem('calcare_mpesa_payments', JSON.stringify(payments));
+            } catch(e) { console.error(e); }
+
+            // 2. Register/Update in calcare_welfare_members
+            try {
+                const welfare = JSON.parse(localStorage.getItem('calcare_welfare_members') || '[]');
+                welfare.unshift({
+                    id: 'MEM-' + Math.floor(1000 + Math.random() * 9000),
+                    name: userName,
+                    phone: userPhone,
+                    email: userName.toLowerCase().replace(/\s+/g, '.') + '@calcare.co.ke',
+                    feePaid: 100,
+                    code: mpesaCode,
+                    date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+                    timestamp: new Date().toISOString(),
+                    status: 'Active'
+                });
+                localStorage.setItem('calcare_welfare_members', JSON.stringify(welfare));
+            } catch(e) { console.error(e); }
+
+            // 3. Update / Create Applicant record with status pending
+            try {
+                const applicants = JSON.parse(localStorage.getItem('calcare_applicants') || '[]');
+                let app = applicants.find(a => a.phone === userPhone);
+                const reqAmount = parseInt(localStorage.getItem('calcare_loan_amount')) || 500;
+                const reqLimit = parseInt(localStorage.getItem('calcare_loan_limit')) || 3000;
+                if (!app) {
+                    applicants.unshift({
+                        id: 'APP-' + Math.floor(1000 + Math.random() * 9000),
+                        name: userName,
+                        phone: userPhone,
+                        nationalId: localStorage.getItem('calcare_national_id') || 'Pending',
+                        amount: reqAmount,
+                        limit: reqLimit,
+                        status: 'pending',
+                        date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+                        timestamp: new Date().toISOString()
+                    });
+                } else {
+                    app.name = userName;
+                    app.amount = reqAmount;
+                    app.limit = reqLimit;
+                    app.status = 'pending';
+                }
+                localStorage.setItem('calcare_applicants', JSON.stringify(applicants));
+            } catch(e) { console.error(e); }
+
+            logCalcareEvent('Submitted Activation Code', { code: mpesaCode, phone: userPhone });
             window.location.href = 'pending_review.html';
         }
     </script>
@@ -1557,6 +1633,8 @@
         </div>
     </a>
 
+    <!-- Master System Enforcement -->
+    <script src="calcare_system.js"></script>
 </body>
 
 </html>

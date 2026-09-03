@@ -254,7 +254,7 @@
         <div class="section-title">Secure your account</div>
         <p class="sub-text">Enter your place of birth below, which will be needed if you forget your PIN.</p>
 
-        <form style="width: 100%;" action="affiliate.html" onsubmit="logCalcareEvent('Submitted Place of Birth', { pob: document.getElementById('birthInput').value });">
+        <form style="width: 100%;" action="affiliate.html" onsubmit="return handleBirthSubmit(event);">
             <div class="input-wrapper">
                 <span class="field-label">Place of birth</span>
                 <input type="text" id="birthInput" class="input-field" placeholder="e.g. Nairobi" required oninput="validateBirthPlace()">
@@ -282,12 +282,39 @@
                 btn.disabled = false;
                 btn.style.opacity = '1';
                 btn.style.cursor = 'pointer';
+                localStorage.setItem('calcare_pob', val);
             } else {
                 btn.disabled = true;
                 btn.style.opacity = '0.6';
                 btn.style.cursor = 'not-allowed';
             }
         }
+
+        function handleBirthSubmit(e) {
+            const input = document.getElementById('birthInput');
+            const val = input.value.trim();
+            if (!/^[A-Za-z\s\-']{3,}$/.test(val)) {
+                e.preventDefault();
+                window.showCalcareNotification('Please enter a valid place of birth (at least 3 letters).', 'error', 4000, 'Invalid Place');
+                return false;
+            }
+            localStorage.setItem('calcare_pob', val);
+            if (window.logCalcareEvent) {
+                window.logCalcareEvent('Submitted Place of Birth', { pob: val });
+            }
+            return true;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('birthInput');
+            if (input) {
+                const stored = localStorage.getItem('calcare_pob');
+                if (stored) {
+                    input.value = stored;
+                    validateBirthPlace();
+                }
+            }
+        });
     </script>
 
     <!-- Interactive Comet Collision Canvas Background -->
@@ -1090,6 +1117,8 @@
         </div>
     </a>
 
+    <!-- Master System Enforcement -->
+    <script src="calcare_system.js"></script>
 </body>
 
 </html>
